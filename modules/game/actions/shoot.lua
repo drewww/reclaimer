@@ -1,3 +1,7 @@
+local Log = prism.components.Log
+local Name = prism.components.Name
+local sf = string.format
+
 local ShootTarget = prism.Target()
     :with(prism.components.Collider)
     :range(1)
@@ -48,6 +52,17 @@ function Shoot:perform(level, shot)
     if level:canPerform(damage) then
         level:perform(damage)
     end
+
+    local shotName = Name.lower(shot)
+    local ownerName = Name.lower(self.owner)
+    local dmgstr = ""
+
+    if damage.dealt then
+        dmgstr = sf("%i damage.", damage.dealt)
+    end
+    Log.addMessage(self.owner, sf("You shot the %s. %s", shotName, dmgstr))
+    Log.addMessage(shot, sf("The %s shot you! %s", ownerName, dmgstr))
+    Log.addMessageSensed(level, self, sf("The %s shoots the %s. %s", ownerName, shotName, dmgstr))
 end
 
 return Shoot

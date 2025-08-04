@@ -3,6 +3,7 @@ require "prism"
 
 prism.loadModule("prism/spectrum")
 prism.loadModule("prism/extra/sight")
+prism.loadModule("prism/extra/log")
 prism.loadModule("modules/game")
 
 -- Grab our level state and sprite atlas.
@@ -22,6 +23,6 @@ local manager = spectrum.StateManager()
 -- we put out levelstate on top here, but you could create a main menu
 --- @diagnostic disable-next-line
 function love.load()
-   manager:push(MyGameLevelState(display))
-   manager:hook()
+    manager:push(MyGameLevelState(display))
+    manager:hook()
 end

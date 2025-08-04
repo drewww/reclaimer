@@ -48,6 +48,10 @@ function MyGameLevelState:handleMessage(message)
 
     -- This is where you'd process custom messages like advancing to the next
     -- level or triggering a game over.
+    if prism.messages.Lose:is(message) then
+        self.manager:pop()
+        love.event.quit()
+    end
 end
 
 --- @param primary Senses[] { curActor:getComponent(prism.components.Senses)}
@@ -68,9 +72,21 @@ function MyGameLevelState:draw(primary, secondary)
     self.display:putSenses(primary, secondary)
 
     -- custom terminal drawing goes here!
+    --
+    local currentActor = self:getCurrentActor()
+    local health = currentActor and currentActor:get(prism.components.Health)
+    if health then
+        self.display:putString(1, 1, "HP:" .. health.hp .. "/" .. health.maxHP)
+    end
 
-    -- Say hello!
-    self.display:putString(1, 1, "Hello prism!")
+    local log = currentActor and currentActor:get(prism.components.Log)
+    if log then
+        local offset = 0
+        for line in log:iterLast(5) do
+            self.display:putString(1, self.display.height - offset, line)
+            offset = offset + 1
+        end
+    end
 
     -- Actually render the terminal out and present it to the screen.
     -- You could use love2d to translate and say center a smaller terminal or

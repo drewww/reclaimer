@@ -1,3 +1,7 @@
+local Log = prism.components.Log
+local Name = prism.components.Name
+local sf = string.format
+
 local AttackTarget = prism.Target()
     :isPrototype(prism.Actor)
     :with(prism.components.Health)
@@ -19,6 +23,17 @@ function Attack:perform(level, attacked)
     if level:canPerform(damage) then
         level:perform(damage)
     end
+
+    local dmgstr = ""
+    if damage.dealt then
+        dmgstr = sf("%i damage", damage.dealt)
+    end
+
+    local attackName = Name.lower(attacked)
+    local ownerName = Name.lower(self.owner)
+    Log.addMessage(self.owner, sf("You attack the %s. %s", attackName, dmgstr))
+    Log.addMessage(attacked, sf("%s attacks you for %s", ownerName, dmgstr))
+    Log.addMessageSensed(level, self, sf("%s attacks %s for %s", ownerName, attackName, dmgstr))
 end
 
 return Attack
