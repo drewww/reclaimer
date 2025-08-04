@@ -7,6 +7,7 @@ prism.registerActor("bot", function()
         prism.components.Sight { range = 12, fov = true },
         prism.components.Mover { "walk" },
         prism.components.BotController(),
-        prism.components.Health(3)
+        prism.components.Health(3),
+        prism.components.Attacker(1)
     }
 end)

@@ -19,6 +19,12 @@ function BotController:act(level, actor)
             return move
         end
     end
+
+    local attack = prism.actions.Attack(actor, player)
+    if level:canPerform(attack) then
+        level:perform(attack)
+    end
+
     return prism.actions.Wait(actor)
 end
 
