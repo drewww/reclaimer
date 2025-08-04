@@ -15,7 +15,6 @@ function Shoot:canPerform(level)
 end
 
 function Shoot:perform(level, shot)
-    print("SHOOTING")
     local direction = (shot:getPosition() - self.owner:getPosition())
 
     local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
@@ -25,7 +24,6 @@ function Shoot:perform(level, shot)
     -- but it's fine for now
     for _ = 1, 3 do
         local nextpos = shot:getPosition() + direction
-        print("nextpos: ", nextpos.x, ",", nextpos.y)
 
         if not level:getCellPassable(nextpos.x, nextpos.y, mask) then break end
         if not level:hasActor(shot) then break end
