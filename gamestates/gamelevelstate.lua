@@ -1,6 +1,7 @@
 local keybindings = require "keybindingschema"
 
 local GameOverState = require "gamestates.gameoverstate"
+local InventoryState = require "gamestates.inventorystate"
 
 --- @class MyGameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,
@@ -113,6 +114,8 @@ function MyGameLevelState:keypressed(key, scancode)
     -- handles opening geometer for us
     spectrum.LevelState.keypressed(self, key, scancode)
 
+    -- This is a little unclear to me. I think decision is basically the
+    -- action that results from the keypress. can there be only one?
     local decision = self.decision
     if not decision then return end
 
@@ -152,6 +155,25 @@ function MyGameLevelState:keypressed(key, scancode)
         if self.level:canPerform(shoot) then
             decision:setAction(shoot)
         end
+    end
+
+    if action == "inventory" then
+        local inventory = owner:get(prism.components.Inventory)
+        if inventory then
+            local inventoryState = InventoryState(self.display, decision, self.level, inventory)
+            self.manager:push(inventoryState)
+        end
+    end
+
+    if action == "pickup" then
+        local target = self.level:query(prism.components.Item)
+            :at(owner:getPosition():decompose())
+            :first()
+
+        local pickup = prism.actions.Pickup(owner, target)
+
+        -- trying new structure
+        self.level:tryPerform(pickup)
     end
 
     -- Handle waiting
