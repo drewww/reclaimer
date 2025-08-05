@@ -1,5 +1,7 @@
 local keybindings = require "keybindingschema"
 
+local GameOverState = require "gamestates.gameoverstate"
+
 --- @class MyGameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,
 --- handling input, and drawing the state to the screen.
@@ -49,8 +51,7 @@ function MyGameLevelState:handleMessage(message)
     -- This is where you'd process custom messages like advancing to the next
     -- level or triggering a game over.
     if prism.messages.Lose:is(message) then
-        self.manager:pop()
-        love.event.quit()
+        self.manager:enter(GameOverState(self.display))
     end
 end
 
@@ -142,7 +143,6 @@ function MyGameLevelState:keypressed(key, scancode)
             :at(destination:decompose())
             :first()
 
-        print("owner: ", owner)
         local shoot = prism.actions.Shoot(owner, target)
         if self.level:canPerform(shoot) then
             decision:setAction(shoot)
