@@ -10,7 +10,8 @@
         "love",
         "prism",
         "spectrum",
-        "geometer"
+        "geometer",
+        "Game"
     ],
     "Lua.workspace.library": [
         "prism"

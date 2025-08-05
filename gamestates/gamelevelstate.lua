@@ -1,7 +1,6 @@
 local keybindings = require "keybindingschema"
 
 local GameOverState = require "gamestates.gameoverstate"
-local levelgen = require "levelgen"
 
 --- @class MyGameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,
@@ -9,24 +8,22 @@ local levelgen = require "levelgen"
 ---
 --- @field path Path
 --- @field level Level
---- @overload fun(display: Display): MyGameLevelState
+--- @overload fun(display: Display, builder: MapBuilder, seed: string): MyGameLevelState
 local MyGameLevelState = spectrum.LevelState:extend "MyGameLevelState"
 
 --- @param display Display
-function MyGameLevelState:__new(display)
+--- @param builder MapBuilder
+--- @param seed string
+function MyGameLevelState:__new(display, builder, seed)
     -- Construct a simple test map using MapBuilder.
     -- In a complete game, you'd likely extract this logic to a separate module
     -- and pass in an existing player object between levels.
 
-    local seed = tostring(os.time())
-    local mapbuilder = levelgen(prism.RNG(seed), prism.actors.Player(), 60, 30)
-
-    -- Build the map and instantiate the level with systems
-    local map, actors = mapbuilder:build()
+    local map, actors = builder:build()
     local level = prism.Level(map, actors, {
         prism.systems.Senses(),
         prism.systems.Sight(),
-    })
+    }, nil, seed)
 
     -- Initialize with the created level and display, the heavy lifting is done by
     -- the parent class.
@@ -47,12 +44,13 @@ function MyGameLevelState:handleMessage(message)
     end
 
     if prism.messages.Descend:is(message) then
-        self.manager:enter(MyGameLevelState(self.display))
+        --- @cast message DescendMessage
+        self.manager:enter(MyGameLevelState(self.display, Game:generateNextFloor(message.descender), Game:getLevelSeed()))
     end
 end
 
 --- @param primary Senses[] { curActor:getComponent(prism.components.Senses)}
----@param secondary Senses[]
+--- @param secondary Senses[]
 function MyGameLevelState:draw(primary, secondary)
     if not self.decision then return end
 

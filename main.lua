@@ -9,6 +9,8 @@ prism.loadModule("modules/game")
 -- Grab our level state and sprite atlas.
 local MyGameLevelState = require "gamestates.gamelevelstate"
 
+Game = require("game")
+
 -- Load a sprite atlas and configure the terminal-style display,
 local spriteAtlas = spectrum.SpriteAtlas.fromASCIIGrid("display/wanderlust_16x16.png", 16, 16)
 local display = spectrum.Display(81, 41, spriteAtlas, prism.Vector2(16, 16))
@@ -23,6 +25,7 @@ local manager = spectrum.StateManager()
 -- we put out levelstate on top here, but you could create a main menu
 --- @diagnostic disable-next-line
 function love.load()
-    manager:push(MyGameLevelState(display))
+    local builder = Game:generateNextFloor(prism.actors.Player())
+    manager:push(MyGameLevelState(display, builder, Game:getLevelSeed()))
     manager:hook()
 end
