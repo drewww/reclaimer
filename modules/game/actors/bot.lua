@@ -1,4 +1,4 @@
-prism.registerActor("bot", function()
+prism.registerActor("Bot", function()
     return prism.Actor.fromComponents {
         prism.components.Position(),
         prism.components.Drawable { char = "b", color = prism.Color4.RED },
