@@ -6,6 +6,7 @@ prism.registerActor("Scrap", function()
         prism.components.Item {
             stackable = prism.actors.Scrap,
             stackLimit = 99
-        }
+        },
+        prism.components.Edible(1)
     }
 end)
