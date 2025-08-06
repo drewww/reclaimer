@@ -4,7 +4,7 @@ local sf = string.format
 
 local ShootTarget = prism.Target()
     :with(prism.components.Collider)
-    :range(1)
+    :range(10)
     :sensed()
 
 local Shoot = prism.Action:extend("ShootAction")
@@ -20,6 +20,8 @@ end
 
 function Shoot:perform(level, shot)
     local direction = (shot:getPosition() - self.owner:getPosition())
+    local distance = direction:length()
+    direction = distance == 0 and 0 or direction / direction:length()
 
     local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
 
@@ -28,8 +30,7 @@ function Shoot:perform(level, shot)
     -- but it's fine for now
     local damageValue = 1
 
-
-    for _ = 1, 3 do
+    for _ = 1, 1 do
         local nextpos = shot:getPosition() + direction
 
         if not level:getCellPassable(nextpos.x, nextpos.y, mask) then

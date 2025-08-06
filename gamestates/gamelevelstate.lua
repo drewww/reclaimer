@@ -106,6 +106,22 @@ local keybindOffsets = {
     ["move down-right"] = prism.Vector2.DOWN_RIGHT,
 }
 
+function MyGameLevelState:mousepressed(x, y, button, istouch, presses)
+    -- get the cell under the mouse button
+    local cellX, cellY, targetCell = self:getCellUnderMouse()
+
+    local decision = self.decision
+    if not decision then return end
+
+    local target = self.level:query(prism.components.Collider)
+        :at(cellX, cellY)
+        :first()
+
+    -- not totally sure why this isn't just Player. Can decision have a different actor?
+    local shoot = prism.actions.Shoot(decision.actor, target)
+    self.level:tryPerform(shoot)
+end
+
 -- The input handling functions act as the player controller’s logic.
 -- You should NOT mutate the Level here directly. Instead, find a valid
 -- action and set it in the decision object. It will then be executed by
