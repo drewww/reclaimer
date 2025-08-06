@@ -48,13 +48,11 @@ function prism.turn(level, actor, controller)
 
         level:perform(action)
 
-        continueTurn = actor:has(prism.components.Dashing) and action.className == "Move"
-
-        print("action class:", action.className)
-        print("action prototype:", action.__class)
-        print("prism.actions.Move:", prism.actions.Move)
-        print("Are they the same?", action.__class == prism.actions.Move)
-        print("Action type:", type(action))
-        print("Move type:", type(prism.actions.Move))
+        -- if the actor is dashing and the move they're doing right now is a Move, continue the turn.
+        -- later logic may include things like "does the gun firing have multiple shot available?"
+        -- certain enemies may get multiple actions a turn.
+        -- we may generalize this into an action cost / available AP model at some point, too.
+        -- also, we will want to limit dash distances. both per dash and overall dash energy available.
+        continueTurn = actor:has(prism.components.Dashing) and prism.actions.Move:is(action)
     until not continueTurn
 end
