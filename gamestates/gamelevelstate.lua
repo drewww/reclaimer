@@ -118,8 +118,10 @@ function MyGameLevelState:mousepressed(x, y, button, istouch, presses)
         :first()
 
     -- not totally sure why this isn't just Player. Can decision have a different actor?
-    local shoot = prism.actions.Shoot(decision.actor, target)
-    self.level:tryPerform(shoot)
+    if target then
+        local shoot = prism.actions.Shoot(decision.actor, target)
+        decision:setAction(shoot)
+    end
 end
 
 -- The input handling functions act as the player controller’s logic.
@@ -177,12 +179,14 @@ function MyGameLevelState:keypressed(key, scancode)
 
         local pickup = prism.actions.Pickup(owner, target)
 
-        -- trying new structure
-        self.level:tryPerform(pickup)
+        decision:setAction(pickup)
     end
 
     if action == "dash" then
         -- enter dash mode
+
+        -- don't consider this a "decision" because it should not yield the turn
+        -- it's entering a mode.
         self.level:tryPerform(prism.actions.Dash(owner))
     end
 

@@ -23,6 +23,8 @@ function Shoot:perform(level, shot)
     local distance = direction:length()
     direction = distance == 0 and 0 or direction / direction:length()
 
+    print("direction: " .. tostring(direction))
+
     local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
 
     -- pushes back 3 steps
@@ -30,8 +32,12 @@ function Shoot:perform(level, shot)
     -- but it's fine for now
     local damageValue = 1
 
-    for _ = 1, 1 do
-        local nextpos = shot:getPosition() + direction
+    -- because the enemy moves immediately after this, if you just move one space
+    -- it appears like they're not moving.
+    for _ = 1, 2 do
+        local nextpos = shot:getPosition() + (direction)
+        nextpos.x = nextpos.x >= 0 and math.floor(nextpos.x + 0.5) or math.ceil(nextpos.x - 0.5)
+        nextpos.y = nextpos.y >= 0 and math.floor(nextpos.y + 0.5) or math.ceil(nextpos.y - 0.5)
 
         if not level:getCellPassable(nextpos.x, nextpos.y, mask) then
             -- if the next position is not passable, do more damage.
@@ -44,6 +50,7 @@ function Shoot:perform(level, shot)
         end
         if not level:hasActor(shot) then break end
 
+        print("moving target from " .. tostring(shot:getPosition()) .. " to " .. tostring(nextpos))
         level:moveActor(shot, nextpos)
     end
 
