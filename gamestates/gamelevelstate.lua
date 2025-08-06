@@ -160,17 +160,6 @@ function MyGameLevelState:keypressed(key, scancode)
             decision:setAction(move)
             return
         end
-
-        -- will drop out above if a valid move action
-        -- ohhh, above will fail if the move is
-        local target = self.level:query()
-            :at(destination:decompose())
-            :first()
-
-        local shoot = prism.actions.Shoot(owner, target)
-        if self.level:canPerform(shoot) then
-            decision:setAction(shoot)
-        end
     end
 
     if action == "inventory" then
@@ -192,8 +181,21 @@ function MyGameLevelState:keypressed(key, scancode)
         self.level:tryPerform(pickup)
     end
 
+    if action == "dash" then
+        -- enter dash mode
+        self.level:tryPerform(prism.actions.Dash(owner))
+    end
+
     -- Handle waiting
     if action == "wait" then decision:setAction(prism.actions.Wait(self.decision.actor)) end
+end
+
+function MyGameLevelState:keyreleased(key, scancode)
+    local action = keybindings:keypressed(key)
+
+    if action == "dash" then
+        self.level:tryPerform(prism.actions.Dash(self.decision.actor))
+    end
 end
 
 return MyGameLevelState
