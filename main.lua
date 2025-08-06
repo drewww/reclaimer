@@ -31,3 +31,30 @@ function love.load()
     manager:push(MyGameLevelState(display, builder, Game:getLevelSeed()))
     manager:hook()
 end
+
+-- set up my custom turn logic
+
+---@param level Level
+---@param actor Actor
+---@param controller Controller
+---@diagnostic disable-next-line
+function prism.turn(level, actor, controller)
+    local continueTurn = false
+    repeat
+        local action = controller:act(level, actor)
+
+        -- we make sure we got an action back from the controller for sanity's sake
+        assert(action, "Actor " .. actor:getName() .. " returned nil from act()")
+
+        level:perform(action)
+
+        continueTurn = actor:has(prism.components.Dashing) and action.className == "Move"
+
+        print("action class:", action.className)
+        print("action prototype:", action.__class)
+        print("prism.actions.Move:", prism.actions.Move)
+        print("Are they the same?", action.__class == prism.actions.Move)
+        print("Action type:", type(action))
+        print("Move type:", type(prism.actions.Move))
+    until not continueTurn
+end
