@@ -87,16 +87,23 @@ function MyGameLevelState:draw(primary, secondary)
     end
 
     if self.mouseCellPosition then
-        -- prism.logger.info("cellSize: " .. tostring(self.display.cellSize))
-        -- self.display:putFilledRect(self.display.cellSize.x * self.mouseCellPosition.x,
-        --     self.display.cellSize.y * self.mouseCellPosition.y, self.display.cellSize.x, self.display.cellSize.y, " ",
-        --     prism.Color4.TRANSPARENT, prism.Color4(0.5, 0.5, 1.0, 1.0))
-
         local mouseX, mouseY = self.mouseCellPosition.x + x,
             self.mouseCellPosition.y + y
 
         -- prism.logger.info(string.format("Drawing mouse cell position: x=%d, y=%d, w=%d, h=%d", x, y, w, h))
         self.display:putBG(mouseX, mouseY, prism.Color4(0.5, 0.5, 1.0, 0.5))
+    end
+
+    -- loop through the cells. this is inefficient.
+    for cellX, cellY, cell in self.level:eachCell() do
+        if cell:has(prism.components.Dashing) then
+            self.display:putBG(cellX + x, cellY + y, prism.Color4(0.5, 0.5, 1.0, 0.5))
+        end
+    end
+
+    -- custom handle the player.
+    if self:getCurrentActor():has(prism.components.Dashing) then
+        self.display:putBG(position.x + x, position.y + y, prism.Color4(0.5, 0.5, 1.0, 0.5))
     end
 
 
