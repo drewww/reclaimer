@@ -224,7 +224,7 @@ function MyGameLevelState:keypressed(key, scancode)
 
         local pickup = prism.actions.Pickup(owner, target)
 
-        decision:setAction(pickup)
+        decision:trySetAction(pickup, self.level)
     end
 
     if action == "dash" then
