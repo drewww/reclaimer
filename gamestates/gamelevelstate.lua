@@ -232,7 +232,7 @@ function MyGameLevelState:keypressed(key, scancode)
 
         -- don't consider this a "decision" because it should not yield the turn
         -- it's entering a mode.
-        self.level:tryPerform(prism.actions.Dash(owner))
+        decision:setAction(prism.actions.Dash(owner))
     end
 
     -- Handle waiting
@@ -242,8 +242,11 @@ end
 function MyGameLevelState:keyreleased(key, scancode)
     local action = keybindings:keypressed(key)
 
+    local decision = self.decision
+    if not decision then return end
+
     if action == "dash" then
-        self.level:tryPerform(prism.actions.Dash(self.decision.actor))
+        decision:setAction(prism.actions.Dash(self.decision.actor))
     end
 end
 

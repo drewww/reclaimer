@@ -42,7 +42,9 @@ function prism.turn(level, actor, controller)
     local continueTurn = false
     repeat
         local action = controller:act(level, actor)
-
+        if actor:has(prism.components.PlayerController) then
+            prism.logger.debug("action: " .. action.className .. " for actor: " .. actor.className)
+        end
         -- we make sure we got an action back from the controller for sanity's sake
         assert(action, "Actor " .. actor:getName() .. " returned nil from act()")
 
@@ -53,6 +55,11 @@ function prism.turn(level, actor, controller)
         -- certain enemies may get multiple actions a turn.
         -- we may generalize this into an action cost / available AP model at some point, too.
         -- also, we will want to limit dash distances. both per dash and overall dash energy available.
-        continueTurn = actor:has(prism.components.Dashing) and prism.actions.Move:is(action)
+        continueTurn = actor:has(prism.components.Dashing) and
+            (prism.actions.Move:is(action) or prism.actions.Dash:is(action))
+
+        if actor:has(prism.components.PlayerController) then
+            prism.logger.debug("continueTurn: " .. tostring(continueTurn))
+        end
     until not continueTurn
 end
