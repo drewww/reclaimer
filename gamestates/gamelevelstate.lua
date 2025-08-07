@@ -86,19 +86,33 @@ function MyGameLevelState:draw(primary, secondary)
         end
     end
 
+    local playerSenses = self.level:query(prism.components.PlayerController):first():get(prism.components.Senses)
+
+    -- loop through the cells. this is inefficient.
+    for cellX, cellY, cell in self.level:eachCell() do
+        local color = prism.Color4.TRANSPARENT
+
+        -- checks -- player can see, and it's in range of current weapon
+        -- position is playerPosition
+
+
+        if position:distance(prism.Vector2(cellX, cellY)) <= 10 and playerSenses and playerSenses.cells:get(cellX, cellY) then
+            color = prism.Color4(0.5, 0.5, 1.0, 0.2)
+        end
+
+        if cell:has(prism.components.Dashing) then
+            color = prism.Color4(0.5, 0.5, 1.0, 0.5)
+        end
+
+        self.display:putBG(cellX + x, cellY + y, color)
+    end
+
     if self.mouseCellPosition then
         local mouseX, mouseY = self.mouseCellPosition.x + x,
             self.mouseCellPosition.y + y
 
         -- prism.logger.info(string.format("Drawing mouse cell position: x=%d, y=%d, w=%d, h=%d", x, y, w, h))
         self.display:putBG(mouseX, mouseY, prism.Color4(0.5, 0.5, 1.0, 0.5))
-    end
-
-    -- loop through the cells. this is inefficient.
-    for cellX, cellY, cell in self.level:eachCell() do
-        if cell:has(prism.components.Dashing) then
-            self.display:putBG(cellX + x, cellY + y, prism.Color4(0.5, 0.5, 1.0, 0.5))
-        end
     end
 
     -- custom handle the player.
