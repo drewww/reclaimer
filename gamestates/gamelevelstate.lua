@@ -119,8 +119,10 @@ function MyGameLevelState:mousepressed(x, y, button, istouch, presses)
 
     -- not totally sure why this isn't just Player. Can decision have a different actor?
     if target then
+        prism.logger.info("Shooting at entity at " .. tostring(target:getPosition()))
+
         local shoot = prism.actions.Shoot(decision.actor, target)
-        decision:setAction(shoot)
+        decision:trySetAction(shoot, self.level)
     end
 end
 
