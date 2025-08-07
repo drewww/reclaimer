@@ -29,6 +29,8 @@ function MyGameLevelState:__new(display, builder, seed)
     -- Initialize with the created level and display, the heavy lifting is done by
     -- the parent class.
     spectrum.LevelState.__new(self, level, display)
+
+    self.mouseCellPosition = nil
 end
 
 function MyGameLevelState:handleMessage(message)
@@ -84,6 +86,20 @@ function MyGameLevelState:draw(primary, secondary)
         end
     end
 
+    if self.mouseCellPosition then
+        -- prism.logger.info("cellSize: " .. tostring(self.display.cellSize))
+        -- self.display:putFilledRect(self.display.cellSize.x * self.mouseCellPosition.x,
+        --     self.display.cellSize.y * self.mouseCellPosition.y, self.display.cellSize.x, self.display.cellSize.y, " ",
+        --     prism.Color4.TRANSPARENT, prism.Color4(0.5, 0.5, 1.0, 1.0))
+
+        local mouseX, mouseY = self.mouseCellPosition.x + x,
+            self.mouseCellPosition.y + y
+
+        -- prism.logger.info(string.format("Drawing mouse cell position: x=%d, y=%d, w=%d, h=%d", x, y, w, h))
+        self.display:putBG(mouseX, mouseY, prism.Color4(0.5, 0.5, 1.0, 1.0))
+    end
+
+
     -- Actually render the terminal out and present it to the screen.
     -- You could use love2d to translate and say center a smaller terminal or
     -- offset it for custom non-terminal UI elements. If you do scale the UI
@@ -92,6 +108,10 @@ function MyGameLevelState:draw(primary, secondary)
     self.display:draw()
 
     -- custom love2d drawing goes here!
+
+    -- draw a square over the cell we're hovering over
+
+    -- self.display:putFilledRect(10, 10, 100, 100, "*", prism.Color4.WHITE, prism.Color4.RED, math.huge)
 end
 
 -- Maps string actions from the keybinding schema to directional vectors.
@@ -124,6 +144,12 @@ function MyGameLevelState:mousepressed(x, y, button, istouch, presses)
         local shoot = prism.actions.Shoot(decision.actor, target)
         decision:trySetAction(shoot, self.level)
     end
+end
+
+function MyGameLevelState:mousemoved()
+    local cellX, cellY, targetCell = self:getCellUnderMouse()
+
+    self.mouseCellPosition = targetCell and prism.Vector2(cellX, cellY) or nil
 end
 
 -- The input handling functions act as the player controller’s logic.
