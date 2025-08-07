@@ -96,7 +96,7 @@ function MyGameLevelState:draw(primary, secondary)
             self.mouseCellPosition.y + y
 
         -- prism.logger.info(string.format("Drawing mouse cell position: x=%d, y=%d, w=%d, h=%d", x, y, w, h))
-        self.display:putBG(mouseX, mouseY, prism.Color4(0.5, 0.5, 1.0, 1.0))
+        self.display:putBG(mouseX, mouseY, prism.Color4(0.5, 0.5, 1.0, 0.5))
     end
 
 
@@ -149,7 +149,17 @@ end
 function MyGameLevelState:mousemoved()
     local cellX, cellY, targetCell = self:getCellUnderMouse()
 
-    self.mouseCellPosition = targetCell and prism.Vector2(cellX, cellY) or nil
+    local playerSenses = self.level:query(prism.components.PlayerController):first():get(prism.components.Senses)
+
+    if playerSenses then
+        if playerSenses.cells:get(cellX, cellY) then
+            self.mouseCellPosition = targetCell and prism.Vector2(cellX, cellY) or nil
+        else
+            self.mouseCellPosition = nil
+        end
+    else
+        self.mouseCellPosition = nil
+    end
 end
 
 -- The input handling functions act as the player controller’s logic.
