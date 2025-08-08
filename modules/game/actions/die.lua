@@ -12,9 +12,15 @@ function Die:perform(level)
         level:addActor(item, self.owner:getPosition():decompose())
     end
 
+    prism.logger.info("making death animation at " .. tostring(self.owner:getPosition()))
+
     level:yield(prism.messages.Animation {
-        animation = spectrum.animations.Alert,
+        animation = spectrum.animations.Alert(),
         actor = self.owner
+        -- x = self.owner:getPosition().x,
+        -- y = self.owner:getPosition().y
+        -- x = 20,
+        -- y = 20
     })
 
     level:removeActor(self.owner)

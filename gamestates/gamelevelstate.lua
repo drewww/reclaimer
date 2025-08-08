@@ -119,7 +119,6 @@ function MyGameLevelState:draw(primary, secondary)
         self.display:putBG(position.x + x, position.y + y, prism.Color4(0.5, 0.5, 1.0, 0.5))
     end
 
-
     -- Actually render the terminal out and present it to the screen.
     -- You could use love2d to translate and say center a smaller terminal or
     -- offset it for custom non-terminal UI elements. If you do scale the UI
