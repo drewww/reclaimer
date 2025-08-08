@@ -12,7 +12,14 @@ function Die:perform(level)
         level:addActor(item, self.owner:getPosition():decompose())
     end
 
+    level:yield(prism.messages.Animation {
+        animation = spectrum.animations.Alert,
+        actor = self.owner
+    })
+
     level:removeActor(self.owner)
+
+
 
     -- if there are no players left, game is over.
     if not level:query(prism.components.PlayerController):first() then

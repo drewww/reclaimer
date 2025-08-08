@@ -95,7 +95,6 @@ function MyGameLevelState:draw(primary, secondary)
         -- checks -- player can see, and it's in range of current weapon
         -- position is playerPosition
 
-
         if position:distance(prism.Vector2(cellX, cellY)) <= 10 and playerSenses and playerSenses.cells:get(cellX, cellY) then
             color = prism.Color4(0.5, 0.5, 1.0, 0.2)
         end
@@ -126,7 +125,10 @@ function MyGameLevelState:draw(primary, secondary)
     -- offset it for custom non-terminal UI elements. If you do scale the UI
     -- just remember that display:getCellUnderMouse expects the mouse in the
     -- display's local pixel coordinates
+    self.display:putAnimations(self.level)
+
     self.display:draw()
+
 
     -- custom love2d drawing goes here!
 
