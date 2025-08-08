@@ -8,6 +8,9 @@ prism.loadModule("prism/extra/inventory")
 
 prism.loadModule("modules/game")
 
+-- Load animations.
+local animations = require "animations"
+
 -- Grab our level state and sprite atlas.
 local MyGameLevelState = require "gamestates.gamelevelstate"
 
