@@ -24,6 +24,7 @@ function MyGameLevelState:__new(display, builder, seed)
     local level = prism.Level(map, actors, {
         prism.systems.Senses(),
         prism.systems.Sight(),
+        prism.systems.Alert()
     }, nil, seed)
 
     -- Initialize with the created level and display, the heavy lifting is done by
