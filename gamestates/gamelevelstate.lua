@@ -2,6 +2,7 @@ local keybindings = require "keybindingschema"
 
 local GameOverState = require "gamestates.gameoverstate"
 local InventoryState = require "gamestates.inventorystate"
+local InfoFrame = require "display.infoframe"
 
 --- @class MyGameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,
@@ -33,6 +34,8 @@ function MyGameLevelState:__new(display, builder, seed)
     spectrum.LevelState.__new(self, level, display)
 
     self.mouseCellPosition = nil
+
+    self.infoFrame = InfoFrame(self.level)
 end
 
 function MyGameLevelState:handleMessage(message)
@@ -122,12 +125,13 @@ function MyGameLevelState:draw(primary, secondary)
         self.display:putBG(position.x + x, position.y + y, prism.Color4(0.5, 0.5, 1.0, 0.5))
     end
 
-
     -- Actually render the terminal out and present it to the screen.
     -- You could use love2d to translate and say center a smaller terminal or
     -- offset it for custom non-terminal UI elements. If you do scale the UI
     -- just remember that display:getCellUnderMouse expects the mouse in the
     -- display's local pixel coordinates
+    self.infoFrame:draw(self.display)
+
     self.display:draw()
 
     -- custom love2d drawing goes here!
