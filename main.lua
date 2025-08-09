@@ -11,7 +11,7 @@ prism.loadModule("modules/game")
 -- Grab our level state and sprite atlas.
 local MyGameLevelState = require "gamestates.gamelevelstate"
 
-Game = require("game")
+local Game = require("game")
 
 -- Load a sprite atlas and configure the terminal-style display,
 local spriteAtlas = spectrum.SpriteAtlas.fromASCIIGrid("display/wanderlust_16x16.png", 16, 16)
