@@ -12,7 +12,13 @@ function Die:perform(level)
         level:addActor(item, self.owner:getPosition():decompose())
     end
 
+
     level:removeActor(self.owner)
+
+    if self.owner:has(prism.components.Unstable) then
+        level:addActor(prism.actors.BarrelExploding(), self.owner:getPosition():decompose())
+    end
+
 
     -- if there are no players left, game is over.
     if not level:query(prism.components.PlayerController):first() then

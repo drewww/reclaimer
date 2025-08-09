@@ -85,6 +85,7 @@ return function(rng, player, width, height)
             local cx, cy = room:center():floor():decompose()
 
             builder:addActor(prism.actors.Bot(), cx, cy)
+            builder:addActor(prism.actors.Barrel(), cx + 1, cy + 1)
         end
     end
 
