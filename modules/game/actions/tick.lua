@@ -22,6 +22,17 @@ function Tick:perform(level)
         if tickable.duration <= 0 then
             -- put end of process action here
             prism.logger.info("TICK OVER")
+
+            if tickable.type == "explode" then
+                -- get all actors with health and check distance. if in range, damage.
+                for actor, component in level:query(prism.components.Health):iter() do
+                    if actor:getPosition():distanceChebyshev(self.owner:getPosition()) <= 3 then
+                        level:tryPerform(prism.actions.Damage(actor, 5))
+                    end
+                end
+                level:removeActor(self.owner)
+            end
+
             self.owner:remove(tickable)
         end
     end
