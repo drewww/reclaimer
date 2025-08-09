@@ -124,7 +124,9 @@ function MyGameLevelState:draw(primary, secondary)
     -- offset it for custom non-terminal UI elements. If you do scale the UI
     -- just remember that display:getCellUnderMouse expects the mouse in the
     -- display's local pixel coordinates
+    self.display:push()
     self.display:putAnimations(self.level)
+    self.display:pop()
 
     self.display:draw()
 
