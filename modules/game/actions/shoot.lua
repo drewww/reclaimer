@@ -19,6 +19,7 @@ function Shoot:canPerform(level)
 end
 
 function Shoot:perform(level, shot)
+    local initialPosition = shot:getPosition()
     local direction = (shot:getPosition() - self.owner:getPosition())
     local distance = direction:length()
     direction = distance == 0 and 0 or direction / direction:length()
@@ -59,18 +60,23 @@ function Shoot:perform(level, shot)
     -- Why do I need to ask first? I guess this is type protection more or less.
     if level:canPerform(damage) then
         level:perform(damage)
-    end
 
-    local shotName = Name.lower(shot)
-    local ownerName = Name.lower(self.owner)
-    local dmgstr = ""
+        local shotName = Name.lower(shot)
+        local ownerName = Name.lower(self.owner)
+        local dmgstr = ""
 
-    if damage.dealt then
-        dmgstr = sf("%i damage.", damage.dealt)
+        if damage.dealt then
+            dmgstr = sf("%i damage.", damage.dealt)
+        end
+        Log.addMessage(self.owner, sf("You shot the %s. %s", shotName, dmgstr))
+        Log.addMessage(shot, sf("The %s shot you! %s", ownerName, dmgstr))
+        Log.addMessageSensed(level, self, sf("The %s shoots the %s. %s", ownerName, shotName, dmgstr))
+
+        level:yield(prism.messages.Animation {
+            animation = spectrum.animations.Projectile(self.owner, initialPosition),
+            actor = self.owner
+        })
     end
-    Log.addMessage(self.owner, sf("You shot the %s. %s", shotName, dmgstr))
-    Log.addMessage(shot, sf("The %s shot you! %s", ownerName, dmgstr))
-    Log.addMessageSensed(level, self, sf("The %s shoots the %s. %s", ownerName, shotName, dmgstr))
 end
 
 return Shoot
