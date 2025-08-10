@@ -4,19 +4,19 @@ local GameOverState = require "gamestates.gameoverstate"
 local InventoryState = require "gamestates.inventorystate"
 local InfoFrame = require "display.infoframe"
 
---- @class MyGameLevelState : LevelState
+--- @class GameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,
 --- handling input, and drawing the state to the screen.
 ---
 --- @field path Path
 --- @field level Level
---- @overload fun(display: Display, builder: MapBuilder, seed: string): MyGameLevelState
-local MyGameLevelState = spectrum.LevelState:extend "MyGameLevelState"
+--- @overload fun(display: Display, builder: MapBuilder, seed: string): GameLevelState
+local GameLevelState = spectrum.LevelState:extend "GameLevelState"
 
 --- @param display Display
 --- @param builder MapBuilder
 --- @param seed string
-function MyGameLevelState:__new(display, builder, seed)
+function GameLevelState:__new(display, builder, seed)
     -- Construct a simple test map using MapBuilder.
     -- In a complete game, you'd likely extract this logic to a separate module
     -- and pass in an existing player object between levels.
@@ -38,7 +38,7 @@ function MyGameLevelState:__new(display, builder, seed)
     self.infoFrame = InfoFrame(self.level)
 end
 
-function MyGameLevelState:handleMessage(message)
+function GameLevelState:handleMessage(message)
     spectrum.LevelState.handleMessage(self, message)
 
     -- Handle any messages sent to the level state from the level. LevelState
@@ -53,13 +53,13 @@ function MyGameLevelState:handleMessage(message)
 
     if prism.messages.Descend:is(message) then
         --- @cast message DescendMessage
-        self.manager:enter(MyGameLevelState(self.display, Game:generateNextFloor(message.descender), Game:getLevelSeed()))
+        self.manager:enter(GameLevelState(self.display, Game:generateNextFloor(message.descender), Game:getLevelSeed()))
     end
 end
 
 --- @param primary Senses[] { curActor:getComponent(prism.components.Senses)}
 --- @param secondary Senses[]
-function MyGameLevelState:draw(primary, secondary)
+function GameLevelState:draw(primary, secondary)
     if not self.decision then return end
 
     self.display:clear()
@@ -153,7 +153,7 @@ local keybindOffsets = {
     ["move down-right"] = prism.Vector2.DOWN_RIGHT,
 }
 
-function MyGameLevelState:mousepressed(x, y, button, istouch, presses)
+function GameLevelState:mousepressed(x, y, button, istouch, presses)
     -- get the cell under the mouse button
     local cellX, cellY, targetCell = self:getCellUnderMouse()
 
@@ -173,7 +173,7 @@ function MyGameLevelState:mousepressed(x, y, button, istouch, presses)
     end
 end
 
-function MyGameLevelState:mousemoved()
+function GameLevelState:mousemoved()
     local cellX, cellY, targetCell = self:getCellUnderMouse()
 
     local playerSenses = self.level:query(prism.components.PlayerController):first():get(prism.components.Senses)
@@ -193,7 +193,7 @@ end
 -- You should NOT mutate the Level here directly. Instead, find a valid
 -- action and set it in the decision object. It will then be executed by
 -- the level. This is a similar pattern to the example KoboldController.
-function MyGameLevelState:keypressed(key, scancode)
+function GameLevelState:keypressed(key, scancode)
     -- handles opening geometer for us
     spectrum.LevelState.keypressed(self, key, scancode)
 
@@ -259,7 +259,7 @@ function MyGameLevelState:keypressed(key, scancode)
     if action == "wait" then decision:setAction(prism.actions.Wait(self.decision.actor)) end
 end
 
-function MyGameLevelState:keyreleased(key, scancode)
+function GameLevelState:keyreleased(key, scancode)
     local action = keybindings:keypressed(key)
 
     local decision = self.decision
@@ -270,4 +270,4 @@ function MyGameLevelState:keyreleased(key, scancode)
     end
 end
 
-return MyGameLevelState
+return GameLevelState

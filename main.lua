@@ -9,7 +9,7 @@ prism.loadModule("prism/extra/inventory")
 prism.loadModule("modules/game")
 
 -- Grab our level state and sprite atlas.
-local MyGameLevelState = require "gamestates.gamelevelstate"
+local GameLevelState = require "gamestates.gamelevelstate"
 
 local Game = require("game")
 
@@ -28,7 +28,7 @@ local manager = spectrum.StateManager()
 --- @diagnostic disable-next-line
 function love.load()
     local builder = Game:generateNextFloor(prism.actors.Player())
-    manager:push(MyGameLevelState(display, builder, Game:getLevelSeed()))
+    manager:push(GameLevelState(display, builder, Game:getLevelSeed()))
     manager:hook()
 end
 
