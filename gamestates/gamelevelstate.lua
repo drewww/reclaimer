@@ -2,6 +2,7 @@ local keybindings = require "keybindingschema"
 
 local GameOverState = require "gamestates.gameoverstate"
 local InfoFrame = require "display.infoframe"
+local Game = require "game"
 
 --- @class GameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,

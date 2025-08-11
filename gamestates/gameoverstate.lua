@@ -37,7 +37,7 @@ function GameOverState:draw()
 end
 
 function GameOverState:keypressed(key, scancode, isrepeat)
-    local action = keybindings:keypressed(key, "game-over")
+    local action = keybindings:keypressed(key, "title")
 
     if action == "restart" then
         love.event.restart()

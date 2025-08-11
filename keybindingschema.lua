@@ -8,8 +8,11 @@ return spectrum.Keybinding {
     { key = "z",      action = "move down-left",  description = "Moves the character diagonally down-left." },
     { key = "c",      action = "move down-right", description = "Moves the character diagonally down-right." },
     { key = "x",      action = "wait",            description = "Character waits and does nothing." },
-    { key = "r",      mode = "game-over",         action = "restart",                                        description = "Restart the game." },
-    { key = "q",      mode = "game-over",         action = "quit",                                           description = "Quit the game." },
+    { key = "r",      mode = "title",             action = "restart",                                        description = "Restart the game." },
+    { key = "q",      mode = "title",             action = "quit",                                           description = "Quit the game." },
+
+    { key = "p",      mode = "title",             action = "start",                                          description = "Start the game." },
+
 
     { key = "lshift", action = "dash",            description = "Move quickly." },
     { key = "rshift", action = "dash",            description = "Move quickly." }
