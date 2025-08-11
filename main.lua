@@ -16,7 +16,7 @@ local Game = require("game")
 
 -- Load a sprite atlas and configure the terminal-style display,
 local spriteAtlas = spectrum.SpriteAtlas.fromASCIIGrid("display/wanderlust_16x16.png", 16, 16)
-local display = spectrum.Display(41, 21, spriteAtlas, prism.Vector2(32, 32))
+local display = spectrum.Display(81, 41, spriteAtlas, prism.Vector2(16, 16))
 
 -- Automatically size the window to match the terminal dimensions
 display:fitWindowToTerminal()
@@ -56,7 +56,7 @@ function prism.turn(level, actor, controller)
       -- we may generalize this into an action cost / available AP model at some point, too.
       -- also, we will want to limit dash distances. both per dash and overall dash energy available.
       continueTurn = actor:has(prism.components.Dashing)
-         and (prism.actions.Move:is(action) or prism.actions.Dash:is(action))
+          and (prism.actions.Move:is(action) or prism.actions.Dash:is(action))
 
       if actor:has(prism.components.PlayerController) then
          prism.logger.debug("continueTurn: " .. tostring(continueTurn))
