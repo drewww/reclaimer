@@ -1,7 +1,6 @@
 local keybindings = require "keybindingschema"
 
 local GameOverState = require "gamestates.gameoverstate"
-local InventoryState = require "gamestates.inventorystate"
 local InfoFrame = require "display.infoframe"
 
 --- @class GameLevelState : LevelState
@@ -226,14 +225,6 @@ function GameLevelState:keypressed(key, scancode)
         if self.level:canPerform(move) then
             decision:setAction(move)
             return
-        end
-    end
-
-    if action == "inventory" then
-        local inventory = owner:get(prism.components.Inventory)
-        if inventory then
-            local inventoryState = InventoryState(self.display, decision, self.level, inventory)
-            self.manager:push(inventoryState)
         end
     end
 
