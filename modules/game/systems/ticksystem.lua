@@ -2,8 +2,8 @@
 local TickSystem = prism.System:extend("TickSystem")
 
 function TickSystem:onTurn(level, actor)
-    -- try to tick the actor
-    level:tryPerform(prism.actions.Tick(actor))
+   -- try to tick the actor
+   level:tryPerform(prism.actions.Tick(actor))
 end
 
 return TickSystem

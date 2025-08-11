@@ -1,6 +1,4 @@
-local MoveTarget = prism.Target()
-    :isPrototype(prism.Vector2)
-    :range(1)
+local MoveTarget = prism.Target():isPrototype(prism.Vector2):range(1)
 
 ---@class Move : Action
 ---@field name string
@@ -11,28 +9,28 @@ Move.name = "move"
 Move.targets = { MoveTarget }
 
 Move.requiredComponents = {
-    prism.components.Controller,
-    prism.components.Mover
+   prism.components.Controller,
+   prism.components.Mover,
 }
 
 --- @param level Level
 --- @param destination Vector2
 function Move:canPerform(level, destination)
-    local mover = self.owner:expect(prism.components.Mover)
-    return level:getCellPassableByActor(destination.x, destination.y, self.owner, mover.mask)
+   local mover = self.owner:expect(prism.components.Mover)
+   return level:getCellPassableByActor(destination.x, destination.y, self.owner, mover.mask)
 end
 
 --- @param level Level
 --- @param destination Vector2
 function Move:perform(level, destination)
-    level:moveActor(self.owner, destination)
+   level:moveActor(self.owner, destination)
 
-    -- add Dashing to any cell we're passing through.
-    if self.owner:has(prism.components.Dashing) then
-        -- get the cell being enered
-        local cell = level:getCell(destination:decompose())
-        if cell then cell:give(prism.components.Dashing()) end
-    end
+   -- add Dashing to any cell we're passing through.
+   if self.owner:has(prism.components.Dashing) then
+      -- get the cell being enered
+      local cell = level:getCell(destination:decompose())
+      if cell then cell:give(prism.components.Dashing()) end
+   end
 end
 
 return Move

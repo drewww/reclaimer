@@ -9,25 +9,25 @@ local EatTarget = prism.InventoryTarget(prism.components.Edible):inInventory()
 local Eat = prism.Action:extend("Eat")
 
 Eat.requiredComponents = {
-    prism.components.Health
+   prism.components.Health,
 }
 
 Eat.targets = {
-    EatTarget
+   EatTarget,
 }
 
 --- @param level Level
 --- @param food Actor
 function Eat:perform(level, food)
-    local edible = food:expect(prism.components.Edible)
-    local health = self.owner:expect(prism.components.Health)
-    health:heal(edible.healing)
+   local edible = food:expect(prism.components.Edible)
+   local health = self.owner:expect(prism.components.Health)
+   health:heal(edible.healing)
 
-    local inventory = self.owner:expect(prism.components.Inventory)
-    inventory:removeQuantity(food, 1)
+   local inventory = self.owner:expect(prism.components.Inventory)
+   inventory:removeQuantity(food, 1)
 
-    Log.addMessage(self.owner, sf("You eat the %s.", Name.get(food)))
-    Log.addMessageSensed(level, self, sf("%s eats the %s.", Name.get(self.owner), Name.get(food)))
+   Log.addMessage(self.owner, sf("You eat the %s.", Name.get(food)))
+   Log.addMessageSensed(level, self, sf("%s eats the %s.", Name.get(self.owner), Name.get(food)))
 end
 
 return Eat

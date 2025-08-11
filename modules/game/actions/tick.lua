@@ -9,33 +9,33 @@ Tick.requiredComponents = { prism.components.Tickable }
 
 --- @param level Level
 function Tick:perform(level)
-    -- Handle status effect durations
-    local tickable = self.owner:expect(prism.components.Tickable)
+   -- Handle status effect durations
+   local tickable = self.owner:expect(prism.components.Tickable)
 
-    local expired = {}
-    if tickable.duration then
-        tickable.duration = tickable.duration - 1
+   local expired = {}
+   if tickable.duration then
+      tickable.duration = tickable.duration - 1
 
-        prism.logger.info("ticked." .. tickable.type .. "@" .. tickable.duration)
-        -- put mid process actions here, i.e. effects every tick
+      prism.logger.info("ticked." .. tickable.type .. "@" .. tickable.duration)
+      -- put mid process actions here, i.e. effects every tick
 
-        if tickable.duration <= 0 then
-            -- put end of process action here
-            prism.logger.info("TICK OVER")
+      if tickable.duration <= 0 then
+         -- put end of process action here
+         prism.logger.info("TICK OVER")
 
-            if tickable.type == "explode" then
-                -- get all actors with health and check distance. if in range, damage.
-                for actor, component in level:query(prism.components.Health):iter() do
-                    if actor:getPosition():distanceChebyshev(self.owner:getPosition()) <= 3 then
-                        level:tryPerform(prism.actions.Damage(actor, 5))
-                    end
-                end
-                level:removeActor(self.owner)
+         if tickable.type == "explode" then
+            -- get all actors with health and check distance. if in range, damage.
+            for actor, component in level:query(prism.components.Health):iter() do
+               if actor:getPosition():distanceChebyshev(self.owner:getPosition()) <= 3 then
+                  level:tryPerform(prism.actions.Damage(actor, 5))
+               end
             end
+            level:removeActor(self.owner)
+         end
 
-            self.owner:remove(tickable)
-        end
-    end
+         self.owner:remove(tickable)
+      end
+   end
 end
 
 return Tick

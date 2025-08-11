@@ -6,44 +6,29 @@ local keybindings = require "keybindingschema"
 local GameOverState = spectrum.GameState:extend("GameOverState")
 
 function GameOverState:__new(display)
-    self.display = display
+   self.display = display
 end
 
 function GameOverState:draw()
-    local midpoint = math.floor(self.display.height / 2)
+   local midpoint = math.floor(self.display.height / 2)
 
-    self.display:clear()
-    self.display:putString(
-        1, midpoint,
-        "Game over!",
-        nil, nil, nil,
-        "center", self.display.width
-    )
+   self.display:clear()
+   self.display:putString(1, midpoint, "Game over!", nil, nil, nil, "center", self.display.width)
 
-    self.display:putString(
-        1, midpoint + 3,
-        "[r] to restart",
-        nil, nil, nil,
-        "center", self.display.width
-    )
-    self.display:putString(
-        1, midpoint + 4,
-        "[q] to quit",
-        nil, nil, nil,
-        "center", self.display.width
-    )
+   self.display:putString(1, midpoint + 3, "[r] to restart", nil, nil, nil, "center", self.display.width)
+   self.display:putString(1, midpoint + 4, "[q] to quit", nil, nil, nil, "center", self.display.width)
 
-    self.display:draw()
+   self.display:draw()
 end
 
 function GameOverState:keypressed(key, scancode, isrepeat)
-    local action = keybindings:keypressed(key, "title")
+   local action = keybindings:keypressed(key, "title")
 
-    if action == "restart" then
-        love.event.restart()
-    elseif action == "quit" then
-        love.event.quit()
-    end
+   if action == "restart" then
+      love.event.restart()
+   elseif action == "quit" then
+      love.event.quit()
+   end
 end
 
 return GameOverState

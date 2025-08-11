@@ -5,7 +5,7 @@ local Edible = prism.Component:extend("Edible")
 
 --- @param healing integer
 function Edible:__new(healing)
-    self.healing = healing
+   self.healing = healing
 end
 
 return Edible
