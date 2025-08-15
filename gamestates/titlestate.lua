@@ -1,12 +1,12 @@
-local keybindings = require "keybindingschema"
+local keybindings    = require "keybindingschema"
+local MapState       = require "gamestates.mapstate"
+local GameLevelState = require "gamestates.gamelevelstate"
+local Game           = require "game"
 
 --- @class TitleState : GameState
 --- @field display Display
 --- @overload fun(display: Display): GameOverState
-local TitleState = spectrum.GameState:extend("TitleState")
-local GameLevelState = require "gamestates.gamelevelstate"
-
-local Game = require "game"
+local TitleState     = spectrum.GameState:extend("TitleState")
 
 function TitleState:__new(display)
    self.display = display
@@ -37,6 +37,8 @@ function TitleState:keypressed(key, scancode, isrepeat)
       self.manager:enter(GameLevelState(self.display, builder, Game:getLevelSeed()))
    elseif action == "quit" then
       love.event.quit()
+   elseif action == "generate" then
+      self.manager:enter(MapState(self.display))
    end
 end
 
