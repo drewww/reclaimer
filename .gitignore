@@ -6,3 +6,5 @@
 !.zed
 
 dist/
+
+display/*.png
