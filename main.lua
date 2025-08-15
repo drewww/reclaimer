@@ -20,7 +20,7 @@ local mrmoMap = require "display.MRMOTEXTmap"
 
 
 local spriteAtlas = spectrum.SpriteAtlas.fromGrid("display/MRMOTEXT-x3.png", 24, 24, mrmoMap)
-local display = spectrum.Display(81, 41, spriteAtlas, prism.Vector2(24, 24))
+local display = spectrum.Display(61, 31, spriteAtlas, prism.Vector2(24, 24))
 
 -- Automatically size the window to match the terminal dimensions
 display:fitWindowToTerminal()
