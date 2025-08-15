@@ -18,11 +18,11 @@ function TitleState:draw()
    self.display:clear()
    self.display:putString(5, 5, "RECLAIMER", nil, nil, nil, "left", self.display.width)
 
-   self.display:putString(5, 6, "a game by Drew Harry", nil, nil, nil, "left", self.display.width)
+   self.display:putString(5, 6, "A GAME BY DREW HARRY", nil, nil, nil, "left", self.display.width)
 
-   self.display:putString(midpointX + 2, 20, "[p]lay", nil, nil, nil, "left", midpointX - 2)
+   self.display:putString(midpointX + 2, 20, "[P]LAY", nil, nil, nil, "left", midpointX - 2)
 
-   self.display:putString(midpointX + 2, 22, "[q]uit", nil, nil, nil, "left", midpointX - 2)
+   self.display:putString(midpointX + 2, 22, "[Q]UIT", nil, nil, nil, "left", midpointX - 2)
 
    self.display:draw()
 end
