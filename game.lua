@@ -1,4 +1,4 @@
-local levelgen = require "levelgen"
+local levelgen = require "levelgen.levelgen"
 
 --- @class Game : Object
 --- @field depth integer
