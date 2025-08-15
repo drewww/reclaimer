@@ -1,6 +1,6 @@
 local InfoFrame = prism.Object:extend("InfoFrame")
 
---- @param level : Level
+--- @param level Level
 function InfoFrame:__new(level)
    self.level = level
 end
