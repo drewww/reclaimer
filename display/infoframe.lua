@@ -7,7 +7,7 @@ end
 
 --- @param display : Display
 function InfoFrame:draw(display)
-   display:putFilledRect(1, 1, 81, 1, " ", prism.Color4.TRANSPARENT, prism.Color4.BLUE)
+   display:putFilledRect(1, 1, 81, 1, 1, prism.Color4.TRANSPARENT, prism.Color4.BLUE)
 
    -- now draw health over integer
    display:putString(1, 1, "HP", prism.Color4.WHITE, prism.Color4.BLUE)
@@ -18,8 +18,8 @@ function InfoFrame:draw(display)
    -- function Display:putString(x, y, str, fg, bg, layer, align, width)
 
    if health then
-      display:putFilledRect(4, 1, health.maxHP, 1, 4, prism.Color4.WHITE, prism.Color4.BLUE)
-      display:putFilledRect(4, 1, health.hp, 1, 4, prism.Color4.RED, prism.Color4.BLUE)
+      display:putFilledRect(4, 1, health.maxHP, 1, (15 * 32) + 5, prism.Color4.WHITE, prism.Color4.BLUE)
+      display:putFilledRect(4, 1, health.hp, 1, (15 * 32) + 4, prism.Color4.WHITE, prism.Color4.BLUE)
    end
 end
 
