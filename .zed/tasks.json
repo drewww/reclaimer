@@ -34,7 +34,7 @@
       "command": "bash",
       "args": [
          "-c",
-         "echo \"Current directory: $(pwd)\" && echo \"Files available:\" && ls -la && butler push RECLAIMER-macos.zip drewww/reclaimer:macos && butler push RECLAIMER-windows.zip drewww/reclaimer:windows && butler push RECLAIMER.love drewww/reclaimer:love"
+         "echo \"Current directory: $(pwd)\" && echo \"Files available:\" && ls -la && echo \"Creating DMG from RECLAIMER.app...\" && hdiutil create -volname \"RECLAIMER\" -srcfolder \"RECLAIMER.app\" -ov -format UDZO \"RECLAIMER-macos.dmg\" && echo \"DMG created successfully\" && echo \"Uploading to itch.io...\" && butler push RECLAIMER-macos.dmg drewww/reclaimer:macos && butler push RECLAIMER-windows.zip drewww/reclaimer:windows && butler push RECLAIMER.love drewww/reclaimer:love"
       ],
       "cwd": "$ZED_WORKTREE_ROOT/dist/0.1",
       "use_new_terminal": false,
