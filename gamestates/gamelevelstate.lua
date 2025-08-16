@@ -97,9 +97,9 @@ function GameLevelState:draw(primary, secondary)
       -- position is playerPosition
 
       if
-         position:distance(prism.Vector2(cellX, cellY)) <= 10
-         and playerSenses
-         and playerSenses.cells:get(cellX, cellY)
+          position:distance(prism.Vector2(cellX, cellY)) <= 10
+          and playerSenses
+          and playerSenses.cells:get(cellX, cellY)
       then
          color = prism.Color4(0.5, 0.5, 1.0, 0.2)
       end
