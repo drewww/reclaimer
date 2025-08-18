@@ -10,6 +10,73 @@ local Game = prism.Object:extend("Game")
 function Game:__new(seed)
    self.depth = 0
    self.rng = prism.RNG(seed)
+
+   -- define a list of stats to track.
+   -- when certain events in the game happen, update game stats.
+   -- so when you get a kill, go down a level, etc. that will
+   -- update the 'cur' field.
+   --
+   -- later, we can write some code that updates best if it cur
+   -- is better than best. and then save/load best from disk.
+   self.stats = {
+      depth = { direction = "ascending", cur = 0, best = 0 }
+   }
+end
+
+function Game:setStat(key, value)
+   if key == nil then
+      return
+   end
+
+   if self.stats[key] then
+      local stat = self.stats[key]
+      stat.cur = value
+      prism.logger.info("set stat: " .. key .. " -> " .. value)
+   end
+end
+
+function Game:getStat(key)
+   if key == nil then
+      return false
+   end
+
+   if self.stats[key] then
+      local stat = self.stats[key]
+      return stat.cur
+   else
+      return false
+   end
+end
+
+function Game:incrementStat(key, value)
+   if key == nil then
+      return false
+   end
+
+   value = value or 1
+
+   local new = self:getStat(key) + value
+   self:setStat(key, new)
+
+   return new
+end
+
+function Game:printStats()
+   for index, value in pairs(self.stats) do
+      prism.logger.info(index .. ": " .. value.cur .. " (" .. value.best .. ")")
+   end
+end
+
+function Game:finalizeStats()
+   -- TODO check cur against best and set bests + flags where it's a new best
+end
+
+function Game:loadStats()
+   -- TODO
+end
+
+function Game:saveStats()
+   -- TODO
 end
 
 --- @return string

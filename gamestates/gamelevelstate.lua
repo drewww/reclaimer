@@ -50,6 +50,9 @@ function GameLevelState:handleMessage(message)
    if prism.messages.Lose:is(message) then self.manager:enter(GameOverState(self.display)) end
 
    if prism.messages.Descend:is(message) then
+      prism.logger.info("DESCENDING")
+      Game:incrementStat("depth", 1)
+      Game:printStats()
       --- @cast message DescendMessage
       self.manager:enter(GameLevelState(self.display, Game:generateNextFloor(message.descender), Game:getLevelSeed()))
    end
