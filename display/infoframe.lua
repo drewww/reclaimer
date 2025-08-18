@@ -5,7 +5,7 @@ function InfoFrame:__new(level)
    self.level = level
 end
 
---- @param display : Display
+--- @param display  Display
 function InfoFrame:draw(display)
    display:putFilledRect(1, 1, 81, 1, 1, prism.Color4.TRANSPARENT, prism.Color4.BLUE)
 

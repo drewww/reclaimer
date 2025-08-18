@@ -8,8 +8,8 @@ local GameOverState = spectrum.GameState:extend("GameOverState")
 function GameOverState:__new(display)
    self.display = display
 
-   Game:finalizeStats()
-   Game:printStats()
+   Game.stats:finalize()
+   Game.stats:print()
 end
 
 function GameOverState:draw()
