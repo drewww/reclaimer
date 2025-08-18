@@ -19,7 +19,7 @@ function Game:__new(seed)
    -- later, we can write some code that updates best if it cur
    -- is better than best. and then save/load best from disk.
    self.stats = {
-      depth = { direction = "ascending", cur = 0, best = 0 }
+      depth = { sort = "asc", cur = 0, best = 0, record = false }
    }
 end
 
@@ -63,12 +63,23 @@ end
 
 function Game:printStats()
    for index, value in pairs(self.stats) do
-      prism.logger.info(index .. ": " .. value.cur .. " (" .. value.best .. ")")
+      prism.logger.info(index .. ": " .. value.cur .. " (" .. value.best .. ") " .. tostring(value.record))
    end
 end
 
 function Game:finalizeStats()
-   -- TODO check cur against best and set bests + flags where it's a new best
+   -- loop through each key, compare cur to best.
+   -- if cur is "better" than best (split on ascending/descending) then replace it.
+   -- if replaced, flag that stat as "NEW RECORD!"
+   for key, value in pairs(self.stats) do
+      if (value.cur >= value.best and value.sort == "asc") or
+          (value.cur <= value.best and value.sort == "desc") then
+         value.best = value.cur
+         value.record = true
+      else
+         value.record = false
+      end
+   end
 end
 
 function Game:loadStats()
