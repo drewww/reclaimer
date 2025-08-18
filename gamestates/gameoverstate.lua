@@ -14,15 +14,30 @@ function GameOverState:__new(display)
 end
 
 function GameOverState:draw()
-   local midpoint = math.floor(self.display.height / 2)
+   local midpointX, midpointY = math.floor(self.display.width / 2), math.floor(self.display.height / 2)
 
    self.display:clear()
-   self.display:putString(1, midpoint, "Game over!", nil, nil, nil, "center", self.display.width)
+   self.display:putString(3, 3, "EXPEDITION OVER", nil, nil, nil, "left", self.display.width)
 
-   self.display:putString(1, midpoint + 3, "[r] to restart", nil, nil, nil, "center", self.display.width)
-   self.display:putString(1, midpoint + 4, "[q] to quit", nil, nil, nil, "center", self.display.width)
+   self.display:putString(midpointX + 2, midpointY + 5, "R TO RESTART", nil, nil, nil, "left", self.display.width)
+   self.display:putString(midpointX + 2, midpointY + 6, "Q TO QUIT", nil, nil, nil, "left", self.display.width)
 
    -- TODO draw the stats in here
+   self.display:putString(3, 7, "STATS", nil, nil, nil, "left")
+
+   -- now iterate through stats and display them
+   local i = 0
+   for key, value in pairs(Game.stats.stats) do
+      if value.record then
+         -- star
+         self.display:put(4, 9 + i, (15 * 32) + 6)
+      end
+      self.display:putString(6, 9 + i, string.upper(key))
+      self.display:putString(14, 9 + i, tostring(value.cur))
+      self.display:putString(20, 9 + i, "(" .. tostring(value.cur) .. ")")
+
+      i = i + 1
+   end
 
    self.display:draw()
 end

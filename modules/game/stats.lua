@@ -70,7 +70,6 @@ function Stats:finalize()
    for key, value in pairs(self.stats) do
       if (value.cur >= value.best and value.sort == "asc") or
           (value.cur <= value.best and value.sort == "desc") then
-         value.best = value.cur
          value.record = true
       else
          value.record = false
@@ -117,6 +116,13 @@ function Stats:load()
 end
 
 function Stats:save()
+   -- make sure we save the NEW best value
+   for key, value in pairs(self.stats) do
+      if value.record then
+         value.best = value.cur
+      end
+   end
+
    local jsonStats = json.encode(self:serialize())
    local success = love.filesystem.write("stats.json", jsonStats)
 
