@@ -108,6 +108,8 @@ function Stats:load()
    end
 
    self.stats = loadedStats.stats
+   self:resetRecords()
+
    prism.logger.info("Stats loaded successfully.")
    prism.logger.info(self:prettyprint())
 
@@ -122,6 +124,12 @@ function Stats:save()
       prism.logger.info("Stats saved.")
    else
       prism.logger.error("Failed to save stats.")
+   end
+end
+
+function Stats:resetRecords()
+   for key, value in pairs(self.stats) do
+      value.record = false
    end
 end
 
