@@ -1,6 +1,7 @@
 local Log = prism.components.Log
 local Name = prism.components.Name
 local sf = string.format
+local Game = require "game"
 
 local ShootTarget = prism.Target():with(prism.components.Collider):range(10):sensed()
 
@@ -59,6 +60,12 @@ function Shoot:perform(level, shot)
    local shotName = Name.lower(shot)
    local ownerName = Name.lower(self.owner)
    local dmgstr = ""
+
+   if damage.dealt then
+      if self.owner:has(prism.components.PlayerController) then
+         Game.stats:increment("shots")
+      end
+   end
 
    if damage.dealt then dmgstr = sf("%i damage.", damage.dealt) end
    Log.addMessage(self.owner, sf("You shot the %s. %s", shotName, dmgstr))

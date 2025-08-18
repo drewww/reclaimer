@@ -1,6 +1,7 @@
 --- @class Die : Action
 --- @overload fun(owner: Actor): Die
 local Die = prism.Action:extend("Die")
+local Game = require "game"
 
 function Die:perform(level)
    -- check if the dying actor has an inventory. if it does, drop the first item
@@ -10,6 +11,10 @@ function Die:perform(level)
       -- TODO how to make this random? might be a nice bit of query suger
       local item = inventory:query(prism.components.Item):first()
       level:addActor(item, self.owner:getPosition():decompose())
+   end
+
+   if not self.owner:has(prism.components.PlayerController) then
+      Game.stats:increment("kills")
    end
 
    level:removeActor(self.owner)

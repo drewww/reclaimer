@@ -34,7 +34,7 @@ function GameOverState:draw()
       end
       self.display:putString(6, 9 + i, string.upper(key))
       self.display:putString(14, 9 + i, tostring(value.cur))
-      self.display:putString(20, 9 + i, "(" .. tostring(value.cur) .. ")")
+      self.display:putString(20, 9 + i, "(" .. tostring(value.best) .. ")")
 
       i = i + 1
    end

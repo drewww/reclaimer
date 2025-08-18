@@ -1,4 +1,5 @@
 local MoveTarget = prism.Target():isPrototype(prism.Vector2):range(1)
+local Game = require "game"
 
 ---@class Move : Action
 ---@field name string
@@ -30,6 +31,10 @@ function Move:perform(level, destination)
       -- get the cell being enered
       local cell = level:getCell(destination:decompose())
       if cell then cell:give(prism.components.Dashing()) end
+   end
+
+   if self.owner:has(prism.components.PlayerController) then
+      Game.stats:increment("steps")
    end
 end
 
