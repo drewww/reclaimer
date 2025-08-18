@@ -10,6 +10,7 @@ function GameOverState:__new(display)
 
    Game.stats:finalize()
    Game.stats:print()
+   Game.stats:save()
 end
 
 function GameOverState:draw()

@@ -1,5 +1,6 @@
 --- @class Stats : Object
 local Stats = prism.Object:extend("Stats")
+local json = require "prism.engine.lib.json"
 
 function Stats:__new()
    -- define a list of stats to track.
@@ -12,6 +13,9 @@ function Stats:__new()
    self.stats = {
       depth = { sort = "asc", cur = 0, best = 0, record = false }
    }
+
+   -- attempt to load
+   self:load()
 end
 
 function Stats:set(key, value)
@@ -75,11 +79,50 @@ function Stats:finalize()
 end
 
 function Stats:load()
-   -- TODO
+   local file_info = love.filesystem.getInfo("stats.json")
+   if not file_info then
+      prism.logger.info("No stats file found, using defaults.")
+      return false
+   end
+
+   local contents, error = love.filesystem.read("stats.json")
+   if not contents then
+      prism.logger.error("Failed to read stats.json: " .. error)
+   end
+
+   local success, serialized_data = pcall(json.decode, contents)
+   if not success then
+      prism.logger.error("Failed to parse stats file.")
+      return false
+   end
+
+   if not serialized_data or type(serialized_data) ~= "table" then
+      prism.logger.error("Stats file contains invalid data.")
+      return false
+   end
+
+   local loadedStats = prism.Object.deserialize(serialized_data)
+   if not loadedStats then
+      prism.logger.error("Failed to deserialize stats object.")
+      return false
+   end
+
+   self.stats = loadedStats.stats
+   prism.logger.info("Stats loaded successfully.")
+   prism.logger.info(self:prettyprint())
+
+   return true
 end
 
 function Stats:save()
-   -- TODO
+   local jsonStats = json.encode(self:serialize())
+   local success = love.filesystem.write("stats.json", jsonStats)
+
+   if success then
+      prism.logger.info("Stats saved.")
+   else
+      prism.logger.error("Failed to save stats.")
+   end
 end
 
 return Stats
