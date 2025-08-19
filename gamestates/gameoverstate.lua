@@ -26,13 +26,24 @@ function GameOverState:draw()
    self.display:putString(3, 7, "STATS", nil, nil, nil, "left")
 
    -- now iterate through stats and display them
-   local i = 0
+   -- first, convert to an array and then sort the array
+   local statsArray = {}
    for key, value in pairs(Game.stats.stats) do
+      value.name = key
+      table.insert(statsArray, value)
+   end
+
+   table.sort(statsArray, function(a, b)
+      return a.index < b.index
+   end)
+
+   local i = 0
+   for key, value in ipairs(statsArray) do
       if value.record then
          -- star
          self.display:put(4, 9 + i, (15 * 32) + 6)
       end
-      self.display:putString(6, 9 + i, string.upper(key))
+      self.display:putString(6, 9 + i, string.upper(value.name))
       self.display:putString(14, 9 + i, tostring(value.cur))
       self.display:putString(20, 9 + i, "(" .. tostring(value.best) .. ")")
 

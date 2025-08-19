@@ -11,11 +11,11 @@ function Stats:__new()
    -- later, we can write some code that updates best if it cur
    -- is better than best. and then save/load best from disk.
    self.stats = {
-      cash = { sort = "asc", cur = 0, best = 0, record = false },
-      depth = { sort = "asc", cur = 0, best = 0, record = false },
-      kills = { sort = "asc", cur = 0, best = 0, record = false },
-      steps = { sort = "asc", cur = 0, best = 0, record = false },
-      shots = { sort = "asc", cur = 0, best = 0, record = false },
+      cash = { sort = "asc", cur = 0, best = 0, record = false, index = 1 },
+      depth = { sort = "asc", cur = 0, best = 0, record = false, index = 2 },
+      kills = { sort = "asc", cur = 0, best = 0, record = false, index = 3 },
+      steps = { sort = "asc", cur = 0, best = 0, record = false, index = 4 },
+      shots = { sort = "asc", cur = 0, best = 0, record = false, index = 5 },
    }
 
    -- attempt to load
