@@ -41,13 +41,13 @@ function MapState:draw()
    self.display:draw()
 end
 
-function MapState:updateDecision(dt, owner, decision)
+function MapState:update(dt)
    self.controls:update()
 
-   if self.controls:get("generate") == "generate" then
+   if self.controls.generate.pressed then
       -- now put this in the display
       self.builder = self:newBuilder()
-   elseif self.controls:get("quit") == "quit" then
+   elseif self.controls.quit.pressed then
       love.event.quit()
    end
 end
