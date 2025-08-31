@@ -165,7 +165,7 @@ function GameLevelState:mousepressed(x, y, button, istouch, presses)
       prism.logger.info("Shooting at entity at " .. tostring(target:getPosition()))
 
       local shoot = prism.actions.Shoot(decision.actor, target)
-      decision:trySetAction(shoot, self.level)
+      decision:setAction(shoot, self.level)
    end
 end
 
@@ -185,6 +185,10 @@ function GameLevelState:mousemoved()
    end
 end
 
+-- The input handling functions act as the player controller’s logic.
+-- You should NOT mutate the Level here directly. Instead, find a valid
+-- action and set it in the decision object. It will then be executed by
+-- the level. This is a similar pattern to the example KoboldController.
 function GameLevelState:updateDecision(dt, owner, decision)
    self.controls:update()
 
@@ -208,71 +212,5 @@ function GameLevelState:updateDecision(dt, owner, decision)
       decision:setAction(pickup, self.level)
    end
 end
-
--- The input handling functions act as the player controller’s logic.
--- You should NOT mutate the Level here directly. Instead, find a valid
--- action and set it in the decision object. It will then be executed by
--- the level. This is a similar pattern to the example KoboldController.
--- function GameLevelState:keypressed(key, scancode)
---    -- handles opening geometer for us
---    spectrum.LevelState.keypressed(self, key, scancode)
-
---    -- This is a little unclear to me. I think decision is basically the
---    -- action that results from the keypress. can there be only one?
---    local decision = self.decision
---    if not decision then return end
-
---    local owner = decision.actor
-
---    -- Resolve the action string from the keybinding schema
---    local action = keybindings:keypressed(key)
-
---    -- Attempt to translate the action into a directional move
---    if keybindOffsets[action] then
---       local destination = owner:getPosition() + keybindOffsets[action]
-
---       local descendTarget = self.level:query(prism.components.Stairs):at(destination:decompose()):first()
-
---       local descend = prism.actions.Descend(owner, descendTarget)
---       if self.level:canPerform(descend) then
---          decision:setAction(descend)
---          return
---       end
-
---       local move = prism.actions.Move(owner, destination)
---       if self.level:canPerform(move) then
---          decision:setAction(move)
---          return
---       end
---    end
-
---    if action == "pickup" then
---       local target = self.level:query(prism.components.Item):at(owner:getPosition():decompose()):first()
-
---       local pickup = prism.actions.Pickup(owner, target)
-
---       decision:trySetAction(pickup, self.level)
---    end
-
---    if action == "dash" then
---       -- enter dash mode
-
---       -- don't consider this a "decision" because it should not yield the turn
---       -- it's entering a mode.
---       decision:setAction(prism.actions.Dash(owner))
---    end
-
---    -- Handle waiting
---    if action == "wait" then decision:setAction(prism.actions.Wait(self.decision.actor)) end
--- end
-
--- function GameLevelState:keyreleased(key, scancode)
---    local action = keybindings:keypressed(key)
-
---    local decision = self.decision
---    if not decision then return end
-
---    if action == "dash" then decision:setAction(prism.actions.Dash(self.decision.actor)) end
--- end
 
 return GameLevelState
