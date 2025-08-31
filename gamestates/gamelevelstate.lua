@@ -8,28 +8,26 @@ local Game = require "game"
 ---
 --- @field path Path
 --- @field level Level
---- @overload fun(display: Display, builder: MapBuilder, seed: string): GameLevelState
+--- @overload fun(display: Display, builder: LevelBuilder, seed: string): GameLevelState
 local GameLevelState = spectrum.LevelState:extend "GameLevelState"
 
 --- @param display Display
---- @param builder MapBuilder
+--- @param builder LevelBuilder
 --- @param seed string
 function GameLevelState:__new(display, builder, seed)
-   -- Construct a simple test map using MapBuilder.
+   -- Construct a simple test map using LevelBuilder.
    -- In a complete game, you'd likely extract this logic to a separate module
    -- and pass in an existing player object between levels.
 
-   local map, actors = builder:build()
-   local level = prism.Level(map, actors, {
+   builder:addSystems(
       prism.systems.Senses(),
       prism.systems.Sight(),
       prism.systems.Alert(),
-      prism.systems.Tick(),
-   }, nil, seed)
+      prism.systems.Tick())
 
    -- Initialize with the created level and display, the heavy lifting is done by
    -- the parent class.
-   spectrum.LevelState.__new(self, level, display)
+   spectrum.LevelState.__new(self, builder:build(), display)
 
    self.mouseCellPosition = nil
 
@@ -190,23 +188,24 @@ end
 function GameLevelState:updateDecision(dt, owner, decision)
    self.controls:update()
 
-   if self.controls:get("move").pressed then
-      local destination = owner:getPosition() + self.controls:get("move").vector
-      decision:setAction(prism.actions.Move(self.decision.actor, destination))
+   if self.controls.move.pressed then
+      local destination = owner:getPosition() + self.controls.move.vector
+      local move = prism.actions.Move(owner, destination)
+      if self:setAction(move) then return end
    end
 
-   if self.controls:get("wait").pressed == "wait" then
-      decision:setAction(prism.actions.Wait(self.decision.actor))
+   if self.controls.wait.pressed then
+      decision:setAction(prism.actions.Wait(self.decision.actor), self.level)
    end
 
-   if self.controls:get("dash").pressed == "dash" then
-      decision:setAction(prism.actions.Dash(self.decision.actor))
+   if self.controls.dash.down or self.controls.dash.released then
+      decision:setAction(prism.actions.Dash(self.decision.actor), self.level)
    end
 
-   if self.controls:get("pickup").pressed == "pickup" then
+   if self.controls.pickup.pressed then
       local target = self.level:query(prism.components.Item):at(owner:getPosition():decompose()):first()
       local pickup = prism.actions.Pickup(owner, target)
-      decision:setAction(pickup)
+      decision:setAction(pickup, self.level)
    end
 end
 
