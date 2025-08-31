@@ -43,14 +43,14 @@ function TitleState:update(dt)
          " - " .. tostring(self.controls.start.down) .. " - " .. tostring(self.controls.start.released))
    end
 
-   if self.controls.start.down then
+   if self.controls.start.pressed then
       local builder = Game:generateNextFloor(prism.actors.Player())
       prism.logger:info("entering game state")
 
       self.manager:enter(GameLevelState(self.display, builder, Game:getLevelSeed()))
-   elseif self.controls.quit.down then
+   elseif self.controls.quit.pressed then
       love.event.quit()
-   elseif self.controls.generate.down then
+   elseif self.controls.generate.pressed then
       self.manager:enter(MapState(self.display))
    end
 end

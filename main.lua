@@ -33,8 +33,8 @@ local manager = spectrum.StateManager()
 --- @diagnostic disable-next-line
 function love.load()
    manager:push(TitleState(display))
-   spectrum.Input:hook()
    manager:hook()
+   spectrum.Input:hook()
 end
 
 -- set up my custom turn logic
