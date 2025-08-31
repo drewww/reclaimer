@@ -5,7 +5,7 @@ return {
    developer = 'Drew Harry',            -- dev name used in metadata of the file
    output = 'dist',                     -- output location for your game, defaults to $SAVE_DIRECTORY
    version = '0.1',                     -- 'version' of your game, used to name the folder in output
-   love = '12.0',                       -- version of LÖVE to use, must match github releases
+   love = '11.5',                       -- version of LÖVE to use, must match github releases
    ignore = { 'dist', 'ignoreme.txt' }, -- folders/files to ignore in your project
    icon = 'resources/icon.png',         -- 256x256px PNG icon for game, will be converted for you
 
