@@ -37,18 +37,20 @@ end
 function TitleState:update(dt)
    self.controls:update()
 
-   prism.logger.info("UPDATE DECISON: " ..
-      tostring(self.controls.start.pressed) ..
-      " - " .. tostring(self.controls.start.down) .. " - " .. tostring(self.controls.start.released))
+   if self.controls.start.pressed or self.controls.start.down or self.controls.start.released then
+      prism.logger.info("UPDATE DECISON: " ..
+         tostring(self.controls.start.pressed) ..
+         " - " .. tostring(self.controls.start.down) .. " - " .. tostring(self.controls.start.released))
+   end
 
-   if self.controls.start.pressed then
+   if self.controls.start.down then
       local builder = Game:generateNextFloor(prism.actors.Player())
       prism.logger:info("entering game state")
 
       self.manager:enter(GameLevelState(self.display, builder, Game:getLevelSeed()))
-   elseif self.controls.quit.pressed then
+   elseif self.controls.quit.down then
       love.event.quit()
-   elseif self.controls.generate.pressed then
+   elseif self.controls.generate.down then
       self.manager:enter(MapState(self.display))
    end
 end

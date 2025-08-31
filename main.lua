@@ -33,6 +33,7 @@ local manager = spectrum.StateManager()
 --- @diagnostic disable-next-line
 function love.load()
    manager:push(TitleState(display))
+   spectrum.Input:hook()
    manager:hook()
 end
 
