@@ -1,4 +1,3 @@
-local keybindings = require "keybindingschema"
 local Game = require "game"
 --- @class GameOverState : GameState
 --- @field display Display
@@ -11,6 +10,13 @@ function GameOverState:__new(display)
    Game.stats:finalize()
    Game.stats:print()
    Game.stats:save()
+
+   self.controls = spectrum.Input.Controls {
+      controls = {
+         restart = { "r" },
+         quit = { "q" }
+      }
+   }
 end
 
 function GameOverState:draw()
@@ -53,12 +59,12 @@ function GameOverState:draw()
    self.display:draw()
 end
 
-function GameOverState:keypressed(key, scancode, isrepeat)
-   local action = keybindings:keypressed(key, "title")
+function GameOverState:updateDecision(dt, owner, decision)
+   self.controls:update()
 
-   if action == "restart" then
+   if self.controls:get("restart") == "restart" then
       love.event.restart()
-   elseif action == "quit" then
+   elseif self.controls:get("quit") == "quit" then
       love.event.quit()
    end
 end

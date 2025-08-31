@@ -1,4 +1,3 @@
-local keybindings    = require "keybindingschema"
 local MapState       = require "gamestates.mapstate"
 local GameLevelState = require "gamestates.gamelevelstate"
 local Game           = require "game"
@@ -10,6 +9,14 @@ local TitleState     = spectrum.GameState:extend("TitleState")
 
 function TitleState:__new(display)
    self.display = display
+
+   self.controls = spectrum.Input.Controls {
+      controls = {
+         start = { "p" },
+         quit = { "q" },
+         generate = { "g" }
+      }
+   }
 end
 
 function TitleState:draw()
@@ -27,17 +34,21 @@ function TitleState:draw()
    self.display:draw()
 end
 
-function TitleState:keypressed(key, scancode, isrepeat)
-   local action = keybindings:keypressed(key, "title")
+function TitleState:update(dt)
+   self.controls:update()
 
-   if action == "start" or action == "restart" then
+   prism.logger.info("UPDATE DECISON: " ..
+      tostring(self.controls.start.pressed) ..
+      " - " .. tostring(self.controls.start.down) .. " - " .. tostring(self.controls.start.released))
+
+   if self.controls.start.pressed then
       local builder = Game:generateNextFloor(prism.actors.Player())
       prism.logger:info("entering game state")
 
       self.manager:enter(GameLevelState(self.display, builder, Game:getLevelSeed()))
-   elseif action == "quit" then
+   elseif self.controls.quit.pressed then
       love.event.quit()
-   elseif action == "generate" then
+   elseif self.controls.generate.pressed then
       self.manager:enter(MapState(self.display))
    end
 end

@@ -1,5 +1,4 @@
-local keybindings = require "keybindingschema"
-local levelgen    = require "levelgen.levelgen"
+local levelgen = require "levelgen.levelgen"
 
 -- Lightweight adapter to fix MapBuilder's getCell method
 local function makeDisplayable(mapBuilder)
@@ -27,6 +26,13 @@ local Game     = require "game"
 function MapState:__new(display)
    self.display = display
    self.builder = self:newBuilder()
+
+   self.controls = spectrum.Input.Controls {
+      controls = {
+         generate = { "g" },
+         quit = { "q" }
+      }
+   }
 end
 
 function MapState:draw()
@@ -35,13 +41,13 @@ function MapState:draw()
    self.display:draw()
 end
 
-function MapState:keypressed(key, scancode, isrepeat)
-   local action = keybindings:keypressed(key, "title")
+function MapState:updateDecision(dt, owner, decision)
+   self.controls:update()
 
-   if action == "generate" then
+   if self.controls:get("generate") == "generate" then
       -- now put this in the display
       self.builder = self:newBuilder()
-   elseif action == "quit" then
+   elseif self.controls:get("quit") == "quit" then
       love.event.quit()
    end
 end

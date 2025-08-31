@@ -1,5 +1,3 @@
-local keybindings = require "keybindingschema"
-
 local GameOverState = require "gamestates.gameoverstate"
 local InfoFrame = require "display.infoframe"
 local Game = require "game"
@@ -36,6 +34,9 @@ function GameLevelState:__new(display, builder, seed)
    self.mouseCellPosition = nil
 
    self.infoFrame = InfoFrame(self.level)
+
+   -- TODO consider if this should be inlined
+   self.controls = require "controls"
 end
 
 function GameLevelState:handleMessage(message)
@@ -141,16 +142,16 @@ function GameLevelState:draw(primary, secondary)
 end
 
 -- Maps string actions from the keybinding schema to directional vectors.
-local keybindOffsets = {
-   ["move up"] = prism.Vector2.UP,
-   ["move left"] = prism.Vector2.LEFT,
-   ["move down"] = prism.Vector2.DOWN,
-   ["move right"] = prism.Vector2.RIGHT,
-   ["move up-left"] = prism.Vector2.UP_LEFT,
-   ["move up-right"] = prism.Vector2.UP_RIGHT,
-   ["move down-left"] = prism.Vector2.DOWN_LEFT,
-   ["move down-right"] = prism.Vector2.DOWN_RIGHT,
-}
+-- local keybindOffsets = {
+--    ["move up"] = prism.Vector2.UP,
+--    ["move left"] = prism.Vector2.LEFT,
+--    ["move down"] = prism.Vector2.DOWN,
+--    ["move right"] = prism.Vector2.RIGHT,
+--    ["move up-left"] = prism.Vector2.UP_LEFT,
+--    ["move up-right"] = prism.Vector2.UP_RIGHT,
+--    ["move down-left"] = prism.Vector2.DOWN_LEFT,
+--    ["move down-right"] = prism.Vector2.DOWN_RIGHT,
+-- }
 
 function GameLevelState:mousepressed(x, y, button, istouch, presses)
    -- get the cell under the mouse button
@@ -186,70 +187,93 @@ function GameLevelState:mousemoved()
    end
 end
 
+function GameLevelState:updateDecision(dt, owner, decision)
+   self.controls:update()
+
+   if self.controls:get("move").pressed then
+      local destination = owner:getPosition() + self.controls:get("move").vector
+      decision:setAction(prism.actions.Move(self.decision.actor, destination))
+   end
+
+   if self.controls:get("wait").pressed == "wait" then
+      decision:setAction(prism.actions.Wait(self.decision.actor))
+   end
+
+   if self.controls:get("dash").pressed == "dash" then
+      decision:setAction(prism.actions.Dash(self.decision.actor))
+   end
+
+   if self.controls:get("pickup").pressed == "pickup" then
+      local target = self.level:query(prism.components.Item):at(owner:getPosition():decompose()):first()
+      local pickup = prism.actions.Pickup(owner, target)
+      decision:setAction(pickup)
+   end
+end
+
 -- The input handling functions act as the player controller’s logic.
 -- You should NOT mutate the Level here directly. Instead, find a valid
 -- action and set it in the decision object. It will then be executed by
 -- the level. This is a similar pattern to the example KoboldController.
-function GameLevelState:keypressed(key, scancode)
-   -- handles opening geometer for us
-   spectrum.LevelState.keypressed(self, key, scancode)
+-- function GameLevelState:keypressed(key, scancode)
+--    -- handles opening geometer for us
+--    spectrum.LevelState.keypressed(self, key, scancode)
 
-   -- This is a little unclear to me. I think decision is basically the
-   -- action that results from the keypress. can there be only one?
-   local decision = self.decision
-   if not decision then return end
+--    -- This is a little unclear to me. I think decision is basically the
+--    -- action that results from the keypress. can there be only one?
+--    local decision = self.decision
+--    if not decision then return end
 
-   local owner = decision.actor
+--    local owner = decision.actor
 
-   -- Resolve the action string from the keybinding schema
-   local action = keybindings:keypressed(key)
+--    -- Resolve the action string from the keybinding schema
+--    local action = keybindings:keypressed(key)
 
-   -- Attempt to translate the action into a directional move
-   if keybindOffsets[action] then
-      local destination = owner:getPosition() + keybindOffsets[action]
+--    -- Attempt to translate the action into a directional move
+--    if keybindOffsets[action] then
+--       local destination = owner:getPosition() + keybindOffsets[action]
 
-      local descendTarget = self.level:query(prism.components.Stairs):at(destination:decompose()):first()
+--       local descendTarget = self.level:query(prism.components.Stairs):at(destination:decompose()):first()
 
-      local descend = prism.actions.Descend(owner, descendTarget)
-      if self.level:canPerform(descend) then
-         decision:setAction(descend)
-         return
-      end
+--       local descend = prism.actions.Descend(owner, descendTarget)
+--       if self.level:canPerform(descend) then
+--          decision:setAction(descend)
+--          return
+--       end
 
-      local move = prism.actions.Move(owner, destination)
-      if self.level:canPerform(move) then
-         decision:setAction(move)
-         return
-      end
-   end
+--       local move = prism.actions.Move(owner, destination)
+--       if self.level:canPerform(move) then
+--          decision:setAction(move)
+--          return
+--       end
+--    end
 
-   if action == "pickup" then
-      local target = self.level:query(prism.components.Item):at(owner:getPosition():decompose()):first()
+--    if action == "pickup" then
+--       local target = self.level:query(prism.components.Item):at(owner:getPosition():decompose()):first()
 
-      local pickup = prism.actions.Pickup(owner, target)
+--       local pickup = prism.actions.Pickup(owner, target)
 
-      decision:trySetAction(pickup, self.level)
-   end
+--       decision:trySetAction(pickup, self.level)
+--    end
 
-   if action == "dash" then
-      -- enter dash mode
+--    if action == "dash" then
+--       -- enter dash mode
 
-      -- don't consider this a "decision" because it should not yield the turn
-      -- it's entering a mode.
-      decision:setAction(prism.actions.Dash(owner))
-   end
+--       -- don't consider this a "decision" because it should not yield the turn
+--       -- it's entering a mode.
+--       decision:setAction(prism.actions.Dash(owner))
+--    end
 
-   -- Handle waiting
-   if action == "wait" then decision:setAction(prism.actions.Wait(self.decision.actor)) end
-end
+--    -- Handle waiting
+--    if action == "wait" then decision:setAction(prism.actions.Wait(self.decision.actor)) end
+-- end
 
-function GameLevelState:keyreleased(key, scancode)
-   local action = keybindings:keypressed(key)
+-- function GameLevelState:keyreleased(key, scancode)
+--    local action = keybindings:keypressed(key)
 
-   local decision = self.decision
-   if not decision then return end
+--    local decision = self.decision
+--    if not decision then return end
 
-   if action == "dash" then decision:setAction(prism.actions.Dash(self.decision.actor)) end
-end
+--    if action == "dash" then decision:setAction(prism.actions.Dash(self.decision.actor)) end
+-- end
 
 return GameLevelState
