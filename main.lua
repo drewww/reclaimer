@@ -1,6 +1,8 @@
 require "debugger"
 require "prism"
 
+require "animations"
+
 prism.loadModule("prism/spectrum")
 prism.loadModule("prism/extra/sight")
 prism.loadModule("prism/extra/log")

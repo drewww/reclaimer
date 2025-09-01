@@ -169,6 +169,7 @@ function GameLevelState:draw(primary, secondary)
    self.infoFrame:draw(self.display)
 
    self.display:draw()
+   self.display:putAnimations()
 
    -- custom love2d drawing goes here!
 

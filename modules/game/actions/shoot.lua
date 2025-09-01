@@ -30,6 +30,12 @@ function Shoot:perform(level, shot)
    -- but it's fine for now
    local damageValue = 1
 
+   level:yield(prism.messages.Animation {
+      animation = spectrum.animations.Projectile(self.owner, shot:getPosition()),
+      -- actor = self.owner
+      -- blocking = true -- causes screen to go black
+   })
+
    -- because the enemy moves immediately after this, if you just move one space
    -- it appears like they're not moving.
    for _ = 1, 2 do
