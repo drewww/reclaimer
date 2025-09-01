@@ -33,9 +33,6 @@ function Shoot:canPerform(level)
    else
       return false
    end
-
-
-   return true
 end
 
 function Shoot:perform(level, shot)

@@ -49,7 +49,9 @@ function TitleState:update(dt)
 
       local inventory = player:get(prism.components.Inventory)
       if inventory then
-         inventory:addItem(prism.actors.AmmoStack())
+         local ammo = prism.actors.AmmoStack()
+         ammo:get(prism.components.Item).stackCount = 50
+         inventory:addItem(ammo)
       end
 
       local builder = Game:generateNextFloor(player)
