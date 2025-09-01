@@ -139,18 +139,6 @@ function GameLevelState:draw(primary, secondary)
    -- self.display:putFilledRect(10, 10, 100, 100, "*", prism.Color4.WHITE, prism.Color4.RED, math.huge)
 end
 
--- Maps string actions from the keybinding schema to directional vectors.
--- local keybindOffsets = {
---    ["move up"] = prism.Vector2.UP,
---    ["move left"] = prism.Vector2.LEFT,
---    ["move down"] = prism.Vector2.DOWN,
---    ["move right"] = prism.Vector2.RIGHT,
---    ["move up-left"] = prism.Vector2.UP_LEFT,
---    ["move up-right"] = prism.Vector2.UP_RIGHT,
---    ["move down-left"] = prism.Vector2.DOWN_LEFT,
---    ["move down-right"] = prism.Vector2.DOWN_RIGHT,
--- }
-
 function GameLevelState:mousepressed(x, y, button, istouch, presses)
    -- get the cell under the mouse button
    local cellX, cellY, targetCell = self:getCellUnderMouse()
@@ -194,6 +182,17 @@ function GameLevelState:updateDecision(dt, owner, decision)
 
    if self.controls.move.pressed then
       local destination = owner:getPosition() + self.controls.move.vector
+
+      local descendTarget = self.level:query(prism.components.Stair)
+          :at(destination:decompose())
+          :first()
+
+      local descend = prism.actions.Descend(owner, descendTarget)
+
+      if self.level:canPerform(descend) then
+         self:setAction(descend)
+      end
+
       local move = prism.actions.Move(owner, destination)
       if self:setAction(move) then return end
    end
