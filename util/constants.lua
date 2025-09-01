@@ -1,1 +1,8 @@
 WALL_COLLIDE_DAMAGE = 5
+
+CHEST_DURATION = 10
+
+
+-- sprite locations
+CHEST_BASE = 129
+LOOT_BASE = 134

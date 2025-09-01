@@ -18,6 +18,15 @@ function Tick:perform(level)
 
       prism.logger.info("ticked." .. tickable.type .. "@" .. tickable.duration)
       -- put mid process actions here, i.e. effects every tick
+      if tickable.type == "openchest" then
+         -- update the drawable
+         -- this is hacky as hell, just assuming max duration is 10
+         local spriteOffset = math.floor((CHEST_DURATION - tickable.duration) / 2)
+         local drawable = self.owner:get(prism.components.Drawable)
+         if drawable then
+            drawable.index = CHEST_BASE + spriteOffset
+         end
+      end
 
       if tickable.duration <= 0 then
          -- put end of process action here
@@ -30,6 +39,15 @@ function Tick:perform(level)
                   level:tryPerform(prism.actions.Damage(actor, 5))
                end
             end
+            level:removeActor(self.owner)
+         end
+
+         if tickable.type == "openchest" then
+            local value = math.random(1, 4)
+            local loot = prism.actors.Loot(value)
+
+            level:addActor(loot, self.owner:getPosition():decompose())
+
             level:removeActor(self.owner)
          end
 

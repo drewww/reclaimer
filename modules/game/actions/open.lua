@@ -27,7 +27,7 @@ function Open:perform(level, target)
       if openable.delay > 0 and not openable.open then
          -- set a tick component and get it started
          prism.logger.info("Started delayed open countdown: " .. tostring(openable.delay))
-         target:give(prism.components.Tickable("open", openable.delay))
+         target:give(prism.components.Tickable("openchest", openable.delay))
 
          -- need to do this otherwise it doesn't get a turn to tick on.
          target:give(prism.components.WaitController())
