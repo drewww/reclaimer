@@ -1,6 +1,7 @@
 local GameOverState = require "gamestates.gameoverstate"
 local InfoFrame = require "display.infoframe"
 local Game = require "game"
+local WeaponUtil = require "util/weapons"
 
 --- @class GameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,
@@ -129,23 +130,32 @@ function GameLevelState:draw(primary, secondary)
    local playerSenses = self.level:query(prism.components.PlayerController):first():get(prism.components.Senses)
 
    -- loop through the cells. this is inefficient.
-   for cellX, cellY, cell in self.level:eachCell() do
-      local color = prism.Color4.TRANSPARENT
 
-      -- checks -- player can see, and it's in range of current weapon
-      -- position is playerPosition
+   if self:getCurrentActor():has(prism.components.Inventory) then
+      local inventory = self:getCurrentActor():get(prism.components.Inventory)
 
-      if
-          position:distance(prism.Vector2(cellX, cellY)) <= 10
-          and playerSenses
-          and playerSenses.cells:get(cellX, cellY)
-      then
-         color = prism.Color4(0.5, 0.5, 1.0, 0.2)
+      local weapon = WeaponUtil.getActive(inventory):get(prism.components.Weapon)
+
+      if weapon then
+         for cellX, cellY, cell in self.level:eachCell() do
+            local color = prism.Color4.TRANSPARENT
+
+            -- checks -- player can see, and it's in range of current weapon
+            -- position is playerPosition
+
+            if
+                position:distance(prism.Vector2(cellX, cellY)) <= weapon.range
+                and playerSenses
+                and playerSenses.cells:get(cellX, cellY)
+            then
+               color = prism.Color4(0.5, 0.5, 1.0, 0.2)
+            end
+
+            if cell:has(prism.components.Dashing) then color = prism.Color4(0.5, 0.5, 1.0, 0.5) end
+
+            self.display:putBG(cellX + x, cellY + y, color)
+         end
       end
-
-      if cell:has(prism.components.Dashing) then color = prism.Color4(0.5, 0.5, 1.0, 0.5) end
-
-      self.display:putBG(cellX + x, cellY + y, color)
    end
 
    if self.mouseCellPosition then

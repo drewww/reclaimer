@@ -69,7 +69,7 @@ function Shoot:perform(level, shot)
    -- because the enemy moves immediately after this, if you just move one space
    -- it appears like they're not moving.
    local startPos = shot:getPosition()
-   local finalPos, hitWall, cellsMoved = knockback(level, startPos, direction, 2, mask)
+   local finalPos, hitWall, cellsMoved = knockback(level, startPos, direction, weapon.push, mask)
 
    -- Move the target to final position
    if level:hasActor(shot) then
