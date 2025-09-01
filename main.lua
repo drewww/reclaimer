@@ -3,6 +3,8 @@ require "prism"
 
 require "animations"
 
+require "util/constants"
+
 prism.loadModule("prism/spectrum")
 prism.loadModule("prism/extra/sight")
 prism.loadModule("prism/extra/log")

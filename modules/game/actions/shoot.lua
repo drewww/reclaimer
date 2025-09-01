@@ -45,10 +45,8 @@ end
 function Shoot:perform(level, shot)
    local inventory = self.owner:get(prism.components.Inventory)
 
-   local weapon = WeaponUtil.getActive(inventory)
-   if weapon then
-      print("shooting weapon: " .. weapon:getName())
-   end
+   local weapon = WeaponUtil.getActive(inventory):get(prism.components.Weapon)
+   assert(weapon)
 
    local direction = (shot:getPosition() - self.owner:getPosition())
 
@@ -73,7 +71,7 @@ function Shoot:perform(level, shot)
    end
 
    -- Calculate damage based on whether they hit a wall
-   local damageValue = hitWall and 5 or 1
+   local damageValue = hitWall and WALL_COLLIDE_DAMAGE + weapon.damage or weapon.damage
 
    local damage = prism.actions.Damage(shot, damageValue)
 
