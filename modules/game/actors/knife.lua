@@ -1,9 +1,9 @@
-prism.registerActor("Pistol", function()
+prism.registerActor("Knife", function()
    return prism.Actor.fromComponents {
-      prism.components.Name("Pistol"),
+      prism.components.Name("Knife"),
       prism.components.Position(),
       prism.components.Drawable { index = "w", color = prism.Color4.YELLOW },
       prism.components.Item(),
-      prism.components.Weapon(2, 0, 5, "point", 2)
+      prism.components.Weapon(1, 1, 1, "point", 1)
    }
 end)
