@@ -12,6 +12,7 @@ return spectrum.Input.Controls {
       pickup         = { "p", "g" },
       wait           = { "x" },
       dash           = { "lshift", "rshift" },
+      reload         = { "r" },
 
       -- dash_upleft    = { "lshift q", "lshift y" },
       -- dash_up        = { "lshift w", "lshift k" },

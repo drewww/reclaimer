@@ -22,6 +22,7 @@ local cp437Map = require "display.reclaimer_tiles_map"
 -- Load a sprite atlas and configure the terminal-style display,
 -- local spriteAtlas = spectrum.SpriteAtlas.fromASCIIGrid("display/wanderlust_16x16.png", 16, 16)
 
+-- prism.logger.level = "debug"
 prism.logger.info("Loaded TILE MAP: " .. #cp437Map .. " entries")
 -- prism.logger.info(" location of `A`: " .. cp437Map[1150])
 

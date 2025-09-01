@@ -294,6 +294,15 @@ function GameLevelState:updateDecision(dt, owner, decision)
       -- prism.logger.info("setting selectWeapon action with hotkey: " .. tostring(weaponHotkey))
       decision:setAction(prism.actions.SelectWeapon(owner, weaponHotkey), self.level)
    end
+
+   if self.controls.reload.pressed then
+      local weapon = WeaponUtil.getActive(owner:get(prism.components.Inventory))
+
+      local set, err = decision:setAction(prism.actions.Reload(owner), self.level)
+      if err then
+         prism.logger.info("result: " .. tostring(set) .. " " .. err)
+      end
+   end
 end
 
 return GameLevelState
