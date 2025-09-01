@@ -52,7 +52,13 @@ function TitleState:update(dt)
          local ammo = prism.actors.AmmoStack()
          ammo:get(prism.components.Item).stackCount = 50
          inventory:addItem(ammo)
+
+         local pistol = prism.actors.Pistol()
+         pistol:get(prism.components.Weapon).active = true
+         inventory:addItem(pistol)
       end
+
+
 
       local builder = Game:generateNextFloor(player)
       prism.logger:info("entering game state")

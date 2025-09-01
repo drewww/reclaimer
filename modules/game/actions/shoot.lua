@@ -3,6 +3,7 @@ local Name = prism.components.Name
 local sf = string.format
 local Game = require "game"
 
+local WeaponUtil = require "util/weapons"
 local knockback = require "util/knockback"
 
 local ShootTarget = prism.Target():with(prism.components.Collider):range(10):sensed()
@@ -18,6 +19,12 @@ function Shoot:canPerform(level)
    -- TODO check for ammo
    local inventory = self.owner:get(prism.components.Inventory)
    if inventory then
+      local weapon = WeaponUtil.getActive(inventory)
+      if not weapon then
+         prism.logger.info("No weapon selected.")
+         return false
+      end
+
       local ammo = inventory:getStack(prism.actors.AmmoStack)
       if ammo then
          local ammoItem = ammo:get(prism.components.Item)
@@ -36,6 +43,13 @@ function Shoot:canPerform(level)
 end
 
 function Shoot:perform(level, shot)
+   local inventory = self.owner:get(prism.components.Inventory)
+
+   local weapon = WeaponUtil.getActive(inventory)
+   if weapon then
+      print("shooting weapon: " .. weapon:getName())
+   end
+
    local direction = (shot:getPosition() - self.owner:getPosition())
 
    print("direction: " .. tostring(direction))
@@ -76,7 +90,6 @@ function Shoot:perform(level, shot)
          Game.stats:increment("shots")
       end
 
-      local inventory = self.owner:get(prism.components.Inventory)
       if inventory then
          local ammoUsed = inventory:getStack(prism.actors.AmmoStack)
 
