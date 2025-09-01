@@ -17,7 +17,9 @@ function WeaponFrame:draw(display)
    -- we don't know the sort order. so go off the hotkeys to position it.
    -- we could also run this as 1-9 and create all the empty spaces also with numbers
    local player = self.level:query(prism.components.PlayerController):first()
+
    if player then
+      local inventory = player:get(prism.components.Inventory)
       for weaponActor in player:get(prism.components.Inventory):query(prism.components.Weapon):iter() do
          local weapon = weaponActor:get(prism.components.Weapon)
          assert(weapon)
@@ -34,9 +36,15 @@ function WeaponFrame:draw(display)
 
          display:putFilledRect(originX, originY + baseRow, 15, 2, " ", prism.Color4.TRANSPARENT, bg)
 
-         display:putString(originX, originY + baseRow, tostring(weapon.ammo),
-            fg, bg,
-            math.huge, "right", 15)
+         if (weapon.ammopershot ~= 0) then
+            local totalAmmo = 0
+            if inventory then
+               totalAmmo = inventory:getStack(prism.actors.AmmoStack):get(prism.components.Item).stackCount
+            end
+            display:putString(originX, originY + baseRow, tostring(weapon.ammo) .. "/" .. tostring(totalAmmo),
+               fg, bg,
+               math.huge, "right", 15)
+         end
 
          display:putString(originX, originY + baseRow, tostring(weapon.hotkey) .. " " .. weaponActor:getName(),
             fg, bg,

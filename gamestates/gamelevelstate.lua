@@ -296,9 +296,11 @@ function GameLevelState:updateDecision(dt, owner, decision)
    end
 
    if self.controls.reload.pressed then
+      prism.logger.info("reloading")
       local weapon = WeaponUtil.getActive(owner:get(prism.components.Inventory))
 
       local set, err = decision:setAction(prism.actions.Reload(owner), self.level)
+      prism.logger.info("reload: " .. tostring(set))
       if err then
          prism.logger.info("result: " .. tostring(set) .. " " .. err)
       end
