@@ -18,7 +18,7 @@ function InfoFrame:draw(display)
    -- function Display:putString(x, y, str, fg, bg, layer, align, width)
 
    if health then
-      display:putFilledRect(4, 1, health.maxHP, 1, (15 * 32) + 5, prism.Color4.WHITE, prism.Color4.BLUE)
+      display:putFilledRect(4, 1, health.maxHP, 1, " ", prism.Color4.WHITE, prism.Color4.BLUE)
       display:putFilledRect(4, 1, health.hp, 1, (15 * 32) + 4, prism.Color4.WHITE, prism.Color4.BLUE)
    end
 end

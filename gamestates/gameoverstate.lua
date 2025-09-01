@@ -47,7 +47,7 @@ function GameOverState:draw()
    for key, value in ipairs(statsArray) do
       if value.record then
          -- star
-         self.display:put(4, 9 + i, (15 * 32) + 6)
+         self.display:put(4, 9 + i, (15 * 32) + 5)
       end
       self.display:putString(6, 9 + i, string.upper(value.name))
       self.display:putString(14, 9 + i, tostring(value.cur))
