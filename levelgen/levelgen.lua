@@ -10,7 +10,8 @@ return function(rng, player, width, height)
    local nox, noy = rng:random(1, 10000), rng:random(1, 10000)
    for x = 1, width do
       for y = 1, height do
-         local noise = love.math.perlinNoise(x / 5 + nox, y / 5 + noy)
+         -- local noise = love.math.perlinNoise(x / 5 + nox, y / 5 + noy)
+         local noise = love.math.noise(x / 5 + nox + y / 5 + noy)
          local cell = noise > 0.5 and prism.cells.Wall or prism.cells.Pit
 
          builder:set(x, y, cell())
