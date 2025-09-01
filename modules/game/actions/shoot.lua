@@ -63,7 +63,7 @@ function Shoot:perform(level, shot)
    level:yield(prism.messages.Animation {
       animation = spectrum.animations.Projectile(self.owner, shot:getPosition()),
       -- actor = self.owner
-      -- blocking = true -- causes screen to go black
+      blocking = true -- causes screen to go black
    })
 
    -- because the enemy moves immediately after this, if you just move one space

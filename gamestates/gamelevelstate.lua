@@ -95,30 +95,38 @@ function GameLevelState:handleMessage(message)
    end
 end
 
---- @param primary Senses[] { curActor:getComponent(prism.components.Senses)}
---- @param secondary Senses[]
-function GameLevelState:draw(primary, secondary)
-   if not self.decision then return end
-
-   self.display:clear()
-
-   local position = self.decision.actor:getPosition()
+function GameLevelState:updateCamera()
+   local position = self.level:query(prism.components.PlayerController):first():getPosition()
    if not position then return end
 
    local x, y = self.display:getCenterOffset(position:decompose())
    self.display:setCamera(x, y)
+end
+
+--- @param primary Senses[] { curActor:getComponent(prism.components.Senses)}
+--- @param secondary Senses[]
+function GameLevelState:draw(primary, secondary)
+   self.display:clear()
+
+   local player = self.level:query(prism.components.PlayerController):first()
+   assert(player)
+
+   if self.decision or not self.display.camera then
+      self:updateCamera()
+   end
+
+   local cameraX, cameraY = self.display.camera:decompose()
 
    local primary, secondary = self:getSenses()
    -- Render the level using the actor’s senses
    self.display:putSenses(primary, secondary)
 
    -- custom terminal drawing goes here!
-   --
-   local currentActor = self:getCurrentActor()
-   local health = currentActor and currentActor:get(prism.components.Health)
+
+   local health = player:get(prism.components.Health)
    if health then self.display:putString(1, 1, "HP:" .. health.hp .. "/" .. health.maxHP) end
 
-   local log = currentActor and currentActor:get(prism.components.Log)
+   local log = player:get(prism.components.Log)
    if log then
       local offset = 0
       for line in log:iterLast(5) do
@@ -127,12 +135,12 @@ function GameLevelState:draw(primary, secondary)
       end
    end
 
-   local playerSenses = self.level:query(prism.components.PlayerController):first():get(prism.components.Senses)
+   local playerSenses = player:get(prism.components.Senses)
 
    -- loop through the cells. this is inefficient.
 
-   if self:getCurrentActor():has(prism.components.Inventory) then
-      local inventory = self:getCurrentActor():get(prism.components.Inventory)
+   if player:has(prism.components.Inventory) then
+      local inventory = player:get(prism.components.Inventory)
 
       local weapon = WeaponUtil.getActive(inventory):get(prism.components.Weapon)
 
@@ -144,7 +152,7 @@ function GameLevelState:draw(primary, secondary)
             -- position is playerPosition
 
             if
-                position:distance(prism.Vector2(cellX, cellY)) <= weapon.range
+                player:getPosition():distance(prism.Vector2(cellX, cellY)) <= weapon.range
                 and playerSenses
                 and playerSenses.cells:get(cellX, cellY)
             then
@@ -153,21 +161,22 @@ function GameLevelState:draw(primary, secondary)
 
             if cell:has(prism.components.Dashing) then color = prism.Color4(0.5, 0.5, 1.0, 0.5) end
 
-            self.display:putBG(cellX + x, cellY + y, color)
+            self.display:putBG(cellX + cameraX, cellY + cameraY, color)
          end
       end
    end
 
    if self.mouseCellPosition then
-      local mouseX, mouseY = self.mouseCellPosition.x + x, self.mouseCellPosition.y + y
+      local mouseX, mouseY = self.mouseCellPosition.x + cameraX, self.mouseCellPosition.y + cameraY
 
       -- prism.logger.info(string.format("Drawing mouse cell position: x=%d, y=%d, w=%d, h=%d", x, y, w, h))
       self.display:putBG(mouseX, mouseY, prism.Color4(0.5, 0.5, 1.0, 0.5))
    end
 
    -- custom handle the player.
-   if self:getCurrentActor():has(prism.components.Dashing) then
-      self.display:putBG(position.x + x, position.y + y, prism.Color4(0.5, 0.5, 1.0, 0.5))
+   if player:has(prism.components.Dashing) then
+      self.display:putBG(player:getPosition().x + cameraX, player:getPosition().y + cameraY,
+         prism.Color4(0.5, 0.5, 1.0, 0.5))
    end
 
    -- Actually render the terminal out and present it to the screen.
