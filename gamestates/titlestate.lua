@@ -23,6 +23,7 @@ function TitleState:draw()
    local midpointX, midpointY = math.floor(self.display.width / 2), math.floor(self.display.height / 2)
 
    self.display:clear()
+
    self.display:putString(5, 5, "RECLAIMER", nil, nil, nil, "left", self.display.width)
 
    self.display:putString(5, 6, "A GAME BY DREW HARRY", nil, nil, nil, "left", self.display.width)

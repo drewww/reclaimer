@@ -13,14 +13,16 @@ local GameLevelState = require "gamestates.gamelevelstate"
 local TitleState = require "gamestates.titlestate"
 
 local Game = require("game")
-local mrmoMap = require "display.MRMOTEXTmap"
+local cp437Map = require "display.reclaimer_tiles_map"
 
 -- Load a sprite atlas and configure the terminal-style display,
 -- local spriteAtlas = spectrum.SpriteAtlas.fromASCIIGrid("display/wanderlust_16x16.png", 16, 16)
 
+prism.logger.info("Loaded TILE MAP: " .. #cp437Map .. " entries")
+-- prism.logger.info(" location of `A`: " .. cp437Map[1150])
 
-local spriteAtlas = spectrum.SpriteAtlas.fromGrid("display/MRMOTEXT-x3.png", 24, 24, mrmoMap)
-local display = spectrum.Display(61, 31, spriteAtlas, prism.Vector2(24, 24))
+local spriteAtlas = spectrum.SpriteAtlas.fromGrid("display/reclaimer_tiles.png", 16, 16, cp437Map)
+local display = spectrum.Display(61, 31, spriteAtlas, prism.Vector2(16, 16))
 
 -- Automatically size the window to match the terminal dimensions
 display:fitWindowToTerminal()
