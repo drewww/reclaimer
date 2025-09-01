@@ -6,7 +6,7 @@ local Game = require "game"
 local WeaponUtil = require "util/weapons"
 local knockback = require "util/knockback"
 
-local ShootTarget = prism.Target():with(prism.components.Collider):range(10):sensed()
+local ShootTarget = prism.Target():with(prism.components.Collider):sensed()
 
 local Shoot = prism.Action:extend("ShootAction")
 Shoot.name = "Shoot"
@@ -15,28 +15,34 @@ Shoot.requireComponents = {
    prism.components.Controller,
 }
 
-function Shoot:canPerform(level)
+function Shoot:canPerform(level, shot)
    -- TODO check for ammo
    local inventory = self.owner:get(prism.components.Inventory)
    if inventory then
-      local weapon = WeaponUtil.getActive(inventory)
+      local weapon = WeaponUtil.getActive(inventory):get(prism.components.Weapon)
       if not weapon then
          prism.logger.info("No weapon selected.")
          return false
       end
 
       local ammo = inventory:getStack(prism.actors.AmmoStack)
+      local availableAmmo = false
       if ammo then
          local ammoItem = ammo:get(prism.components.Item)
          prism.logger.info("ammo: " .. tostring(ammoItem.stackCount))
          if ammoItem and ammoItem.stackCount > 0 then
-            return true
-         else
-            return false
+            availableAmmo = true
          end
-      else
-         return false
       end
+
+      -- now check range
+      local range = self.owner:getRange(shot)
+      local inRange = false
+      if range < weapon.range then
+         inRange = true
+      end
+
+      return inRange and availableAmmo
    else
       return false
    end
