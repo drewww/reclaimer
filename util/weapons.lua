@@ -3,20 +3,39 @@ local WeaponUtil = {}
 --- @param inventory Inventory
 --- @return boolean
 WeaponUtil.setActive = function(inventory, hotkey)
-   -- loop through all items with weapon, set to false except one matching the hotkey.
-   if not inventory then return false end
+   local selectedWeapon = WeaponUtil.getWeaponForHotkey(inventory, hotkey)
 
-   local didSet = false
+   -- unselect the currently active weapon
+   local activeWeapon = WeaponUtil.getActive(inventory)
+   if activeWeapon then
+      activeWeapon:get(prism.components.Weapon).active = false
+   end
+
+   -- prism.logger.info("setting weapon active for hotkey " .. tostring(hotkey) .. " " .. tostring(selectedWeapon:getName()))
+   if selectedWeapon then
+      selectedWeapon:get(prism.components.Weapon).active = true
+      return true
+   else
+      return false
+   end
+end
+
+--- @return Actor?
+WeaponUtil.getWeaponForHotkey = function(inventory, hotkey)
+   -- loop through all items with weapon, set to false except one matching the hotkey.
+   if not inventory then return nil end
+
+   local selectedWeapon = nil
    inventory:query(prism.components.Weapon):each(
    ---@param component Weapon
       function(actor, component --[[@as Weapon]])
-         component.active = hotkey == component.hotkey
-
-         if component.active then didSet = true end
+         if hotkey == component.hotkey then
+            selectedWeapon = actor
+         end
       end
    )
 
-   return didSet
+   return selectedWeapon
 end
 
 --- @param inventory Inventory

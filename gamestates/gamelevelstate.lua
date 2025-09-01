@@ -265,24 +265,6 @@ function GameLevelState:updateDecision(dt, owner, decision)
       decision:setAction(prism.actions.Wait(self.decision.actor), self.level)
    end
 
-   -- okay so the problem is that we are triggering actions every frame while it's down versus when it
-   -- goes down the first time
-   -- maybe it's that dash entry/exit should not yield the turn?
-   -- we may also want to experiment with shift-move being its own thing. think about it...
-   --
-   -- first -- try just using pressed. it will feel bad but confirm the rest of the logic works.
-   -- if self.controls.dash.down or self.controls.dash.released then
-   --
-   -- okay, so that works. now if we wanted to create the HOLD SHIFT idea, maybe we look
-   -- to create dash-variants of all the moves? unwire shift and just look for
-   -- shift-variants and shift released to un-dash.
-   --
-
-   -- prism.logger.info("DASH: " ..
-   --    tostring(self.controls.dash.pressed) ..
-   --    " " .. tostring(self.controls.dash.down) ..
-   --    " " .. tostring(self.controls.dash.released))
-
    if self.controls.dash.pressed or self.controls.dash.released then
       prism.logger.info("DASH ACTION")
       decision:setAction(prism.actions.Dash(self.decision.actor), self.level)
@@ -292,6 +274,22 @@ function GameLevelState:updateDecision(dt, owner, decision)
       local target = self.level:query(prism.components.Item):at(owner:getPosition():decompose()):first()
       local pickup = prism.actions.Pickup(owner, target)
       decision:setAction(pickup, self.level)
+   end
+
+
+   -- check on weapon selection keys
+   local weaponHotkey = nil
+   for key, control in pairs(self.controls) do
+      local n = key:match("^weapon_(%d+)$")
+      if n and control.pressed then
+         weaponHotkey = tonumber(n)
+         break
+      end
+   end
+
+   if weaponHotkey then
+      -- prism.logger.info("setting selectWeapon action with hotkey: " .. tostring(weaponHotkey))
+      decision:setAction(prism.actions.SelectWeapon(owner, weaponHotkey), self.level)
    end
 end
 

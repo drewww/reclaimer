@@ -22,7 +22,18 @@ return spectrum.Input.Controls {
       -- dash_down      = { "lshift s", "lshift j" },
       -- dash_downright = { "lshift c", "lshift n" },
 
-      play           = { "p" }
+      weapon_1       = { "1" },
+      weapon_2       = { "2" },
+      weapon_3       = { "3" },
+      weapon_4       = { "4" },
+      weapon_5       = { "5" },
+      weapon_6       = { "6" },
+      weapon_7       = { "7" },
+      weapon_8       = { "8" },
+      weapon_9       = { "9" },
+
+
+      play = { "p" }
    },
    pairs = {
       -- stylua: ignore
