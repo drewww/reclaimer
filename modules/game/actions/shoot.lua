@@ -15,6 +15,26 @@ Shoot.requireComponents = {
 }
 
 function Shoot:canPerform(level)
+   -- TODO check for ammo
+   local inventory = self.owner:get(prism.components.Inventory)
+   if inventory then
+      local ammo = inventory:getStack(prism.actors.AmmoStack)
+      if ammo then
+         local ammoItem = ammo:get(prism.components.Item)
+         prism.logger.info("ammo: " .. tostring(ammoItem.stackCount))
+         if ammoItem and ammoItem.stackCount > 0 then
+            return true
+         else
+            return false
+         end
+      else
+         return false
+      end
+   else
+      return false
+   end
+
+
    return true
 end
 
@@ -53,9 +73,19 @@ function Shoot:perform(level, shot)
    local ownerName = Name.lower(self.owner)
    local dmgstr = ""
 
+   -- TODO increment this even if you miss. especially if we support shooting random spots.
    if damage.dealt then
       if self.owner:has(prism.components.PlayerController) then
          Game.stats:increment("shots")
+      end
+
+      local inventory = self.owner:get(prism.components.Inventory)
+      if inventory then
+         local ammoUsed = inventory:getStack(prism.actors.AmmoStack)
+
+         if ammoUsed then
+            inventory:removeQuantity(ammoUsed, 1)
+         end
       end
    end
 

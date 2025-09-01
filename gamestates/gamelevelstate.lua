@@ -20,12 +20,11 @@ local GameLevelState = spectrum.LevelState:extend "GameLevelState"
 ---@param controller Controller
 ---@diagnostic disable-next-line
 function turn(level, actor, controller)
-   prism.logger.info("PRISM TURN HANDLER")
    local continueTurn = false
    repeat
       local action = controller:act(level, actor)
       if actor:has(prism.components.PlayerController) then
-         prism.logger.info("action: " .. action.className .. " for actor: " .. actor.className)
+         -- prism.logger.info("action: " .. action.className .. " for actor: " .. actor.className)
       end
       -- we make sure we got an action back from the controller for sanity's sake
       assert(action, "Actor " .. actor:getName() .. " returned nil from act()")
@@ -41,7 +40,7 @@ function turn(level, actor, controller)
           and (prism.actions.Move:is(action) or prism.actions.Dash:is(action))
 
       if actor:has(prism.components.PlayerController) then
-         prism.logger.info("continueTurn: " .. tostring(continueTurn))
+         -- prism.logger.info("continueTurn: " .. tostring(continueTurn))
       end
    until not continueTurn
 end
@@ -169,7 +168,6 @@ function GameLevelState:draw(primary, secondary)
    self.infoFrame:draw(self.display)
 
    self.display:draw()
-   self.display:putAnimations()
 
    -- custom love2d drawing goes here!
 

@@ -45,7 +45,14 @@ function TitleState:update(dt)
    end
 
    if self.controls.start.pressed then
-      local builder = Game:generateNextFloor(prism.actors.Player())
+      local player = prism.actors.Player()
+
+      local inventory = player:get(prism.components.Inventory)
+      if inventory then
+         inventory:addItem(prism.actors.AmmoStack())
+      end
+
+      local builder = Game:generateNextFloor(player)
       prism.logger:info("entering game state")
 
       self.manager:enter(GameLevelState(self.display, builder, Game:getLevelSeed()))

@@ -10,7 +10,6 @@ prism.registerActor("Player", function()
       prism.components.Mover { "walk" },
       prism.components.Health(10),
       prism.components.Log(),
-      prism.components.Tickable("countdown", 10),
       prism.components.Inventory {
          limitCount = 26,
       },
