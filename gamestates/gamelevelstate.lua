@@ -11,6 +11,41 @@ local Game = require "game"
 --- @overload fun(display: Display, builder: LevelBuilder, seed: string): GameLevelState
 local GameLevelState = spectrum.LevelState:extend "GameLevelState"
 
+-- set up my custom turn logic
+
+--- This is the default core turn logic. Use :lua:func:`LevelBuilder.addTurnHandler` to override this.
+
+---@param level Level
+---@param actor Actor
+---@param controller Controller
+---@diagnostic disable-next-line
+function turn(level, actor, controller)
+   prism.logger.info("PRISM TURN HANDLER")
+   local continueTurn = false
+   repeat
+      local action = controller:act(level, actor)
+      if actor:has(prism.components.PlayerController) then
+         prism.logger.info("action: " .. action.className .. " for actor: " .. actor.className)
+      end
+      -- we make sure we got an action back from the controller for sanity's sake
+      assert(action, "Actor " .. actor:getName() .. " returned nil from act()")
+
+      level:perform(action)
+
+      -- if the actor is dashing and the move they're doing right now is a Move, continue the turn.
+      -- later logic may include things like "does the gun firing have multiple shot available?"
+      -- certain enemies may get multiple actions a turn.
+      -- we may generalize this into an action cost / available AP model at some point, too.
+      -- also, we will want to limit dash distances. both per dash and overall dash energy available.
+      continueTurn = actor:has(prism.components.Dashing)
+          and (prism.actions.Move:is(action) or prism.actions.Dash:is(action))
+
+      if actor:has(prism.components.PlayerController) then
+         prism.logger.info("continueTurn: " .. tostring(continueTurn))
+      end
+   until not continueTurn
+end
+
 --- @param display Display
 --- @param builder LevelBuilder
 --- @param seed string
@@ -24,6 +59,9 @@ function GameLevelState:__new(display, builder, seed)
       prism.systems.Sight(),
       prism.systems.Alert(),
       prism.systems.Tick())
+
+   -- setup custom turn handler
+   builder:addTurnHandler(turn)
 
    -- Initialize with the created level and display, the heavy lifting is done by
    -- the parent class.
@@ -180,8 +218,16 @@ end
 function GameLevelState:updateDecision(dt, owner, decision)
    self.controls:update()
 
+   -- if self.controls.move.pressed or self.controls.dash.pressed then
    if self.controls.move.pressed then
-      local destination = owner:getPosition() + self.controls.move.vector
+      local vector
+      -- if self.controls.move.pressed then
+      vector = self.controls.move.vector
+      -- else
+      -- vector = self.controls.dash.vector
+      -- end
+
+      local destination = owner:getPosition() + vector
 
       local descendTarget = self.level:query(prism.components.Stair)
           :at(destination:decompose())
@@ -201,7 +247,26 @@ function GameLevelState:updateDecision(dt, owner, decision)
       decision:setAction(prism.actions.Wait(self.decision.actor), self.level)
    end
 
-   if self.controls.dash.down or self.controls.dash.released then
+   -- okay so the problem is that we are triggering actions every frame while it's down versus when it
+   -- goes down the first time
+   -- maybe it's that dash entry/exit should not yield the turn?
+   -- we may also want to experiment with shift-move being its own thing. think about it...
+   --
+   -- first -- try just using pressed. it will feel bad but confirm the rest of the logic works.
+   -- if self.controls.dash.down or self.controls.dash.released then
+   --
+   -- okay, so that works. now if we wanted to create the HOLD SHIFT idea, maybe we look
+   -- to create dash-variants of all the moves? unwire shift and just look for
+   -- shift-variants and shift released to un-dash.
+   --
+
+   -- prism.logger.info("DASH: " ..
+   --    tostring(self.controls.dash.pressed) ..
+   --    " " .. tostring(self.controls.dash.down) ..
+   --    " " .. tostring(self.controls.dash.released))
+
+   if self.controls.dash.pressed or self.controls.dash.released then
+      prism.logger.info("DASH ACTION")
       decision:setAction(prism.actions.Dash(self.decision.actor), self.level)
    end
 

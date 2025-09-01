@@ -13,6 +13,15 @@ return spectrum.Input.Controls {
       wait           = { "x" },
       dash           = { "lshift", "rshift" },
 
+      -- dash_upleft    = { "lshift q", "lshift y" },
+      -- dash_up        = { "lshift w", "lshift k" },
+      -- dash_upright   = { "lshift e", "lshift u" },
+      -- dash_left      = { "lshift a", "lshift h" },
+      -- dash_right     = { "lshift d", "lshift l" },
+      -- dash_downleft  = { "lshift z", "lshift b" },
+      -- dash_down      = { "lshift s", "lshift j" },
+      -- dash_downright = { "lshift c", "lshift n" },
+
       play           = { "p" }
    },
    pairs = {
@@ -22,6 +31,12 @@ return spectrum.Input.Controls {
          "move_left", "move_right",
          "move_downleft", "move_down", "move_downright"
       },
+
+      -- dash = {
+      --    "dash_upleft", "dash_up", "dash_upright",
+      --    "dash_left", "dash_right",
+      --    "dash_downleft", "dash_down", "dash_downright"
+      -- }
    },
 }
 
