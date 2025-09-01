@@ -4,6 +4,7 @@
 --- @field range integer
 --- @field template string
 --- @field active boolean
+--- @field hotkey string
 local Weapon = prism.Component:extend("Weapon")
 
 -- TODO add ammo type

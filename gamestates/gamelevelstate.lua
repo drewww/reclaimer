@@ -2,6 +2,7 @@ local GameOverState = require "gamestates.gameoverstate"
 local InfoFrame = require "display.infoframe"
 local Game = require "game"
 local WeaponUtil = require "util/weapons"
+local WeaponFrame = require "display.weaponframe"
 
 --- @class GameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,
@@ -70,6 +71,7 @@ function GameLevelState:__new(display, builder, seed)
    self.mouseCellPosition = nil
 
    self.infoFrame = InfoFrame(self.level)
+   self.weaponFrame = WeaponFrame(self.level)
 
    -- TODO consider if this should be inlined
    self.controls = require "controls"
@@ -185,6 +187,7 @@ function GameLevelState:draw(primary, secondary)
    -- just remember that display:getCellUnderMouse expects the mouse in the
    -- display's local pixel coordinates
    self.infoFrame:draw(self.display)
+   self.weaponFrame:draw(self.display)
 
    self.display:draw()
 
