@@ -58,7 +58,7 @@ function GameLevelState:__new(display, builder, seed)
    builder:addSystems(
       prism.systems.Senses(),
       prism.systems.Sight(),
-      prism.systems.Alert(),
+      -- prism.systems.Alert(),
       prism.systems.Tick())
 
    -- setup custom turn handler
@@ -250,14 +250,26 @@ function GameLevelState:updateDecision(dt, owner, decision)
 
       local destination = owner:getPosition() + vector
 
+      -- test for descending
       local descendTarget = self.level:query(prism.components.Stair)
           :at(destination:decompose())
           :first()
-
       local descend = prism.actions.Descend(owner, descendTarget)
-
       if self.level:canPerform(descend) then
          self:setAction(descend)
+      end
+
+      -- test for a loot box to open
+      local openableTarget = self.level:query(prism.components.Openable):at(destination:decompose())
+          :first()
+
+      if openableTarget then
+         -- prism.logger.info("bumping into openable target")
+
+         local set, err = decision:setAction(prism.actions.Open(owner, openableTarget), self.level)
+         if err then
+            prism.logger.error("error opening: " .. err)
+         end
       end
 
       local move = prism.actions.Move(owner, destination)
