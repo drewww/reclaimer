@@ -34,6 +34,10 @@ function WeaponFrame:draw(display)
 
          display:putFilledRect(originX, originY + baseRow, 15, 2, " ", prism.Color4.TRANSPARENT, bg)
 
+         display:putString(originX, originY + baseRow, tostring(weapon.ammo),
+            fg, bg,
+            math.huge, "right", 15)
+
          display:putString(originX, originY + baseRow, tostring(weapon.hotkey) .. " " .. weaponActor:getName(),
             fg, bg,
             math.huge, "left", 15)

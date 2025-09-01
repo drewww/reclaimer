@@ -27,18 +27,14 @@ function Shoot:canPerform(level, shot)
       end
 
 
-      local ammo = inventory:getStack(prism.actors.AmmoStack)
+      -- local ammo = inventory:getStack(prism.actors.AmmoStack)
       local availableAmmo = false
 
       -- if ammo per shot is 0, don't check for ammo at all.
       if weapon.ammopershot == 0 then
          availableAmmo = true
-      elseif ammo then
-         local ammoItem = ammo:get(prism.components.Item)
-         prism.logger.info("ammo: " .. tostring(ammoItem.stackCount))
-         if ammoItem and ammoItem.stackCount > 0 then
-            availableAmmo = true
-         end
+      elseif weapon.ammo > 0 then
+         availableAmmo = true
       end
 
       -- now check range
@@ -100,13 +96,7 @@ function Shoot:perform(level, shot)
          Game.stats:increment("shots")
       end
 
-      if inventory then
-         local ammoUsed = inventory:getStack(prism.actors.AmmoStack)
-
-         if ammoUsed and weapon.ammopershot > 0 then
-            inventory:removeQuantity(ammoUsed, weapon.ammopershot)
-         end
-      end
+      weapon.ammo = weapon.ammo - 1
    end
 
    if damage.dealt then dmgstr = sf("%i damage.", damage.dealt) end
