@@ -8,3 +8,4 @@
 dist/
 
 display/*.png
+!display/reclaimer_tiles.png
