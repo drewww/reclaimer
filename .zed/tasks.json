@@ -43,11 +43,15 @@
       "hide": "never"
    },
    {
-      "label": "Copy REXPaint Tiles",
-      "command": "cp",
+      "label": "Update Tiles",
+      "command": "magick",
       "args": [
          "/Applications/REXPaint-v1.70/images/reclaimer_tiles.png",
-         "$ZED_WORKTREE_ROOT/display/"
+         "display/cp437_16x16.png",
+         "-append",
+         "-transparent",
+         "black",
+         "display/reclaimer_tiles.png"
       ],
       "cwd": "$ZED_WORKTREE_ROOT",
       "use_new_terminal": false,
