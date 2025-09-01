@@ -10,11 +10,12 @@ function WeaponFrame:draw(display)
    -- start by painting a background
    local originX, originY = display.width - 14, 2
 
-   display:putFilledRect(originX, originY, 15, 6, " ", prism.Color4.TRANSPARENT, prism.Color4.RED)
+   -- display:putFilledRect(originX, originY, 15, 6, " ", prism.Color4.TRANSPARENT, prism.Color4.RED)
 
    -- okay now we want to rotate through weapons in the inventory, two rows per weapon.
 
    -- we don't know the sort order. so go off the hotkeys to position it.
+   -- we could also run this as 1-9 and create all the empty spaces also with numbers
    local player = self.level:query(prism.components.PlayerController):first()
    if player then
       for weaponActor in player:get(prism.components.Inventory):query(prism.components.Weapon):iter() do
@@ -30,12 +31,21 @@ function WeaponFrame:draw(display)
             bg = prism.Color4.WHITE
             fg = prism.Color4.BLACK
          end
-         display:putFilledRect(originX, originY + baseRow, 15, 2, " ", prism.Color4.TRANSPARENT, prism.Color4.BLACK)
 
+         display:putFilledRect(originX, originY + baseRow, 15, 2, " ", prism.Color4.TRANSPARENT, bg)
 
          display:putString(originX, originY + baseRow, tostring(weapon.hotkey) .. " " .. weaponActor:getName(),
             fg, bg,
             math.huge, "left", 15)
+
+         -- now list weapon stats
+         display:putString(originX + 3, originY + baseRow + 1, tostring(weapon.damage), fg, bg)
+         display:putString(originX + 6, originY + baseRow + 1, tostring(weapon.push), fg, bg)
+
+         display:putString(originX + 9, originY + baseRow + 1, tostring(math.floor(weapon.range)), fg, bg)
+         display:put(originX + 2, originY + baseRow + 1, 484, fg, bg)
+         display:put(originX + 5, originY + baseRow + 1, 656, fg, bg)
+         display:put(originX + 8, originY + baseRow + 1, 510, fg, bg)
       end
    end
 end
