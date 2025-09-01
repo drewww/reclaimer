@@ -6,6 +6,7 @@ local Game = require "game"
 local WeaponUtil = require "util/weapons"
 local knockback = require "util/knockback"
 
+-- don't apply range here, because it's weapon dependent. check in `canPerform` instead.
 local ShootTarget = prism.Target():with(prism.components.Collider):sensed()
 
 local Shoot = prism.Action:extend("ShootAction")
@@ -25,9 +26,14 @@ function Shoot:canPerform(level, shot)
          return false
       end
 
+
       local ammo = inventory:getStack(prism.actors.AmmoStack)
       local availableAmmo = false
-      if ammo then
+
+      -- if ammo per shot is 0, don't check for ammo at all.
+      if weapon.ammopershot == 0 then
+         availableAmmo = true
+      elseif ammo then
          local ammoItem = ammo:get(prism.components.Item)
          prism.logger.info("ammo: " .. tostring(ammoItem.stackCount))
          if ammoItem and ammoItem.stackCount > 0 then
@@ -38,7 +44,7 @@ function Shoot:canPerform(level, shot)
       -- now check range
       local range = self.owner:getRange(shot)
       local inRange = false
-      if range < weapon.range then
+      if range <= weapon.range then
          inRange = true
       end
 
@@ -97,8 +103,8 @@ function Shoot:perform(level, shot)
       if inventory then
          local ammoUsed = inventory:getStack(prism.actors.AmmoStack)
 
-         if ammoUsed then
-            inventory:removeQuantity(ammoUsed, 1)
+         if ammoUsed and weapon.ammopershot > 0 then
+            inventory:removeQuantity(ammoUsed, weapon.ammopershot)
          end
       end
    end
