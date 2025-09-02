@@ -18,7 +18,20 @@ Move.requiredComponents = {
 --- @param destination Vector2
 function Move:canPerform(level, destination)
    local mover = self.owner:expect(prism.components.Mover)
-   return level:getCellPassableByActor(destination.x, destination.y, self.owner, mover.mask)
+   local isPassable = level:getCellPassableByActor(destination.x, destination.y, self.owner, mover.mask)
+
+   local hasEnergyIfNeeded = true
+   if self.owner:has(prism.components.Dashing) then
+      local energy = self.owner:get(prism.components.Energy)
+
+      if energy then
+         hasEnergyIfNeeded = energy.energy >= 1
+      else
+         hasEnergyIfNeeded = false
+      end
+   end
+
+   return isPassable and hasEnergyIfNeeded
 end
 
 --- @param level Level
@@ -31,6 +44,11 @@ function Move:perform(level, destination)
       -- get the cell being enered
       local cell = level:getCell(destination:decompose())
       if cell then cell:give(prism.components.Dashing()) end
+
+      local energy = self.owner:get(prism.components.Energy)
+      if energy then
+         energy.energy = energy.energy - DASH_ENERGY_COST_PER_TILE
+      end
    end
 
    if self.owner:has(prism.components.PlayerController) then
