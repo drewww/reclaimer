@@ -164,7 +164,7 @@ function GameLevelState:draw(primary, secondary)
 
             if cell:has(prism.components.Dashing) then color = prism.Color4(0.5, 0.5, 1.0, 0.5) end
 
-            self.display:putBG(cellX + cameraX, cellY + cameraY, color)
+            self.display:putBG(cellX + cameraX, cellY + cameraY, color, 50)
          end
       end
    end
