@@ -1,18 +1,18 @@
 --- @class Energy : Component
 --- @field maxEnergy number
 --- @field energy number
---- @field regen number
+--- @field regenRate number
 
 local Energy = prism.Component:extend("Energy")
 
-function Energy:__new(maxEnergy, regen)
+function Energy:__new(maxEnergy, regenRate)
    self.maxEnergy = maxEnergy
    self.energy = maxEnergy
-   self.regen = regen
+   self.regenRate = regenRate
 end
 
 function Energy:regen()
-   self.energy = self.energy + self.regen
+   self.energy = math.min(self.energy + self.regenRate, self.maxEnergy)
 end
 
 --- @param amount number

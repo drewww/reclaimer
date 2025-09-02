@@ -38,7 +38,8 @@ function InfoFrame:draw(display)
    local energy = player and player:get(prism.components.Energy)
    if energy then
       display:put(20, 1, "E", prism.Color4.WHITE, prism.Color4.NAVY)
-      display:putString(22, 1, tostring(energy.energy) .. "/" .. tostring(energy.maxEnergy), prism.Color4.WHITE,
+      display:putString(22, 1, tostring(math.floor(energy.energy)) .. "/" .. tostring(energy.maxEnergy),
+         prism.Color4.WHITE,
          prism.Color4.NAVY)
    end
 end

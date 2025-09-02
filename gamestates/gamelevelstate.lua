@@ -59,6 +59,7 @@ function GameLevelState:__new(display, builder, seed)
       prism.systems.Senses(),
       prism.systems.Sight(),
       -- prism.systems.Alert(),
+      prism.systems.Energy(),
       prism.systems.Tick())
 
    -- setup custom turn handler
