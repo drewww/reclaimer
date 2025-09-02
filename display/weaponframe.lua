@@ -38,9 +38,15 @@ function WeaponFrame:draw(display)
 
          if (weapon.ammopershot ~= 0) then
             local totalAmmo = 0
-            if inventory then
-               totalAmmo = inventory:getStack(prism.actors.AmmoStack):get(prism.components.Item).stackCount
+            if inventory and inventory:getStack(prism.actors.AmmoStack) then
+               local ammoStack = inventory:getStack(prism.actors.AmmoStack):get(prism.components.Item)
+               if ammoStack then
+                  totalAmmo = ammoStack.stackCount
+               else
+                  totalAmmo = 0
+               end
             end
+
             display:putString(originX, originY + baseRow, tostring(weapon.ammo) .. "/" .. tostring(totalAmmo),
                fg, bg,
                math.huge, "right", 15)
