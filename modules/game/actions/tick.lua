@@ -44,7 +44,10 @@ function Tick:perform(level)
 
          if tickable.type == "openchest" then
             local value = math.random(1, 4)
+            -- prism.logger.info("generated loot of value " .. tostring(value))
             local loot = prism.actors.Loot(value)
+            local lootItem = loot:get(prism.components.Item)
+            -- prism.logger.info(" post generation value " .. tostring(lootItem.stackCount))
 
             level:addActor(loot, self.owner:getPosition():decompose())
 
