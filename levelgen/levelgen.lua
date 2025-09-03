@@ -29,9 +29,16 @@ local function getBlockBuilder(type, rot)
       builder:rectangle("line", x, y, x + BLOCK_WIDTH - 1, y + BLOCK_HEIGHT - 1, prism.cells.Wall)
 
       -- now knock out doors with two more floor fills.
-      builder:rectangle("fill", x, y + BLOCK_HEIGHT / 2 - 1, x + BLOCK_WIDTH, y + BLOCK_HEIGHT / 2 + 1, prism.cells
+      builder:rectangle("fill", x, y + BLOCK_HEIGHT / 2 - 1, x + BLOCK_WIDTH - 1, y + BLOCK_HEIGHT / 2 + 1, prism.cells
          .Floor)
-      builder:rectangle("fill", x + BLOCK_WIDTH / 2 - 1, y, x + BLOCK_WIDTH / 2 + 1, y + BLOCK_HEIGHT,
+      builder:rectangle("fill", x + BLOCK_WIDTH / 2 - 1, y, x + BLOCK_WIDTH / 2 + 1, y + BLOCK_HEIGHT - 1,
+         prism.cells.Floor)
+   elseif type == "hallway" then
+      builder:rectangle("fill", x, y, x + BLOCK_WIDTH - 1, y + BLOCK_HEIGHT - 1, prism.cells.Wall)
+
+      builder:rectangle("fill", x, y + BLOCK_HEIGHT / 2 - 1, x + BLOCK_WIDTH - 1, y + BLOCK_HEIGHT / 2 + 1, prism.cells
+         .Floor)
+      builder:rectangle("fill", x + BLOCK_WIDTH / 2 - 1, y, x + BLOCK_WIDTH / 2 + 1, y + BLOCK_HEIGHT - 1,
          prism.cells.Floor)
    else
       prism.logger.error("No block of type " .. type .. " exists.")
@@ -67,7 +74,7 @@ return function(rng, player, width, height)
    for i = 1, blockWidth do
       blocks[i] = {}
       for j = 1, blockHeight do
-         blocks[i][j] = "room"
+         blocks[i][j] = rng:random() < 0.7 and "room" or "hallway"
       end
    end
 
@@ -86,7 +93,7 @@ return function(rng, player, width, height)
    end
 
    -- wrap the world in a border
-   builder:rectangle("line", 1, 1, width + 1, height + 1, prism.cells.Wall)
+   builder:rectangle("line", 1, 1, width, height, prism.cells.Wall)
 
 
 
