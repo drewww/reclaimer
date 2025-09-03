@@ -21,13 +21,12 @@ local BLOCK_HEIGHT = 10
 --- @return LevelBuilder
 local function getBlockBuilder(type, rot)
    local builder = prism.LevelBuilder(prism.cells.Floor)
-   local x, y = 1, 1
+   local x, y = 0, 0
    -- for now support one kind of block.
    prism.logger.info("building block: ", type, x, y)
    if type == "room" then
-      builder:rectangle("fill", x, y, x + BLOCK_WIDTH, y + BLOCK_HEIGHT, prism.cells.Floor)
-      builder:rectangle("line", x, y, x + BLOCK_WIDTH, y + BLOCK_HEIGHT, prism.cells.Wall)
-
+      builder:rectangle("fill", x, y, x + BLOCK_WIDTH - 1, y + BLOCK_HEIGHT - 1, prism.cells.Floor)
+      builder:rectangle("line", x, y, x + BLOCK_WIDTH - 1, y + BLOCK_HEIGHT - 1, prism.cells.Wall)
 
       -- now knock out doors with two more floor fills.
       builder:rectangle("fill", x, y + BLOCK_HEIGHT / 2 - 1, x + BLOCK_WIDTH, y + BLOCK_HEIGHT / 2 + 1, prism.cells
@@ -46,7 +45,7 @@ end
 --- @param width integer
 --- @param height integer
 return function(rng, player, width, height)
-   local builder = prism.LevelBuilder(prism.cells.Wall)
+   local builder = prism.LevelBuilder(prism.cells.Pit)
 
    local blockWidth = width / BLOCK_WIDTH
    local blockHeight = height / BLOCK_HEIGHT
@@ -74,17 +73,20 @@ return function(rng, player, width, height)
 
    -- now, iterate through the block list and drop them in. (this could be collapsed,
    -- but I expect that we will want multiple passes to do various consistency checks.
-
    for i = 1, blockWidth do
       for j = 1, blockHeight do
-         prism.logger.info("generating block ", i, j, blocks[i][j])
+         local x, y = (i - 1) * (BLOCK_WIDTH) + 1, (j - 1) * (BLOCK_HEIGHT) + 1
+         prism.logger.info("generating block ", i, j, blocks[i][j], " at ", x, y)
          local blockBuilder = getBlockBuilder(blocks[i][j], 0)
 
          builder:blit(blockBuilder,
-            1 + (i - 1) * (BLOCK_WIDTH + 1),
-            1 + (j - 1) * (BLOCK_HEIGHT + 1))
+            x,
+            y)
       end
    end
+
+   -- wrap the world in a border
+   builder:rectangle("line", 1, 1, width + 1, height + 1, prism.cells.Wall)
 
 
 
