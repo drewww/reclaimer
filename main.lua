@@ -3,7 +3,7 @@ require "prism"
 
 require "animations"
 
-require "util/constants"
+require "util.constants"
 
 prism.loadModule("prism/spectrum")
 prism.loadModule("prism/extra/sight")
@@ -11,6 +11,8 @@ prism.loadModule("prism/extra/log")
 prism.loadModule("prism/extra/inventory")
 
 prism.loadModule("modules/game")
+
+prism.defaultCell = prism.cells.Pit
 
 -- Grab our level state and sprite atlas.
 local GameLevelState = require "gamestates.gamelevelstate"

@@ -3,8 +3,8 @@ local Name = prism.components.Name
 local sf = string.format
 local Game = require "game"
 
-local WeaponUtil = require "util/weapons"
-local knockback = require "util/knockback"
+local WeaponUtil = require "util.weapons"
+local knockback = require "util.knockback"
 
 -- don't apply range here, because it's weapon dependent. check in `canPerform` instead.
 local ShootTarget = prism.Target():with(prism.components.Collider):sensed()

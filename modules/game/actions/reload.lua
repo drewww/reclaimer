@@ -1,4 +1,4 @@
-local WeaponUtil = require "util/weapons"
+local WeaponUtil = require "util.weapons"
 -- local ReloadTarget = prism.Target():isPrototype(prism.Actor):with(prism.components.Weapon)
 -- local ReloadTarget = prism.Target():isPrototype(prism.Actor)
 

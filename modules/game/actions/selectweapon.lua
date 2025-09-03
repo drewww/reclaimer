@@ -1,5 +1,5 @@
 local WeaponHotkey = prism.Target():isType("number")
-local WeaponUtil = require "util/weapons"
+local WeaponUtil = require "util.weapons"
 
 --- @class SelectWeapon : Action
 --- @overload fun(owner: Actor, stairs: Actor): SelectWeapon

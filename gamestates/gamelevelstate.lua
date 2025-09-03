@@ -1,7 +1,7 @@
 local GameOverState = require "gamestates.gameoverstate"
 local InfoFrame = require "display.infoframe"
 local Game = require "game"
-local WeaponUtil = require "util/weapons"
+local WeaponUtil = require "util.weapons"
 local WeaponFrame = require "display.weaponframe"
 
 --- @class GameLevelState : LevelState
