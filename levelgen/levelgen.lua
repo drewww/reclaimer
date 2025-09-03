@@ -110,14 +110,14 @@ return function(rng, player, width, height)
       for j = 1, blockHeight do
          local rand = rng:random()
 
-         if rand < 0.7 then
-            levelBlocks[i][j] = "room"
-         elseif rand < 0.8 then
-            levelBlocks[i][j] = "hallway"
-         else
-            -- levelBlocks[i][j] = "pit"
-            levelBlocks[i][j] = "hints"
-         end
+         -- if rand < 0.7 then
+         --    levelBlocks[i][j] = "room"
+         -- elseif rand < 0.8 then
+         --    levelBlocks[i][j] = "hallway"
+         -- else
+         -- levelBlocks[i][j] = "pit"
+         levelBlocks[i][j] = "hints"
+         -- end
       end
    end
 
@@ -138,10 +138,29 @@ return function(rng, player, width, height)
    -- wrap the world in a border
    builder:rectangle("line", 1, 1, width, height, prism.cells.Wall)
 
+   -- now iterate through all the cells and respond to hints.
+   for x, y, cell in builder:eachCell() do
+      if cell:has(prism.components.Hint) then
+         local hint = cell:get(prism.components.Hint)
+         local drawable = cell:get(prism.components.Drawable)
 
+         cell:remove(prism.components.Hint)
 
+         -- TODO need to be smarter about this
+         drawable.color = prism.Color4.WHITE
 
-   local playerPos = prism.Vector2(3, 3)
+         prism.logger.info("adding actor of type " .. hint.type .. " at ", x, y)
+         if hint.type == "enemy" then
+            builder:addActor(prism.actors.Bot(), x, y)
+         elseif hint.type == "chest" then
+            builder:addActor(prism.actors.Chest(), x, y)
+         elseif hint.type == "barrel" then
+            builder:addActor(prism.actors.Barrel(), x, y)
+         end
+      end
+   end
+
+   local playerPos = prism.Vector2(4, 4)
    builder:addActor(player, playerPos.x, playerPos.y)
 
    builder:pad(1, prism.cells.Wall)
