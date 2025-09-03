@@ -70,10 +70,10 @@ local function getBlockBuilder(type, rot)
          .Floor)
       builder:rectangle("fill", x + BLOCK_WIDTH / 2 - 1, y, x + BLOCK_WIDTH / 2 + 1, y + BLOCK_HEIGHT - 1,
          prism.cells.Floor)
-   elseif BLOCKS and BLOCKS[type] then
-      return BLOCKS[type]
    else
-      prism.logger.error("No block of type " .. type .. " exists.")
+      -- fucking send it
+      prism.logger.info("loading " .. type .. ".lz4 raw")
+      builder = prism.LevelBuilder.fromLz4("levelgen/blocks/" .. type .. ".lz4", prism.defaultCell)
    end
 
    return builder
@@ -128,6 +128,7 @@ return function(rng, player, width, height)
          local x, y = (i - 1) * (BLOCK_WIDTH) + 1, (j - 1) * (BLOCK_HEIGHT) + 1
          prism.logger.info("generating block ", i, j, levelBlocks[i][j], " at ", x, y)
          local blockBuilder = getBlockBuilder(levelBlocks[i][j], 0)
+         -- local blockBuilder =
 
          builder:blit(blockBuilder,
             x,
