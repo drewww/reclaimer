@@ -21,15 +21,19 @@ local BLOCK_HEIGHT = 10
 --- @param x integer
 --- @param y integer
 --- @param rot integer
-function buildBlock(builder, type, x, y, rot)
+local function buildBlock(builder, type, x, y, rot)
    -- for now support one kind of block.
+   prism.logger.info("building block: ", type, x, y)
    if type == "room" then
-      builder:rectangle("fill", x, y, BLOCK_WIDTH, BLOCK_HEIGHT, prism.cells.Floor)
-      builder:rectangle("line", x, y, BLOCK_WIDTH, BLOCK_HEIGHT, prism.cells.Wall)
+      builder:rectangle("fill", x, y, x + BLOCK_WIDTH, y + BLOCK_HEIGHT, prism.cells.Floor)
+      builder:rectangle("line", x, y, x + BLOCK_WIDTH, y + BLOCK_HEIGHT, prism.cells.Wall)
+
 
       -- now knock out doors with two more floor fills.
-      builder:rectangle("fill", x, y + BLOCK_HEIGHT / 2 - 1, BLOCK_WIDTH, 2, prism.cells.Floor)
-      builder:rectangle("fill", x + BLOCK_WIDTH / 2 - 1, y, 2, BLOCK_HEIGHT, prism.cells.Floor)
+      builder:rectangle("fill", x, y + BLOCK_HEIGHT / 2 - 1, x + BLOCK_WIDTH, y + BLOCK_HEIGHT / 2 + 1, prism.cells
+         .Floor)
+      builder:rectangle("fill", x + BLOCK_WIDTH / 2 - 1, y, x + BLOCK_WIDTH / 2 + 1, y + BLOCK_HEIGHT,
+         prism.cells.Floor)
    else
       prism.logger.error("No block of type " .. type .. " exists.")
    end
@@ -59,9 +63,9 @@ return function(rng, player, width, height)
    -- initialize the blocks. this will eventually have logic, but for now just
    -- places the default "room" type
    local blocks = {}
-   for i = 1, blockHeight do
+   for i = 1, blockWidth do
       blocks[i] = {}
-      for j = 1, blockWidth do
+      for j = 1, blockHeight do
          blocks[i][j] = "room"
       end
    end
@@ -69,8 +73,9 @@ return function(rng, player, width, height)
    -- now, iterate through the block list and drop them in. (this could be collapsed,
    -- but I expect that we will want multiple passes to do various consistency checks.
 
-   for i = 1, blockHeight do
-      for j = 1, blockWidth do
+   for i = 1, blockWidth do
+      for j = 1, blockHeight do
+         prism.logger.info("generating block ", i, j, blocks[i][j])
          buildBlock(builder, blocks[i][j],
             1 + (i - 1) * BLOCK_WIDTH,
             1 + (j - 1) * BLOCK_HEIGHT, 0)
