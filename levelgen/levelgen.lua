@@ -16,12 +16,12 @@ local BLOCK_HEIGHT = 10
 --
 -- We'll have the list of blocks be methods for now.
 
---- @param builder LevelBuilder
 --- @param type type
---- @param x integer
---- @param y integer
 --- @param rot integer
-local function buildBlock(builder, type, x, y, rot)
+--- @return LevelBuilder
+local function getBlockBuilder(type, rot)
+   local builder = prism.LevelBuilder(prism.cells.Floor)
+   local x, y = 1, 1
    -- for now support one kind of block.
    prism.logger.info("building block: ", type, x, y)
    if type == "room" then
@@ -37,6 +37,8 @@ local function buildBlock(builder, type, x, y, rot)
    else
       prism.logger.error("No block of type " .. type .. " exists.")
    end
+
+   return builder
 end
 
 --- @param rng RNG
@@ -76,9 +78,11 @@ return function(rng, player, width, height)
    for i = 1, blockWidth do
       for j = 1, blockHeight do
          prism.logger.info("generating block ", i, j, blocks[i][j])
-         buildBlock(builder, blocks[i][j],
-            1 + (i - 1) * BLOCK_WIDTH,
-            1 + (j - 1) * BLOCK_HEIGHT, 0)
+         local blockBuilder = getBlockBuilder(blocks[i][j], 0)
+
+         builder:blit(blockBuilder,
+            1 + (i - 1) * (BLOCK_WIDTH + 1),
+            1 + (j - 1) * (BLOCK_HEIGHT + 1))
       end
    end
 
