@@ -54,7 +54,7 @@ end
 
 function MapState:newBuilder()
    local player = prism.actors.Player()
-   return levelgen(prism.RNG(tostring(os.time())), player, 81, 41)
+   return levelgen(prism.RNG(tostring(os.time())), player, 60, 30)
 end
 
 return MapState
