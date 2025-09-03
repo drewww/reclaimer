@@ -11,4 +11,4 @@ end
 
 prism.registerCell("FloorHintEnemy", floorHint("enemy", prism.Color4.RED))
 prism.registerCell("FloorHintChest", floorHint("chest", prism.Color4.YELLOW))
-prism.registerCell("FloorHintBarrel", floorHint("chest", prism.Color4.BLUE))
+prism.registerCell("FloorHintBarrel", floorHint("barrel", prism.Color4.BLUE))

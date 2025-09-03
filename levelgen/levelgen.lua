@@ -13,38 +13,7 @@ local BLOCK_HEIGHT = 10
 -- pre-populates two different block types.
 --
 -- To start, block interconnect will just be that all blocks have walls and then knock out the middles of each wall.
---
--- We'll have the list of blocks be methods for now.
-local BLOCKS = nil
 
-local function loadBlocks()
-   -- if blocks is already loaded once, don't reload it. essentially,
-   -- lazy init blocks.
-   if BLOCKS then return end
-
-   BLOCKS = {}
-
-   -- get a list of block files in /levelgen/blocks
-   -- load them all in to get workable builder functions out of each.
-   local files = love.filesystem.getDirectoryItems("levelgen/blocks")
-   if not files then
-      prism.logger.warn("No blocks directory found at levelgen/blocks")
-      return
-   end
-
-   for _, filename in ipairs(files) do
-      -- Only process .lz4 files
-      if filename:match("%.lz4$") then
-         local blockName = filename:match("(.+)%.lz4$") -- Remove .lz4 extension
-         local filePath = "levelgen/blocks/" .. filename
-         prism.logger.info("Loading block: " .. blockName .. " from " .. filePath)
-
-         BLOCKS[blockName] = prism.LevelBuilder.fromLz4(filePath, prism.defaultCell)
-      end
-   end
-
-   prism.logger.info(" completed loading blocks.")
-end
 
 --- @param type type
 --- @param rot integer
@@ -72,7 +41,7 @@ local function getBlockBuilder(type, rot)
          prism.cells.Floor)
    else
       -- fucking send it
-      prism.logger.info("loading " .. type .. ".lz4 raw")
+      prism.logger.info("loading " .. type .. ".lz4 ad hoc")
       builder = prism.LevelBuilder.fromLz4("levelgen/blocks/" .. type .. ".lz4", prism.defaultCell)
    end
 
@@ -84,7 +53,7 @@ end
 --- @param width integer
 --- @param height integer
 return function(rng, player, width, height)
-   loadBlocks()
+   -- loadBlocks()
 
    local builder = prism.LevelBuilder(prism.cells.Pit)
 
@@ -110,14 +79,14 @@ return function(rng, player, width, height)
       for j = 1, blockHeight do
          local rand = rng:random()
 
-         -- if rand < 0.7 then
-         --    levelBlocks[i][j] = "room"
-         -- elseif rand < 0.8 then
-         --    levelBlocks[i][j] = "hallway"
-         -- else
-         -- levelBlocks[i][j] = "pit"
-         levelBlocks[i][j] = "hints"
-         -- end
+         if rand < 0.7 then
+            levelBlocks[i][j] = "room"
+         elseif rand < 0.8 then
+            levelBlocks[i][j] = "hallway"
+         else
+            -- levelBlocks[i][j] = "pit"
+            levelBlocks[i][j] = "hints"
+         end
       end
    end
 
@@ -128,7 +97,6 @@ return function(rng, player, width, height)
          local x, y = (i - 1) * (BLOCK_WIDTH) + 1, (j - 1) * (BLOCK_HEIGHT) + 1
          prism.logger.info("generating block ", i, j, levelBlocks[i][j], " at ", x, y)
          local blockBuilder = getBlockBuilder(levelBlocks[i][j], 0)
-         -- local blockBuilder =
 
          builder:blit(blockBuilder,
             x,
