@@ -32,6 +32,14 @@ function Open:perform(level, target)
          -- need to do this otherwise it doesn't get a turn to tick on.
          target:give(prism.components.WaitController())
          openable.open = true
+
+         -- now broadcast to adjacent bots.
+         for bot in level:query(prism.components.BotController):iter()
+         do
+            if bot:getPosition():getRange(target:getPosition(), "euclidean") < 10 then
+               bot:give(prism.components.Alert())
+            end
+         end
       else
          prism.logger.info("Immdiate open.")
          openable.open = true

@@ -10,6 +10,11 @@ prism.loadModule("prism/extra/sight")
 prism.loadModule("prism/extra/log")
 prism.loadModule("prism/extra/inventory")
 
+prism.Collision.registerMovetype("walk", "movetypes0")
+prism.Collision.registerMovetype("fly", "movetypes1")
+
+prism.logger.info(" done registering move types ")
+
 prism.loadModule("modules/game")
 
 prism.defaultCell = prism.cells.Pit

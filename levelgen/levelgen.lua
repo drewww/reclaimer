@@ -81,11 +81,11 @@ return function(rng, player, width, height)
 
          if rand < 0.7 then
             levelBlocks[i][j] = "room"
-         elseif rand < 0.8 then
-            levelBlocks[i][j] = "hallway"
+            -- elseif rand < 0.8 then
+            --    levelBlocks[i][j] = "hallway"
          else
             -- levelBlocks[i][j] = "pit"
-            levelBlocks[i][j] = "hints"
+            levelBlocks[i][j] = "chest"
          end
       end
    end

@@ -11,6 +11,9 @@ function BotController:act(level, actor)
    local mover = actor:get(prism.components.Mover)
    if not mover then return prism.actions.Wait(actor) end
 
+   local alert = actor:get(prism.components.Alert)
+   if not alert then return prism.actions.Wait(actor) end
+
    local path = level:findPath(actor:getPosition(), player:getPosition(), actor, mover.mask, 1)
 
    if path then
