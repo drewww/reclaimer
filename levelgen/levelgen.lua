@@ -1,5 +1,5 @@
-local BLOCK_WIDTH = 10
-local BLOCK_HEIGHT = 10
+local BLOCK_WIDTH = 20
+local BLOCK_HEIGHT = 20
 
 -- Okay, the approach here. We're going to have "blocks" of some size. The map is
 -- composed of those blocks randomly composed. There may be rules to what blocks can go
@@ -79,13 +79,20 @@ return function(rng, player, width, height)
       for j = 1, blockHeight do
          local rand = rng:random()
 
-         if rand < 0.7 then
-            levelBlocks[i][j] = "room"
-            -- elseif rand < 0.8 then
-            --    levelBlocks[i][j] = "hallway"
+         if rand < 0.2 then
+            levelBlocks[i][j] = "20x20-open"
+         elseif rand < 0.3 then
+            levelBlocks[i][j] = "20x20-hallway"
+         elseif rand < 0.5 then
+            levelBlocks[i][j] = "20x20-open-guards"
+         elseif rand < 0.65 then
+            levelBlocks[i][j] = "20x20-hallway"
+         elseif rand < 0.8 then
+            levelBlocks[i][j] = "20x20-chesta"
+         elseif rand < 0.9 then
+            levelBlocks[i][j] = "20x20-chestb"
          else
-            -- levelBlocks[i][j] = "pit"
-            levelBlocks[i][j] = "chest"
+            levelBlocks[i][j] = "20x20-chestc"
          end
       end
    end

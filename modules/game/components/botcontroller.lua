@@ -18,6 +18,7 @@ function BotController:act(level, actor)
 
    if player then
       destination = player:getPosition()
+      alert.lastseen = player:getPosition()
    elseif alert.lastseen then
       destination = alert.lastseen
    end
