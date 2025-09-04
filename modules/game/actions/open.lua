@@ -37,7 +37,7 @@ function Open:perform(level, target)
          for bot in level:query(prism.components.BotController):iter()
          do
             if bot:getPosition():getRange(target:getPosition(), "euclidean") < 10 then
-               bot:give(prism.components.Alert())
+               bot:give(prism.components.Alert(target:getPosition()))
             end
          end
       else

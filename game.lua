@@ -21,7 +21,7 @@ function Game:getLevelSeed()
 end
 
 --- @param player Actor
---- @return MapBuilder builder
+--- @return LevelBuilder builder
 function Game:generateNextFloor(player)
    self.depth = self.depth + 1
 

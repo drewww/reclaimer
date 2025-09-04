@@ -1,4 +1,4 @@
---- @class Alert : Component
+--- @class Hint : Component
 local Hint = prism.Component:extend("Hint")
 
 --- @param type string
