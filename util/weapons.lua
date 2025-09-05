@@ -75,12 +75,13 @@ function WeaponUtil.getTargetPoints(actor, target)
       -- we could range-limit this
       table.insert(points, target)
    elseif weapon and weapon.template == "line" then
-      prism.logger.info("source: ", source)
-      prism.logger.info("target: ", target)
       local line, found = prism.Bresenham(source.x, source.y, target.x, target.y)
 
-      for i, point in ipairs(line) do
-         table.insert(points, prism.Vector2(point[1], point[2]))
+      for i, p in ipairs(line) do
+         local point = prism.Vector2(p[1], p[2])
+         if source:distance(point) <= weapon.range then
+            table.insert(points, point)
+         end
       end
    elseif weapon and weapon.template == "cone" then
       local range = weapon.range
