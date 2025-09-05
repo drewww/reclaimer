@@ -60,6 +60,12 @@ function TitleState:update(dt)
 
          local knife = prism.actors.Knife()
          inventory:addItem(knife)
+
+         local shotgun = prism.actors.Shotgun()
+         inventory:addItem(shotgun)
+
+         local laser = prism.actors.Laser()
+         inventory:addItem(laser)
       end
 
 

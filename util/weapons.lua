@@ -62,6 +62,9 @@ function WeaponUtil.getTargetPoints(actor, target)
    local points = {}
 
    if not actor then return points end
+   local source = actor:getPosition()
+   if not source then return points end
+
    local inventory = actor:get(prism.components.Inventory)
    if not inventory then return points end
    local weaponActor = WeaponUtil.getActive(inventory)
@@ -71,6 +74,53 @@ function WeaponUtil.getTargetPoints(actor, target)
    if weapon and weapon.template == "point" then
       -- we could range-limit this
       table.insert(points, target)
+   elseif weapon and weapon.template == "line" then
+      prism.logger.info("source: ", source)
+      prism.logger.info("target: ", target)
+      local line, found = prism.Bresenham(source.x, source.y, target.x, target.y)
+
+      for i, point in ipairs(line) do
+         table.insert(points, prism.Vector2(point[1], point[2]))
+      end
+   elseif weapon and weapon.template == "cone" then
+      local range = weapon.range
+      local angle = math.pi / 2 -- or whatever angle you want
+
+      local startPos = actor:getPosition()
+      assert(startPos)
+
+      local direction = (target - startPos):normalize()
+      local baseAngle = math.atan2(direction.y, direction.x)
+      local halfAngle = angle / 2
+
+      -- Test all points in a square grid around the start position
+      for dx = -range, range do
+         for dy = -range, range do
+            local testPoint = startPos + prism.Vector2(dx, dy)
+            local toPoint = testPoint - startPos
+            local distance = toPoint:length()
+
+            -- Check if point is within range (but not at the start position)
+            if distance > 0.1 and distance <= range then
+               local pointAngle = math.atan2(toPoint.y, toPoint.x)
+
+               -- Calculate angle difference
+               local angleDiff = pointAngle - baseAngle
+
+               -- Normalize to [-π, π]
+               if angleDiff > math.pi then
+                  angleDiff = angleDiff - 2 * math.pi
+               elseif angleDiff < -math.pi then
+                  angleDiff = angleDiff + 2 * math.pi
+               end
+
+               -- Check if within cone angle
+               if math.abs(angleDiff) <= halfAngle then
+                  table.insert(points, testPoint)
+               end
+            end
+         end
+      end
    end
 
    return points

@@ -170,7 +170,7 @@ function GameLevelState:draw(primary, secondary)
    end
 
    if self.mouseCellPosition then
-      local mouseX, mouseY = self.mouseCellPosition.x + cameraX, self.mouseCellPosition.y + cameraY
+      local mouseX, mouseY = self.mouseCellPosition.x, self.mouseCellPosition.y
 
       -- prism.logger.info(string.format("Drawing mouse cell position: x=%d, y=%d, w=%d, h=%d", x, y, w, h))
 
@@ -181,7 +181,8 @@ function GameLevelState:draw(primary, secondary)
          local points = WeaponUtil.getTargetPoints(player, prism.Vector2(mouseX, mouseY))
 
          for i, point in ipairs(points) do
-            self.display:putBG(point.x, point.y, prism.Color4(0.5, 0.5, 1.0, 0.5))
+            prism.logger.info("point: " .. tostring(point))
+            self.display:putBG(point.x + cameraX, point.y + cameraY, prism.Color4(0.5, 0.5, 1.0, 0.5))
          end
       end
    end
