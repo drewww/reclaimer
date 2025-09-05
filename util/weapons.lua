@@ -54,4 +54,26 @@ WeaponUtil.getActive = function(inventory)
    return activeWeapon
 end
 
+
+--- @param actor Actor
+--- @param target Vector2
+--- @return Vector2[]
+function WeaponUtil.getTargetPoints(actor, target)
+   local points = {}
+
+   if not actor then return points end
+   local inventory = actor:get(prism.components.Inventory)
+   if not inventory then return points end
+   local weaponActor = WeaponUtil.getActive(inventory)
+   if not weaponActor then return points end
+   local weapon = weaponActor:get(prism.components.Weapon)
+
+   if weapon and weapon.template == "point" then
+      -- we could range-limit this
+      table.insert(points, target)
+   end
+
+   return points
+end
+
 return WeaponUtil
