@@ -60,7 +60,9 @@ function GameLevelState:__new(display, builder, seed)
       prism.systems.Sight(),
       -- prism.systems.Alert(),
       prism.systems.Energy(),
-      prism.systems.Tick())
+      prism.systems.Tick()
+   -- prism.systems.Target()
+   )
 
    -- setup custom turn handler
    builder:addTurnHandler(turn)
@@ -166,7 +168,6 @@ function GameLevelState:draw(primary, secondary)
          if cell:has(prism.components.Dashing) then color = prism.Color4(0.5, 0.5, 1.0, 0.5) end
 
          if cell:has(prism.components.Targeted) then
-            prism.logger.info("targeting cell")
             color = prism.Color4(1.0, 0, 0, 0.5)
             layer = 100
          end

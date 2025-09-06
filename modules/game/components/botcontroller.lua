@@ -13,10 +13,37 @@ function BotController:act(level, actor)
    local alert = actor:get(prism.components.Alert)
    if not alert then return prism.actions.Wait(actor) end
 
+   local inventory = actor:get(prism.components.Inventory)
+   local weapon, weaponComponent = WeaponUtil.getActive(inventory)
+
+
    if actor:has(prism.components.Targeting) then
       prism.logger.info("FIRE!")
       -- return shoot
-      return prism.actions.Wait(actor)
+
+
+      -- decrement targeted for all the cells we're targeting
+      local targeting = actor:get(prism.components.Targeting)
+
+      local targetPositions = WeaponUtil.getTargetPoints(level, actor, targeting.target)
+
+      for i, p in ipairs(targetPositions) do
+         -- set targeting on these cells
+         local cell = level:getCell(p.x, p.y)
+         local targeted = cell:get(prism.components.Targeted)
+
+         if targeted then
+            targeted.times = targeted.times - 1
+            if targeted.times == 0 then
+               cell:remove(targeted)
+            end
+         end
+      end
+
+      actor:remove(prism.components.Targeting)
+
+      prism.logger.info("Shooting at ", targeting.target)
+      return prism.actions.Shoot(targeting.target)
    end
 
 
@@ -32,9 +59,6 @@ function BotController:act(level, actor)
          -- enter targeted mode
          actor:give(targeted)
 
-         local inventory = actor:get(prism.components.Inventory)
-         local weapon, weaponComponent = WeaponUtil.getActive(inventory)
-
          if weaponComponent and actor:getPosition():distance(player:getPosition()) <= weaponComponent.range then
             -- if we're in range then target
             local targetPositions = WeaponUtil.getTargetPoints(level, actor, player:getPosition())
@@ -42,10 +66,17 @@ function BotController:act(level, actor)
             for i, p in ipairs(targetPositions) do
                -- set targeting on these cells
                local cell = level:getCell(p.x, p.y)
-               cell:give(prism.components.Targeted())
+               local targetedComponent = cell:get(prism.components.Targeted())
+
+               if targetedComponent then
+                  targetedComponent.times = targetedComponent.times + 1
+               else
+                  cell:give(prism.components.Targeted(1))
+               end
             end
+
+            return prism.actions.Wait(actor)
          end
-         -- set the cells that are targeted to targeted
       end
       -- if the actor sees the player, enter targeting mode
       destination = player:getPosition()
