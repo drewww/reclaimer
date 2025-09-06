@@ -10,11 +10,13 @@ prism.registerActor("Bot", function()
       prism.components.BotController(),
       prism.components.Health(5),
       prism.components.Attacker(1),
+      prism.components.Alert(),
       -- put a scrap item in the inventory of the bot
       prism.components.Inventory {
          totalCount = 1,
          items = {
             prism.actors.Scrap(),
+            prism.actors.BotLaser()
          },
       },
    }

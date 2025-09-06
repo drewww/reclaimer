@@ -40,6 +40,7 @@ end
 
 --- @param inventory Inventory
 --- @return Actor?
+--- @return Weapon?
 WeaponUtil.getActive = function(inventory)
    -- loop through all items until we hit one with a true active flag
 
@@ -51,7 +52,12 @@ WeaponUtil.getActive = function(inventory)
       end
    )
 
-   return activeWeapon
+   if activeWeapon then
+      local weaponComponent = activeWeapon:get(prism.components.Weapon)
+      return activeWeapon, weaponComponent
+   else
+      return nil, nil
+   end
 end
 
 --- @param level Level

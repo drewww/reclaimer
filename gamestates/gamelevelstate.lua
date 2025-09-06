@@ -147,27 +147,34 @@ function GameLevelState:draw(primary, secondary)
 
       local weapon = WeaponUtil.getActive(inventory):get(prism.components.Weapon)
 
-      if weapon then
-         for cellX, cellY, cell in self.level:eachCell() do
-            local color = prism.Color4.TRANSPARENT
 
-            -- checks -- player can see, and it's in range of current weapon
-            -- position is playerPosition
+      for cellX, cellY, cell in self.level:eachCell() do
+         local color = prism.Color4.TRANSPARENT
 
-            if
-                player:getPosition():distance(prism.Vector2(cellX, cellY)) <= weapon.range
-                and playerSenses
-                and playerSenses.cells:get(cellX, cellY)
-            then
-               color = prism.Color4(0.5, 0.5, 1.0, 0.2)
-            end
+         -- checks -- player can see, and it's in range of current weapon
+         -- position is playerPosition
 
-            if cell:has(prism.components.Dashing) then color = prism.Color4(0.5, 0.5, 1.0, 0.5) end
-
-            self.display:putBG(cellX + cameraX, cellY + cameraY, color, 50)
+         if weapon and
+             player:getPosition():distance(prism.Vector2(cellX, cellY)) <= weapon.range
+             and playerSenses
+             and playerSenses.cells:get(cellX, cellY)
+         then
+            color = prism.Color4(0.5, 0.5, 1.0, 0.2)
          end
+
+         local layer = 50
+         if cell:has(prism.components.Dashing) then color = prism.Color4(0.5, 0.5, 1.0, 0.5) end
+
+         if cell:has(prism.components.Targeted) then
+            prism.logger.info("targeting cell")
+            color = prism.Color4(1.0, 0, 0, 0.5)
+            layer = 100
+         end
+
+         self.display:putBG(cellX + cameraX, cellY + cameraY, color, layer)
       end
    end
+
 
    if self.mouseCellPosition then
       local mouseX, mouseY = self.mouseCellPosition.x, self.mouseCellPosition.y
