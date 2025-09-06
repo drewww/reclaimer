@@ -58,53 +58,63 @@ function Shoot:perform(level, target)
    local weapon = WeaponUtil.getActive(inventory):get(prism.components.Weapon)
    assert(weapon)
 
-   local direction = (target - self.owner:getPosition())
+   local targetPoints = WeaponUtil.getTargetPoints(level, self.owner, target)
 
-   print("direction: " .. tostring(direction))
-
-   local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
-
+   -- TODO different animations for different weapons
    level:yield(prism.messages.Animation {
       animation = spectrum.animations.Projectile(self.owner, target),
-      -- actor = self.owner
-      blocking = true -- causes screen to go black
+      blocking = true
    })
 
    -- because the enemy moves immediately after this, if you just move one space
    -- it appears like they're not moving.
-   local startPos = target
-   local finalPos, hitWall, cellsMoved = knockback(level, startPos, direction, weapon.push, mask)
+   local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
+
 
    weapon.ammo = weapon.ammo - weapon.ammopershot
 
    -- Move the target to final position
-   local targetActor = level:query():at(target:decompose()):first()
-   if targetActor then
-      level:moveActor(targetActor, finalPos)
+   for i, p in ipairs(targetPoints) do
+      -- test for actors for each of thet arget points
+      local targetActor = level:query():at(p:decompose()):first()
+      if targetActor then
+         local startPos = p
 
-      -- Calculate damage based on whether they hit a wall
-      local damageValue = hitWall and WALL_COLLIDE_DAMAGE + weapon.damage or weapon.damage
-
-      local damage = prism.actions.Damage(targetActor, damageValue)
-
-      -- Why do I need to ask first? I guess this is type protection more or less.
-      if level:canPerform(damage) then level:perform(damage) end
-
-      local shotName = Name.lower(targetActor)
-      local ownerName = Name.lower(self.owner)
-      local dmgstr = ""
-
-      -- TODO increment this even if you miss. especially if we support shooting random spots.
-      if damage.dealt then
-         if self.owner:has(prism.components.PlayerController) then
-            Game.stats:increment("shots")
+         local direction = (target - self.owner:getPosition())
+         if weapon.template == "aoe" then
+            -- update knockback parameters if it's AOE; you need to knockback
+            -- relative to target position
+            direction = p - target
          end
-      end
 
-      if damage.dealt then dmgstr = sf("%i damage.", damage.dealt) end
-      Log.addMessage(self.owner, sf("You shot the %s. %s", shotName, dmgstr))
-      Log.addMessage(targetActor, sf("The %s shot you! %s", ownerName, dmgstr))
-      Log.addMessageSensed(level, self, sf("The %s shoots the %s. %s", ownerName, shotName, dmgstr))
+         local finalPos, hitWall, cellsMoved = knockback(level, startPos, direction, weapon.push, mask)
+
+         level:moveActor(targetActor, finalPos)
+
+         -- Calculate damage based on whether they hit a wall
+         local damageValue = hitWall and WALL_COLLIDE_DAMAGE + weapon.damage or weapon.damage
+
+         local damage = prism.actions.Damage(targetActor, damageValue)
+
+         -- Why do I need to ask first? I guess this is type protection more or less.
+         if level:canPerform(damage) then level:perform(damage) end
+
+         local shotName = Name.lower(targetActor)
+         local ownerName = Name.lower(self.owner)
+         local dmgstr = ""
+
+         -- TODO increment this even if you miss. especially if we support shooting random spots.
+         if damage.dealt then
+            if self.owner:has(prism.components.PlayerController) then
+               Game.stats:increment("shots")
+            end
+         end
+
+         if damage.dealt then dmgstr = sf("%i damage.", damage.dealt) end
+         Log.addMessage(self.owner, sf("You shot the %s. %s", shotName, dmgstr))
+         Log.addMessage(targetActor, sf("The %s shot you! %s", ownerName, dmgstr))
+         Log.addMessageSensed(level, self, sf("The %s shoots the %s. %s", ownerName, shotName, dmgstr))
+      end
    end
 end
 
