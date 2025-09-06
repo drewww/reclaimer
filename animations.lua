@@ -6,12 +6,35 @@ spectrum.registerAnimation("Projectile", function(owner, targetPosition)
 
    return spectrum.Animation(function(t, display)
       local index = math.floor(t / 0.05) + 1
+
+      if not line or #line == 0 then return true end
+      
       display:put(line[index][1], line[index][2], "*", prism.Color4.ORANGE)
 
       if index == #line then return true end
 
       return false
    end)
+end)
+
+spectrum.registerAnimation("Damage", function(value)
+   local startColor = prism.Color4.RED
+   local lighterColor = startColor:copy()
+   lighterColor.a = 0.6
+
+   local lighestColor = startColor:copy()
+   lighestColor.a = 0.3
+
+   local on = { index = tostring(value), color = startColor }
+   local fade1 = { index = tostring(value), color = lighterColor }
+   local fade2 = { index = tostring(value), color = lighestColor }
+
+   prism.logger.info("DAMAGE ANIM FOR ", value)
+   return spectrum.Animation(
+      { on, on, on, on, on, on, on, fade1, fade2 },
+      0.05,
+      "pauseAtEnd"
+   )
 end)
 
 --- @param center Vector2

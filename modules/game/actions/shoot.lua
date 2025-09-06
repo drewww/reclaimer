@@ -34,7 +34,7 @@ function Shoot:canPerform(level, target)
       -- if ammo per shot is 0, don't check for ammo at all.
       if weapon.ammopershot == 0 then
          availableAmmo = true
-      elseif weapon.ammo >= weapon.ammo then
+      elseif weapon.ammo >= weapon.ammopershot then
          availableAmmo = true
       end
 
@@ -78,7 +78,7 @@ function Shoot:perform(level, target)
    local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
 
 
-   weapon.ammo = weapon.ammo - weapon.ammopershot
+   weapon.ammo = math.max(weapon.ammo - weapon.ammopershot, 0)
 
    -- Move the target to final position
    for i, p in ipairs(targetPoints) do

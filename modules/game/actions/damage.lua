@@ -14,6 +14,14 @@ function Damage:perform(level, damage)
    health.hp = health.hp - damage
    self.dealt = damage
 
+   if health.hp > 0 then
+      level:yield(prism.messages.Animation {
+         animation = spectrum.animations.Damage(damage),
+         actor = self.owner,
+         y = -1
+      })
+   end
+
    if health.hp <= 0 then level:perform(prism.actions.Die(self.owner)) end
 end
 
