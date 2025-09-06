@@ -44,7 +44,7 @@ function Push:perform(level, amount, from)
 
    level:yield(prism.messages.Animation {
       animation = spectrum.animations.Push(self.owner, path),
-      blocking = true
+      blocking = false
    })
 end
 

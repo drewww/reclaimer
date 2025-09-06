@@ -36,6 +36,8 @@ function Die:perform(level)
             level:tryPerform(prism.actions.Damage(actor, 5))
          end
       end
+   else
+      level:removeActor(self.owner)
    end
 
    prism.logger.info("Actor died: " .. self.owner:getName())
