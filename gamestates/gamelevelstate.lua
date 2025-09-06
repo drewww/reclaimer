@@ -301,7 +301,13 @@ function GameLevelState:updateDecision(dt, owner, decision)
 
    if self.controls.pickup.pressed then
       local target = self.level:query(prism.components.Item):at(owner:getPosition():decompose()):first()
+
       local pickup = prism.actions.Pickup(owner, target)
+
+      if pickup:canPerform() and target and target:getName() == "nanos" then
+         Game.stats:increment("cash", target:get(prism.components.Item).stackCount)
+      end
+
       decision:setAction(pickup, self.level)
    end
 
