@@ -101,14 +101,6 @@ function Shoot:perform(level, target)
          blocking = true
       })
    end
-
-   -- because the enemy moves immediately after this, if you just move one space
-   -- it appears like they're not moving.
-   local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
-
-
-
-
    -- Move the target to final position
    for i, p in ipairs(targetPoints) do
       -- test for actors for each of thet arget points
@@ -116,23 +108,29 @@ function Shoot:perform(level, target)
       if targetActor then
          local startPos = p
 
-         local direction = (target - self.owner:getPosition())
+         local source = self.owner:getPosition()
          if weapon.template == "aoe" then
             -- update knockback parameters if it's AOE; you need to knockback
             -- relative to target position
-            direction = p - target
+            source = target
          end
 
-         local finalPos, hitWall, cellsMoved = knockback(level, startPos, direction, weapon.push, mask)
+         local push = prism.actions.Push(targetActor, weapon.push, source)
+         -- local error = push:validateTargets()
+         -- if error then
+         --    prism.logger.error(error)
+         -- end
+         level:perform(push)
 
-         level:moveActor(targetActor, finalPos)
+         -- local finalPos, hitWall, cellsMoved = knockback(level, startPos, direction, weapon.push, mask)
+
 
          -- Calculate damage based on whether they hit a wall
-         local damageValue = hitWall and WALL_COLLIDE_DAMAGE + weapon.damage or weapon.damage
+         local damageValue = weapon.damage
 
          local damage = prism.actions.Damage(targetActor, damageValue)
 
-         -- Why do I need to ask first? I guess this is type protection more or less.
+         -- -- Why do I need to ask first? I guess this is type protection more or less.
          if level:canPerform(damage) then level:perform(damage) end
 
          local shotName = Name.lower(targetActor)
@@ -140,11 +138,11 @@ function Shoot:perform(level, target)
          local dmgstr = ""
 
          -- TODO increment this even if you miss. especially if we support shooting random spots.
-         if damage.dealt then
-            if self.owner:has(prism.components.PlayerController) then
-               Game.stats:increment("shots")
-            end
+         -- if damage.dealt then
+         if self.owner:has(prism.components.PlayerController) then
+            Game.stats:increment("shots")
          end
+         -- end
 
          if damage.dealt then dmgstr = sf("%i damage.", damage.dealt) end
          Log.addMessage(self.owner, sf("You shot the %s. %s", shotName, dmgstr))

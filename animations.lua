@@ -92,6 +92,41 @@ spectrum.registerAnimation("Laser", function(source, target, color)
 end
 )
 
+--- @param actor Actor
+--- @param path Vector2[]
+spectrum.registerAnimation("Push", function(actor, path)
+   return spectrum.Animation(function(t, display)
+      local stepDuration = 0.1
+      local totalDuration = stepDuration * #path
+
+      if t >= totalDuration then
+         return true
+      end
+
+      -- Calculate which step we're on
+      local progress = t / totalDuration
+      local currentStep = math.min(math.floor(progress * #path) + 1, #path)
+
+      if currentStep > 0 and currentStep <= #path then
+         local position = path[currentStep]
+         local drawable = actor:get(prism.components.Drawable)
+
+         if drawable then
+            display:put(
+               position.x,
+               position.y,
+               drawable.index,
+               drawable.color,
+               drawable.background,
+               drawable.layer
+            )
+         end
+      end
+
+      return false
+   end)
+end)
+
 --- @param center Vector2
 --- @param radius number
 --- @param targetPoints Vector2[]? -- Optional mask of specific points to explode at
