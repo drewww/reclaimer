@@ -66,6 +66,11 @@ function Reload:perform(level)
       local ammoToLoad = math.min(missingAmmo, totalAmmo)
       inventory:removeQuantity(ammo, ammoToLoad)
       weaponComponent.ammo = weaponComponent.ammo + ammoToLoad
+
+      level:yield(prism.messages.Animation {
+         animation = spectrum.animations.Notice("RELOAD"),
+         blocking = false
+      })
    end
 end
 

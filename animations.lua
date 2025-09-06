@@ -40,7 +40,7 @@ spectrum.registerAnimation("Damage", function(value)
    )
 end)
 
-spectrum.registerAnimation("Empty", function(target)
+spectrum.registerAnimation("Notice", function(text)
    return spectrum.Animation(function(t, display)
       local totalDuration = 0.5
       local progress = math.min(t / totalDuration, 1.0)
@@ -50,7 +50,9 @@ spectrum.registerAnimation("Empty", function(target)
 
       color.a = progress < 0.5 and 1.0 or (1 - progress * 2)
 
-      display:putString(target.x + 1, target.y, "EMPTY", color)
+      local mX, mY = display:getCellUnderMouse()
+
+      display:putString(mX + 1, mY, text, color)
 
       if progress >= 1.0 then
          return true

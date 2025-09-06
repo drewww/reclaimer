@@ -65,7 +65,7 @@ function Shoot:perform(level, target)
 
    if weapon.ammo < weapon.ammopershot then
       level:yield(prism.messages.Animation {
-         animation = spectrum.animations.Empty(target),
+         animation = spectrum.animations.Notice("EMPTY"),
          blocking = false
       })
    end
