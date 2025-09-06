@@ -21,6 +21,8 @@ function BotController:act(level, actor)
       alert.lastseen = player:getPosition()
    elseif alert.lastseen then
       destination = alert.lastseen
+   else
+      return prism.actions.Wait(actor)
    end
 
    local path = level:findPath(actor:getPosition(), destination, actor, mover.mask, 1)
