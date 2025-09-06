@@ -105,7 +105,9 @@ function WeaponUtil.getTargetPoints(level, actor, target)
                local point = target + prism.Vector2(i, j)
 
                if point:distance(target) <= weapon.aoe then
-                  if prism.Bresenham(target.x, target.y, point.x, point.y, function(x, y)
+                  if level:inBounds(target:decompose()) and
+                      level:inBounds(point:decompose()) and prism.Bresenham(target.x, target.y, point.x, point.y, function(
+                          x, y)
                          return level:getCellOpaque(x, y)
                       end
                       ) then
@@ -159,8 +161,20 @@ function WeaponUtil.getTargetPoints(level, actor, target)
    end
 
 
+   local inBoundPoints = {}
+   for i, p in ipairs(points) do
+      -- prism.logger.info("checking point: ", i, p)
+      -- prism.logger.info("x:" ..
+      --    p.x .. " p.x>0" .. tostring(p.x > 0) .. " inBounds: " .. tostring(level:inBounds(p.x, p.y)))
+      -- this is not working and I have no clue why. the logic for inBounds
+      -- checks x>0 and if you pass 0 in it can return true still.
+      if level:inBounds(p.x, p.y) then
+         prism.logger.info(" adding point: ", p)
+         table.insert(inBoundPoints, p)
+      end
+   end
 
-   return points
+   return inBoundPoints
 end
 
 return WeaponUtil
