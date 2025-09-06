@@ -37,13 +37,15 @@ function Die:perform(level)
          end
       end
    else
+      prism.logger.info("Actor died: " .. self.owner:getName())
+
+      if not level:query(prism.components.PlayerController):first() then level:yield(prism.messages.Lose()) end
+
       level:removeActor(self.owner)
    end
 
-   prism.logger.info("Actor died: " .. self.owner:getName())
 
    -- if there are no players left, game is over.
-   if not level:query(prism.components.PlayerController):first() then level:yield(prism.messages.Lose()) end
 end
 
 return Die

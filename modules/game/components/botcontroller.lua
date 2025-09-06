@@ -3,6 +3,9 @@ BotController.name = "BotController"
 
 local WeaponUtil = require "util.weapons"
 
+
+--- @param level Level
+--- @param actor Actor
 function BotController:act(level, actor)
    local senses = actor:get(prism.components.Senses)
    if not senses then return prism.actions.Wait(actor) end
@@ -43,7 +46,7 @@ function BotController:act(level, actor)
       actor:remove(prism.components.Targeting)
 
       prism.logger.info("Shooting at ", targeting.target)
-      return prism.actions.Shoot(targeting.target)
+      return prism.actions.Shoot(actor, targeting.target)
    end
 
 

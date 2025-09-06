@@ -31,7 +31,11 @@ function turn(level, actor, controller)
       -- we make sure we got an action back from the controller for sanity's sake
       assert(action, "Actor " .. actor:getName() .. " returned nil from act()")
 
-      level:perform(action)
+      if (level:canPerform(action)) then
+         level:perform(action)
+      else
+         prism.logger.error("Failed to perform action: " .. tostring(action))
+      end
 
       -- if the actor is dashing and the move they're doing right now is a Move, continue the turn.
       -- later logic may include things like "does the gun firing have multiple shot available?"

@@ -23,7 +23,9 @@ function Damage:perform(level, damage)
    })
    -- end
 
-   if health.hp <= 0 then level:perform(prism.actions.Die(self.owner)) end
+   if health.hp <= 0 then
+      level:perform(prism.actions.Die(self.owner))
+   end
 end
 
 return Damage
