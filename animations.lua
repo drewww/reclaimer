@@ -42,7 +42,7 @@ end)
 
 --- @param center Vector2
 --- @param radius number
-spectrum.registerAnimation("Explode", function(center, radius)
+spectrum.registerAnimation("Explode", function(center, radius, arc, base)
    return spectrum.Animation(function(t, display)
       local totalDuration = 0.25
       local maxRadius = radius

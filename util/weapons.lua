@@ -86,7 +86,8 @@ function WeaponUtil.getTargetPoints(level, actor, target)
       for i, p in ipairs(line) do
          local point = prism.Vector2(p[1], p[2])
          if source:distance(point) <= weapon.range then
-            if senses and senses.cells:get(point:decompose()) then
+            if senses and senses.cells:get(point:decompose())
+                and point:distance(source) > 0 then
                table.insert(points, point)
             end
          end
