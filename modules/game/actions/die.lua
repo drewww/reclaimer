@@ -41,6 +41,24 @@ function Die:perform(level)
 
       if not level:query(prism.components.PlayerController):first() then level:yield(prism.messages.Lose()) end
 
+      if self.owner:has(prism.components.Targeting) then
+         local targeting = self.owner:get(prism.components.Targeting)
+         assert(targeting)
+
+         for i, p in ipairs(targeting.cells) do
+            -- set targeting on these cells
+            local cell = level:getCell(p.x, p.y)
+            local targeted = cell:get(prism.components.Targeted)
+
+            if targeted then
+               targeted.times = targeted.times - 1
+               if targeted.times == 0 then
+                  cell:remove(targeted)
+               end
+            end
+         end
+      end
+
       level:removeActor(self.owner)
    end
 

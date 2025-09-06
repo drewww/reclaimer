@@ -2,7 +2,7 @@
 prism.registerActor("AmmoStack", function(count)
    return prism.Actor.fromComponents {
       prism.components.Position(),
-      prism.components.Drawable { index = 10 * 16 + 3, color = prism.Color4.BLUE },
+      prism.components.Drawable { index = "a", color = prism.Color4.YELLOW },
       prism.components.Health(1),
       prism.components.Item({
          stackable = prism.actors.AmmoStack, -- TODO work out how to make these stack separately by type.
