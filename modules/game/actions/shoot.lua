@@ -64,8 +64,13 @@ function Shoot:perform(level, target)
    -- TODO different animations for different weapons
 
    if weapon.template == "aoe" then
+      local direction = target - self.owner:getPosition()
+      local angle = math.atan2(direction.y, direction.x)
+      -- Convert angle to sprite offset: 0=up, 1=right, 2=down, 3=left
+      local spriteOffset = math.floor((angle + math.pi * 2.5) / (math.pi * 0.5)) % 4
+
       level:yield(prism.messages.Animation {
-         animation = spectrum.animations.Projectile(self.owner, target, ROCKET_BASE),
+         animation = spectrum.animations.Projectile(self.owner, target, ROCKET_BASE + spriteOffset),
          blocking = true
       })
 

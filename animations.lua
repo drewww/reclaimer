@@ -85,6 +85,7 @@ spectrum.registerAnimation("Explode", function(center, radius)
                      intensity
                   )
 
+
                   display:putBG(x, y, finalColor, math.huge)
 
                   -- Soft trailing edge: fading to black behind the wave
