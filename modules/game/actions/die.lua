@@ -11,6 +11,10 @@ function Die:perform(level)
       -- TODO how to make this random? might be a nice bit of query suger
       local item = inventory:query(prism.components.Item):first()
       level:addActor(item, self.owner:getPosition():decompose())
+
+      if item then
+         prism.logger.info("Adding inventory item on death: " .. item:getName())
+      end
    end
 
    if not self.owner:has(prism.components.PlayerController) then
@@ -22,6 +26,8 @@ function Die:perform(level)
    if self.owner:has(prism.components.Unstable) then
       level:addActor(prism.actors.BarrelExploding(), self.owner:getPosition():decompose())
    end
+
+   prism.logger.info("Actor died: " .. self.owner:getName())
 
    -- if there are no players left, game is over.
    if not level:query(prism.components.PlayerController):first() then level:yield(prism.messages.Lose()) end
