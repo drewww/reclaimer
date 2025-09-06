@@ -23,11 +23,29 @@ function Reload:canPerform(level)
    local weapon = WeaponUtil.getActive(inventory)
    assert(weapon)
 
-   -- don't allow reloads on non-ammo weapons
+   -- don't allow reloads on non-ammo weapons, or if there is no missing ammo
    if weapon then
+      local weaponComponent = weapon:get(prism.components.Weaopn)
+
+      if weaponComponent then
+         if weaponComponent.ammopershot == 0 then
+            do
+               return false
+            end
+         end
+
+         prism.logger.info("ammo check ", weaponComponent.maxAmmo, weaponComponent.ammo)
+         if weaponComponent.maxAmmo == weaponComponent.ammo then
+            return false
+         end
+      end
+
+
       if weapon:get(prism.components.Weapon).ammopershot == 0 then
          return false
       end
+   else
+      return false
    end
 
    local ammo = inventory:getStack(prism.actors.AmmoStack)
@@ -61,6 +79,9 @@ function Reload:perform(level)
       local missingAmmo = weaponComponent.maxAmmo - weaponComponent.ammo
 
       prism.logger.info("reloading: avail: " .. tostring(totalAmmo) .. " missing: " .. tostring(missingAmmo))
+
+      if missingAmmo == 0 then return end
+
       -- load as much as we can. typically this will be all the missing ammo, but
       -- don't overload more ammo than exists in inventory.
       local ammoToLoad = math.min(missingAmmo, totalAmmo)
