@@ -14,13 +14,12 @@ spectrum.registerAnimation("Projectile", function(owner, targetPosition)
    end)
 end)
 
-spectrum.registerAnimation("BarrelExplode", function(owner)
-   local centerX, centerY = owner:expectPosition():decompose()
-   prism.logger.info("center: " .. tostring(owner:expectPosition()))
-
+--- @param center Vector2
+--- @param radius number
+spectrum.registerAnimation("Explode", function(center, radius)
    return spectrum.Animation(function(t, display)
       local totalDuration = 0.25
-      local maxRadius = 4.0
+      local maxRadius = radius
       local waveWidth = 2.0
 
       local progress = math.min(t / totalDuration, 1.0)
@@ -40,8 +39,8 @@ spectrum.registerAnimation("BarrelExplode", function(owner)
             local distance = math.sqrt(dx * dx + dy * dy)
 
             if distance <= maxRadius then
-               local x = centerX + dx
-               local y = centerY + dy
+               local x = center.x + dx
+               local y = center.y + dy
 
                -- Hard leading edge: bright orange wave
                if distance <= currentRadius and distance >= currentRadius - waveWidth then

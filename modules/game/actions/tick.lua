@@ -43,7 +43,7 @@ function Tick:perform(level)
             prism.logger.info("EXPLODE AT " .. tostring(self.owner:getPosition()))
 
             level:yield(prism.messages.Animation {
-               animation = spectrum.animations.BarrelExplode(self.owner),
+               animation = spectrum.animations.Explode(self.owner, 4.0),
                blocking = true
             })
 

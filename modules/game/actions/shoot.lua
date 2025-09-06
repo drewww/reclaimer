@@ -66,6 +66,13 @@ function Shoot:perform(level, target)
       blocking = true
    })
 
+   if weapon.template == "aoe" then
+      level:yield(prism.messages.Animation {
+         animation = spectrum.animations.Explode(target, weapon.aoe),
+         blocking = true
+      })
+   end
+
    -- because the enemy moves immediately after this, if you just move one space
    -- it appears like they're not moving.
    local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }

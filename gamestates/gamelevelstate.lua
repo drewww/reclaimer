@@ -182,7 +182,7 @@ function GameLevelState:draw(primary, secondary)
 
          for i, point in ipairs(points) do
             prism.logger.info("point: " .. tostring(point))
-            self.display:putBG(point.x + cameraX, point.y + cameraY, prism.Color4(0.5, 0.5, 1.0, 0.5))
+            self.display:putBG(point.x + cameraX, point.y + cameraY, prism.Color4(0.5, 0.5, 1.0, 0.5), 50)
          end
       end
    end
