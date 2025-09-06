@@ -42,7 +42,8 @@ end)
 
 --- @param center Vector2
 --- @param radius number
-spectrum.registerAnimation("Explode", function(center, radius, arc, base)
+--- @param targetPoints Vector2[]? -- Optional mask of specific points to explode at
+spectrum.registerAnimation("Explode", function(center, radius, targetPoints)
    return spectrum.Animation(function(t, display)
       local totalDuration = 0.25
       local maxRadius = radius
@@ -53,6 +54,16 @@ spectrum.registerAnimation("Explode", function(center, radius, arc, base)
 
       if progress >= 1 then
          return true
+      end
+
+      -- If targetPoints is provided, create a lookup table for fast checking
+      local pointMask = nil
+      if targetPoints then
+         pointMask = {}
+         for _, point in ipairs(targetPoints) do
+            local key = point.x .. "," .. point.y
+            pointMask[key] = true
+         end
       end
 
       -- Single bright orange color for the wave
@@ -68,42 +79,50 @@ spectrum.registerAnimation("Explode", function(center, radius, arc, base)
                local x = center.x + dx
                local y = center.y + dy
 
-               -- Hard leading edge: bright orange wave
-               if distance <= currentRadius and distance >= currentRadius - waveWidth then
-                  -- Calculate intensity based on position within wave
-                  local wavePosition = (currentRadius - distance) / waveWidth
-                  local intensity = math.max(0, math.min(1, wavePosition))
+               -- Check if this point should be included
+               local shouldExplode = true
+               if pointMask then
+                  local key = x .. "," .. y
+                  shouldExplode = pointMask[key] == true
+               end
 
-                  -- Add some randomness for organic look
-                  local randomFactor = (math.random() * 0.2 + 0.9) -- 0.9 to 1.1
-                  intensity = intensity * randomFactor
+               if shouldExplode then
+                  -- Hard leading edge: bright orange wave
+                  if distance <= currentRadius and distance >= currentRadius - waveWidth then
+                     -- Calculate intensity based on position within wave
+                     local wavePosition = (currentRadius - distance) / waveWidth
+                     local intensity = math.max(0, math.min(1, wavePosition))
 
-                  local finalColor = prism.Color4(
-                     orangeColor.r,
-                     orangeColor.g,
-                     orangeColor.b,
-                     intensity
-                  )
+                     -- Add some randomness for organic look
+                     local randomFactor = (math.random() * 0.2 + 0.9) -- 0.9 to 1.1
+                     intensity = intensity * randomFactor
 
+                     local finalColor = prism.Color4(
+                        orangeColor.r,
+                        orangeColor.g,
+                        orangeColor.b,
+                        intensity
+                     )
 
-                  display:putBG(x, y, finalColor, math.huge)
+                     display:putBG(x, y, finalColor, math.huge)
 
-                  -- Soft trailing edge: fading to black behind the wave
-               elseif distance < currentRadius - waveWidth then
-                  -- Calculate fade based on how far behind the wave we are
-                  local fadeDistance = (currentRadius - waveWidth) - distance
-                  local maxFade = waveWidth * 0.8
-                  local fadeAmount = math.min(fadeDistance / maxFade, 1.0)
+                     -- Soft trailing edge: fading to black behind the wave
+                  elseif distance < currentRadius - waveWidth then
+                     -- Calculate fade based on how far behind the wave we are
+                     local fadeDistance = (currentRadius - waveWidth) - distance
+                     local maxFade = waveWidth * 0.8
+                     local fadeAmount = math.min(fadeDistance / maxFade, 1.0)
 
-                  -- Fade from orange to black
-                  local trailColor = prism.Color4(
-                     orangeColor.r * (1 - fadeAmount),
-                     orangeColor.g * (1 - fadeAmount),
-                     orangeColor.b * (1 - fadeAmount),
-                     0.8 + (fadeAmount * 0.2) -- Gradually become more opaque/black
-                  )
+                     -- Fade from orange to black
+                     local trailColor = prism.Color4(
+                        orangeColor.r * (1 - fadeAmount),
+                        orangeColor.g * (1 - fadeAmount),
+                        orangeColor.b * (1 - fadeAmount),
+                        0.8 + (fadeAmount * 0.2) -- Gradually become more opaque/black
+                     )
 
-                  display:putBG(x, y, trailColor, math.huge)
+                     display:putBG(x, y, trailColor, math.huge)
+                  end
                end
             end
          end

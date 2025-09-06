@@ -173,7 +173,7 @@ function WeaponUtil.getTargetPoints(level, actor, target)
       -- this is not working and I have no clue why. the logic for inBounds
       -- checks x>0 and if you pass 0 in it can return true still.
       if level:inBounds(p.x, p.y) then
-         prism.logger.info(" adding point: ", p)
+         -- prism.logger.info(" adding point: ", p)
          table.insert(inBoundPoints, p)
       end
    end
