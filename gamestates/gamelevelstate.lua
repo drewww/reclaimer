@@ -38,8 +38,8 @@ function turn(level, actor, controller)
       -- certain enemies may get multiple actions a turn.
       -- we may generalize this into an action cost / available AP model at some point, too.
       -- also, we will want to limit dash distances. both per dash and overall dash energy available.
-      continueTurn = actor:has(prism.components.Dashing)
-          and (prism.actions.Move:is(action) or prism.actions.Dash:is(action))
+      continueTurn = (actor:has(prism.components.Dashing)
+         and (prism.actions.Move:is(action)) or prism.actions.Dash:is(action))
 
       if actor:has(prism.components.PlayerController) then
          -- prism.logger.info("continueTurn: " .. tostring(continueTurn))

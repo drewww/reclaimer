@@ -11,7 +11,7 @@ function BotController:act(level, actor)
    local alert = actor:get(prism.components.Alert)
    if not alert then return prism.actions.Wait(actor) end
 
-   local player = senses:query(prism.components.PlayerController):first()
+   local player = senses:query(level, prism.components.PlayerController):first()
 
    ---@type Vector2
    local destination
