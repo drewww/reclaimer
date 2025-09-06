@@ -83,6 +83,11 @@ function Shoot:perform(level, target)
          animation = spectrum.animations.Explode(self.owner:getPosition(), weapon.range + 1, targetPoints, prism.Color4.WHITE),
          blocking = true
       })
+   elseif weapon.template == "line" then
+      level:yield(prism.messages.Animation {
+         animation = spectrum.animations.Laser(self.owner:getPosition(), target, prism.Color4.LIME),
+         blocking = true
+      })
    else
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Projectile(self.owner, target, BULLET_BASE),

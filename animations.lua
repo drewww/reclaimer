@@ -40,6 +40,35 @@ spectrum.registerAnimation("Damage", function(value)
    )
 end)
 
+spectrum.registerAnimation("Laser", function(source, target, color)
+   return spectrum.Animation(function(t, display)
+      local x, y = source:decompose()
+      local line, found = prism.Bresenham(x, y, target.x, target.y)
+      local totalDuration = 0.3
+      if not found then return true end
+
+      local progress = math.min(t / totalDuration, 1.0)
+
+      local curColor = color:copy()
+      curColor.a = 1 - progress
+      -- light up every cell in the line the same, intensity based on progress
+      for i, p in ipairs(line) do
+         local point = prism.Vector2(p[1], p[2])
+
+         if point:getRange(source) > 0 then
+            display:putBG(point.x, point.y, curColor, math.huge)
+         end
+      end
+
+      if progress >= 1 then
+         return true
+      else
+         return false
+      end
+   end)
+end
+)
+
 --- @param center Vector2
 --- @param radius number
 --- @param targetPoints Vector2[]? -- Optional mask of specific points to explode at
