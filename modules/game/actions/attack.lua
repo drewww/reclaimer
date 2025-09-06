@@ -27,7 +27,7 @@ function Attack:perform(level, attacked)
    local ownerName = Name.lower(self.owner)
    Log.addMessage(self.owner, sf("You attack the %s. %s", attackName, dmgstr))
    Log.addMessage(attacked, sf("%s attacks you for %s", ownerName, dmgstr))
-   Log.addMessageSensed(level, self, sf("%s attacks %s for %s", ownerName, attackName, dmgstr))
+   -- Log.addMessageSensed(level, self, sf("%s attacks %s for %s", ownerName, attackName, dmgstr))
 end
 
 return Attack
