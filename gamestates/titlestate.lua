@@ -66,6 +66,9 @@ function TitleState:update(dt)
 
          local laser = prism.actors.Laser()
          inventory:addItem(laser)
+
+         local rocket = prism.actors.Rocket()
+         inventory:addItem(rocket)
       end
 
 

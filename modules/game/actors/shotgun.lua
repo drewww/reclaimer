@@ -4,6 +4,6 @@ prism.registerActor("Shotgun", function()
       prism.components.Position(),
       prism.components.Drawable { index = "s", color = prism.Color4.YELLOW },
       prism.components.Item(),
-      prism.components.Weapon(1, 3, 4, 4, 4, 2, "cone", 3)
+      prism.components.Weapon(1, 3, 4, 4, 4, 2, 0, "cone", 3)
    }
 end)

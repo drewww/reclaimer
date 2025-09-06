@@ -91,6 +91,30 @@ function WeaponUtil.getTargetPoints(level, actor, target)
             end
          end
       end
+   elseif weapon and weapon.template == "aoe" then
+      local range = weapon.range
+      local aoe = weapon.aoe
+
+
+      -- check if target point is visible
+      -- then add all points within AOE of target point,
+      -- filtering whether they are visible FROM target point
+      if senses and senses.cells:get(target:decompose()) then
+         for i = math.floor(-aoe), math.ceil(aoe) do
+            for j = math.floor(-aoe), math.ceil(aoe) do
+               local point = target + prism.Vector2(i, j)
+
+               if point:distance(target) <= weapon.aoe then
+                  if prism.Bresenham(target.x, target.y, point.x, point.y, function(x, y)
+                         return level:getCellOpaque(x, y)
+                      end
+                      ) then
+                     table.insert(points, point)
+                  end
+               end
+            end
+         end
+      end
    elseif weapon and weapon.template == "cone" then
       local range = weapon.range
       local angle = math.pi / 2 -- or whatever angle you want

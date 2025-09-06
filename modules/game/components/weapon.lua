@@ -8,10 +8,11 @@
 --- @field ammopershot integer
 --- @field ammo integer
 --- @field maxAmmo integer
+--- @field aoe number
 local Weapon = prism.Component:extend("Weapon")
 
 -- TODO add ammo type
-function Weapon:__new(damage, push, range, ammo, maxAmmo, ammopershot, template, hotkey)
+function Weapon:__new(damage, push, range, ammo, maxAmmo, ammopershot, aoe, template, hotkey)
    self.damage = damage
    self.push = push
    self.range = range
@@ -21,6 +22,7 @@ function Weapon:__new(damage, push, range, ammo, maxAmmo, ammopershot, template,
    self.ammo = ammo
    self.maxAmmo = maxAmmo
    self.active = false
+   self.aoe = aoe
 end
 
 return Weapon
