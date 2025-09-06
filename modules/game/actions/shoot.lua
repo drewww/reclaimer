@@ -5,6 +5,7 @@ local Game = require "game"
 
 local WeaponUtil = require "util.weapons"
 local knockback = require "util.knockback"
+local constants = require "util.constants"
 
 -- don't apply range here, because it's weapon dependent. check in `canPerform` instead.
 local ShootTarget = prism.Target():isPrototype(prism.Vector2)
@@ -61,14 +62,20 @@ function Shoot:perform(level, target)
    local targetPoints = WeaponUtil.getTargetPoints(level, self.owner, target)
 
    -- TODO different animations for different weapons
-   level:yield(prism.messages.Animation {
-      animation = spectrum.animations.Projectile(self.owner, target),
-      blocking = true
-   })
 
    if weapon.template == "aoe" then
       level:yield(prism.messages.Animation {
+         animation = spectrum.animations.Projectile(self.owner, target, ROCKET_BASE),
+         blocking = true
+      })
+
+      level:yield(prism.messages.Animation {
          animation = spectrum.animations.Explode(target, weapon.aoe),
+         blocking = true
+      })
+   else
+      level:yield(prism.messages.Animation {
+         animation = spectrum.animations.Projectile(self.owner, target, BULLET_BASE),
          blocking = true
       })
    end

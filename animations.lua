@@ -1,15 +1,19 @@
-spectrum.registerAnimation("Projectile", function(owner, targetPosition)
+spectrum.registerAnimation("Projectile", function(owner, targetPosition, char)
    --- @cast owner Actor
    --- @cast targetPosition Vector2
    local x, y = owner:expectPosition():decompose()
    local line = prism.Bresenham(x, y, targetPosition.x, targetPosition.y)
 
+   if not char then
+      char = "*"
+   end
+
    return spectrum.Animation(function(t, display)
       local index = math.floor(t / 0.05) + 1
 
       if not line or #line == 0 then return true end
-      
-      display:put(line[index][1], line[index][2], "*", prism.Color4.ORANGE)
+
+      display:put(line[index][1], line[index][2], char, prism.Color4.RED)
 
       if index == #line then return true end
 
@@ -29,7 +33,6 @@ spectrum.registerAnimation("Damage", function(value)
    local fade1 = { index = tostring(value), color = lighterColor }
    local fade2 = { index = tostring(value), color = lighestColor }
 
-   prism.logger.info("DAMAGE ANIM FOR ", value)
    return spectrum.Animation(
       { on, on, on, on, on, on, on, fade1, fade2 },
       0.05,
