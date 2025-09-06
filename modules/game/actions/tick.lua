@@ -32,24 +32,6 @@ function Tick:perform(level)
          -- put end of process action here
          prism.logger.info("TICK OVER")
 
-         if tickable.type == "explode" then
-            -- get all actors with health and check distance. if in range, damage.
-            for actor, component in level:query(prism.components.Health):iter() do
-               if actor:getPosition():distanceChebyshev(self.owner:getPosition()) <= 3 then
-                  level:tryPerform(prism.actions.Damage(actor, 5))
-               end
-            end
-
-            prism.logger.info("EXPLODE AT " .. tostring(self.owner:getPosition()))
-
-            level:yield(prism.messages.Animation {
-               animation = spectrum.animations.Explode(self.owner, 4.0),
-               blocking = true
-            })
-
-            level:removeActor(self.owner)
-         end
-
          if tickable.type == "openchest" then
             local value = math.random(1, 4)
             -- prism.logger.info("generated loot of value " .. tostring(value))

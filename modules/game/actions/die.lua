@@ -21,10 +21,21 @@ function Die:perform(level)
       Game.stats:increment("kills")
    end
 
-   level:removeActor(self.owner)
-
    if self.owner:has(prism.components.Unstable) then
-      level:addActor(prism.actors.BarrelExploding(), self.owner:getPosition():decompose())
+      prism.logger.info("EXPLODE AT " .. tostring(self.owner:getPosition()))
+
+      level:yield(prism.messages.Animation {
+         animation = spectrum.animations.Explode(self.owner:getPosition(), 4.0),
+         blocking = true
+      })
+      local source = self.owner:getPosition()
+      level:removeActor(self.owner)
+
+      for actor, component in level:query(prism.components.Health):iter() do
+         if actor:getPosition():distanceChebyshev(source) <= 3 then
+            level:tryPerform(prism.actions.Damage(actor, 5))
+         end
+      end
    end
 
    prism.logger.info("Actor died: " .. self.owner:getName())
