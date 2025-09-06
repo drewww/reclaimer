@@ -178,7 +178,7 @@ function GameLevelState:draw(primary, secondary)
       if player then
          local weapon = WeaponUtil.getActive(player:get(prism.components.Inventory))
 
-         local points = WeaponUtil.getTargetPoints(player, prism.Vector2(mouseX, mouseY))
+         local points = WeaponUtil.getTargetPoints(self.level, player, prism.Vector2(mouseX, mouseY))
 
          for i, point in ipairs(points) do
             prism.logger.info("point: " .. tostring(point))

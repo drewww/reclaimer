@@ -54,11 +54,11 @@ WeaponUtil.getActive = function(inventory)
    return activeWeapon
 end
 
-
+--- @param level Level
 --- @param actor Actor
 --- @param target Vector2
 --- @return Vector2[]
-function WeaponUtil.getTargetPoints(actor, target)
+function WeaponUtil.getTargetPoints(level, actor, target)
    local points = {}
 
    if not actor then return points end
@@ -71,16 +71,24 @@ function WeaponUtil.getTargetPoints(actor, target)
    if not weaponActor then return points end
    local weapon = weaponActor:get(prism.components.Weapon)
 
+   local senses = actor:get(prism.components.Senses)
+
    if weapon and weapon.template == "point" then
       -- we could range-limit this
-      table.insert(points, target)
+
+      -- we could use senses for most of these
+      if senses and senses.cells:get(target:decompose()) then
+         table.insert(points, target)
+      end
    elseif weapon and weapon.template == "line" then
       local line, found = prism.Bresenham(source.x, source.y, target.x, target.y)
 
       for i, p in ipairs(line) do
          local point = prism.Vector2(p[1], p[2])
          if source:distance(point) <= weapon.range then
-            table.insert(points, point)
+            if senses and senses.cells:get(point:decompose()) then
+               table.insert(points, point)
+            end
          end
       end
    elseif weapon and weapon.template == "cone" then
@@ -97,8 +105,8 @@ function WeaponUtil.getTargetPoints(actor, target)
       -- Test all points in a square grid around the start position
       for dx = -range, range do
          for dy = -range, range do
-            local testPoint = startPos + prism.Vector2(dx, dy)
-            local toPoint = testPoint - startPos
+            local point = startPos + prism.Vector2(dx, dy)
+            local toPoint = point - startPos
             local distance = toPoint:length()
 
             -- Check if point is within range (but not at the start position)
@@ -117,12 +125,16 @@ function WeaponUtil.getTargetPoints(actor, target)
 
                -- Check if within cone angle
                if math.abs(angleDiff) <= halfAngle then
-                  table.insert(points, testPoint)
+                  if senses and senses.cells:get(point:decompose()) then
+                     table.insert(points, point)
+                  end
                end
             end
          end
       end
    end
+
+
 
    return points
 end
