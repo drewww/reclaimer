@@ -65,7 +65,7 @@ function Shoot:perform(level, target)
 
    weapon.ammo = math.max(weapon.ammo - weapon.ammopershot, 0)
 
-   if weapon.ammo < weapon.ammopershot then
+   if weapon.ammo < weapon.ammopershot and self.owner:has(prism.components.PlayerController) then
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Notice("EMPTY"),
          blocking = false

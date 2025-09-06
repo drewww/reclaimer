@@ -27,10 +27,9 @@ function BotController:act(level, actor)
 
       -- decrement targeted for all the cells we're targeting
       local targeting = actor:get(prism.components.Targeting)
+      assert(targeting)
 
-      local targetPositions = WeaponUtil.getTargetPoints(level, actor, targeting.target)
-
-      for i, p in ipairs(targetPositions) do
+      for i, p in ipairs(targeting.cells) do
          -- set targeting on these cells
          local cell = level:getCell(p.x, p.y)
          local targeted = cell:get(prism.components.Targeted)
@@ -57,10 +56,9 @@ function BotController:act(level, actor)
 
    if player then
       if not actor:has(prism.components.Targeting) then
-         local targeted = prism.components.Targeting(player:getPosition())
-
+         local targeting = prism.components.Targeting(player:getPosition())
          -- enter targeted mode
-         actor:give(targeted)
+         actor:give(targeting)
 
          if weaponComponent and actor:getPosition():distance(player:getPosition()) <= weaponComponent.range then
             -- if we're in range then target
@@ -70,6 +68,8 @@ function BotController:act(level, actor)
                -- set targeting on these cells
                local cell = level:getCell(p.x, p.y)
                local targetedComponent = cell:get(prism.components.Targeted())
+
+               table.insert(targeting.cells, p)
 
                if targetedComponent then
                   targetedComponent.times = targetedComponent.times + 1
