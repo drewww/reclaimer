@@ -61,7 +61,14 @@ function Shoot:perform(level, target)
 
    local targetPoints = WeaponUtil.getTargetPoints(level, self.owner, target)
 
-   -- TODO different animations for different weapons
+   weapon.ammo = math.max(weapon.ammo - weapon.ammopershot, 0)
+
+   if weapon.ammo < weapon.ammopershot then
+      level:yield(prism.messages.Animation {
+         animation = spectrum.animations.Empty(target),
+         blocking = false
+      })
+   end
 
    if weapon.template == "aoe" then
       local direction = target - self.owner:getPosition()
@@ -100,7 +107,7 @@ function Shoot:perform(level, target)
    local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
 
 
-   weapon.ammo = math.max(weapon.ammo - weapon.ammopershot, 0)
+
 
    -- Move the target to final position
    for i, p in ipairs(targetPoints) do

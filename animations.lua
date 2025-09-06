@@ -40,6 +40,27 @@ spectrum.registerAnimation("Damage", function(value)
    )
 end)
 
+spectrum.registerAnimation("Empty", function(target)
+   return spectrum.Animation(function(t, display)
+      local totalDuration = 0.5
+      local progress = math.min(t / totalDuration, 1.0)
+
+      -- put a reload string where the mouse was clicked
+      local color = prism.Color4.WHITE:copy()
+
+      color.a = progress < 0.5 and 1.0 or (1 - progress * 2)
+
+      display:putString(target.x + 1, target.y, "EMPTY", color)
+
+      if progress >= 1.0 then
+         return true
+      else
+         return false
+      end
+   end)
+end
+)
+
 spectrum.registerAnimation("Laser", function(source, target, color)
    return spectrum.Animation(function(t, display)
       local x, y = source:decompose()
