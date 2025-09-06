@@ -7,7 +7,7 @@ local WeaponUtil = require "util.weapons"
 local knockback = require "util.knockback"
 
 -- don't apply range here, because it's weapon dependent. check in `canPerform` instead.
-local ShootTarget = prism.Target():with(prism.components.Collider):sensed()
+local ShootTarget = prism.Target():isPrototype(prism.Vector2)
 
 local Shoot = prism.Action:extend("ShootAction")
 Shoot.name = "Shoot"
@@ -16,7 +16,8 @@ Shoot.requireComponents = {
    prism.components.Controller,
 }
 
-function Shoot:canPerform(level, shot)
+--- @param target Vector2
+function Shoot:canPerform(level, target)
    -- TODO check for ammo
    local inventory = self.owner:get(prism.components.Inventory)
    if inventory then
@@ -33,12 +34,12 @@ function Shoot:canPerform(level, shot)
       -- if ammo per shot is 0, don't check for ammo at all.
       if weapon.ammopershot == 0 then
          availableAmmo = true
-      elseif weapon.ammo > 0 then
+      elseif weapon.ammo >= weapon.ammo then
          availableAmmo = true
       end
 
       -- now check range
-      local range = self.owner:getRange(shot)
+      local range = self.owner:getPosition():getRange(target)
       local inRange = false
       if range <= weapon.range then
          inRange = true
@@ -50,59 +51,61 @@ function Shoot:canPerform(level, shot)
    end
 end
 
-function Shoot:perform(level, shot)
+--- @param target Vector2
+function Shoot:perform(level, target)
    local inventory = self.owner:get(prism.components.Inventory)
 
    local weapon = WeaponUtil.getActive(inventory):get(prism.components.Weapon)
    assert(weapon)
 
-   local direction = (shot:getPosition() - self.owner:getPosition())
+   local direction = (target - self.owner:getPosition())
 
    print("direction: " .. tostring(direction))
 
    local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
 
    level:yield(prism.messages.Animation {
-      animation = spectrum.animations.Projectile(self.owner, shot:getPosition()),
+      animation = spectrum.animations.Projectile(self.owner, target),
       -- actor = self.owner
       blocking = true -- causes screen to go black
    })
 
    -- because the enemy moves immediately after this, if you just move one space
    -- it appears like they're not moving.
-   local startPos = shot:getPosition()
+   local startPos = target
    local finalPos, hitWall, cellsMoved = knockback(level, startPos, direction, weapon.push, mask)
 
+   weapon.ammo = weapon.ammo - weapon.ammopershot
+
    -- Move the target to final position
-   if level:hasActor(shot) then
-      level:moveActor(shot, finalPos)
-   end
+   local targetActor = level:query():at(target:decompose()):first()
+   if targetActor then
+      level:moveActor(targetActor, finalPos)
 
-   -- Calculate damage based on whether they hit a wall
-   local damageValue = hitWall and WALL_COLLIDE_DAMAGE + weapon.damage or weapon.damage
+      -- Calculate damage based on whether they hit a wall
+      local damageValue = hitWall and WALL_COLLIDE_DAMAGE + weapon.damage or weapon.damage
 
-   local damage = prism.actions.Damage(shot, damageValue)
+      local damage = prism.actions.Damage(targetActor, damageValue)
 
-   -- Why do I need to ask first? I guess this is type protection more or less.
-   if level:canPerform(damage) then level:perform(damage) end
+      -- Why do I need to ask first? I guess this is type protection more or less.
+      if level:canPerform(damage) then level:perform(damage) end
 
-   local shotName = Name.lower(shot)
-   local ownerName = Name.lower(self.owner)
-   local dmgstr = ""
+      local shotName = Name.lower(targetActor)
+      local ownerName = Name.lower(self.owner)
+      local dmgstr = ""
 
-   -- TODO increment this even if you miss. especially if we support shooting random spots.
-   if damage.dealt then
-      if self.owner:has(prism.components.PlayerController) then
-         Game.stats:increment("shots")
+      -- TODO increment this even if you miss. especially if we support shooting random spots.
+      if damage.dealt then
+         if self.owner:has(prism.components.PlayerController) then
+            Game.stats:increment("shots")
+         end
       end
 
-      weapon.ammo = weapon.ammo - 1
+      if damage.dealt then dmgstr = sf("%i damage.", damage.dealt) end
+      Log.addMessage(self.owner, sf("You shot the %s. %s", shotName, dmgstr))
+      Log.addMessage(targetActor, sf("The %s shot you! %s", ownerName, dmgstr))
+      Log.addMessageSensed(level, self, sf("The %s shoots the %s. %s", ownerName, shotName, dmgstr))
    end
-
-   if damage.dealt then dmgstr = sf("%i damage.", damage.dealt) end
-   Log.addMessage(self.owner, sf("You shot the %s. %s", shotName, dmgstr))
-   Log.addMessage(shot, sf("The %s shot you! %s", ownerName, dmgstr))
-   Log.addMessageSensed(level, self, sf("The %s shoots the %s. %s", ownerName, shotName, dmgstr))
 end
 
 return Shoot

@@ -214,18 +214,20 @@ function GameLevelState:mousepressed(x, y, button, istouch, presses)
    -- get the cell under the mouse button
    local cellX, cellY, targetCell = self:getCellUnderMouse()
 
+   local target = prism.Vector2(cellX, cellY)
+
    local decision = self.decision
    if not decision then return end
 
-   local target = self.level:query(prism.components.Collider):at(cellX, cellY):first()
+   -- local target = self.level:query(prism.components.Collider):at(cellX, cellY):first()
 
    -- not totally sure why this isn't just Player. Can decision have a different actor?
-   if target then
-      prism.logger.info("Shooting at entity at " .. tostring(target:getPosition()))
+   -- if target then
+   prism.logger.info("Shooting at entity at " .. tostring(target))
 
-      local shoot = prism.actions.Shoot(decision.actor, target)
-      decision:setAction(shoot, self.level)
-   end
+   local shoot = prism.actions.Shoot(decision.actor, target)
+   decision:setAction(shoot, self.level)
+   -- end
 end
 
 function GameLevelState:mousemoved()
