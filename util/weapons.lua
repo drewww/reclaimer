@@ -104,13 +104,16 @@ function WeaponUtil.getTargetPoints(level, actor, target)
             for j = math.floor(-aoe), math.ceil(aoe) do
                local point = target + prism.Vector2(i, j)
 
-               if point:distance(target) <= weapon.aoe then
-                  if level:inBounds(target:decompose()) and
-                      level:inBounds(point:decompose()) and prism.Bresenham(target.x, target.y, point.x, point.y, function(
-                          x, y)
-                         return level:getCellOpaque(x, y)
-                      end
-                      ) then
+               if point:distance(target) <= weapon.aoe
+                   and level:inBounds(target:decompose())
+                   and level:inBounds(point:decompose()) then
+                  local line, passable = prism.Bresenham(target.x, target.y, point.x, point.y,
+                     function(x, y)
+                        return not level:getCellOpaque(x, y)
+                     end
+                  )
+
+                  if passable then
                      table.insert(points, point)
                   end
                end
