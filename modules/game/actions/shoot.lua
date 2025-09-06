@@ -40,13 +40,13 @@ function Shoot:canPerform(level, target)
       end
 
       -- now check range
-      local range = self.owner:getPosition():getRange(target)
-      local inRange = false
-      if range <= weapon.range then
-         inRange = true
-      end
+      -- local range = self.owner:getPosition():getRange(target)
+      -- local inRange = false
+      -- if range <= weapon.range then
+      --    inRange = true
+      -- end
 
-      return inRange and availableAmmo
+      return availableAmmo
    else
       return false
    end
@@ -92,7 +92,7 @@ function Shoot:perform(level, target)
       })
    elseif weapon.template == "line" then
       level:yield(prism.messages.Animation {
-         animation = spectrum.animations.Laser(self.owner:getPosition(), target, prism.Color4.LIME),
+         animation = spectrum.animations.Laser(self.owner:getPosition(), target, prism.Color4.LIME, weapon.range),
          blocking = true
       })
    else

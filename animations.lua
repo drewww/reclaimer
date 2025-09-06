@@ -63,7 +63,7 @@ spectrum.registerAnimation("Notice", function(text)
 end
 )
 
-spectrum.registerAnimation("Laser", function(source, target, color)
+spectrum.registerAnimation("Laser", function(source, target, color, range)
    return spectrum.Animation(function(t, display)
       local x, y = source:decompose()
       local line, found = prism.Bresenham(x, y, target.x, target.y)
@@ -78,7 +78,7 @@ spectrum.registerAnimation("Laser", function(source, target, color)
       for i, p in ipairs(line) do
          local point = prism.Vector2(p[1], p[2])
 
-         if point:getRange(source) > 0 then
+         if point:getRange(source) > 0 and point:getRange(source) < range then
             display:putBG(point.x, point.y, curColor, math.huge)
          end
       end
