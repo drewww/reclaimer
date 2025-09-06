@@ -32,7 +32,7 @@ function Push:perform(level, amount, from)
 
    local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
 
-   local finalPos, hitWall, cellsMoved = knockback(level, target:getPosition(), direction, amount, mask)
+   local finalPos, hitWall, cellsMoved, path = knockback(level, target:getPosition(), direction, amount, mask)
 
    if hitWall and target:has(prism.components.Health) then
       local damage = prism.actions.Damage(target, WALL_COLLIDE_DAMAGE)
@@ -41,6 +41,11 @@ function Push:perform(level, amount, from)
 
    -- animate in here
    level:moveActor(target, finalPos)
+
+   level:yield(prism.messages.Animation {
+      animation = spectrum.animations.Push(self.owner, path),
+      blocking = true
+   })
 end
 
 return Push

@@ -112,13 +112,40 @@ spectrum.registerAnimation("Push", function(actor, path)
          local drawable = actor:get(prism.components.Drawable)
 
          if drawable then
+            -- get the base cell and render that instead at high level
+            local x, y = actor:getPosition():decompose()
+            local cell = display.cells[x][y]
+
+            if cell then
+               display:put(
+                  x, y,
+                  cell.char,
+                  cell.fg,
+                  cell.bg,
+                  math.huge - 100
+               )
+            end
+
+            local destX, destY = path[#path]:decompose()
+            local destCell = display.cells[destX][destY]
+
+            if destCell then
+               display:put(
+                  destX, destY,
+                  destCell.char,
+                  destCell.fg,
+                  destCell.bg,
+                  math.huge - 100
+               )
+            end
+
             display:put(
                position.x,
                position.y,
                drawable.index,
                drawable.color,
                drawable.background,
-               drawable.layer
+               math.huge
             )
          end
       end
