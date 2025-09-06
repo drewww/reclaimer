@@ -80,7 +80,7 @@ function Shoot:perform(level, target)
       })
    elseif weapon.template == "cone" then
       level:yield(prism.messages.Animation {
-         animation = spectrum.animations.Explode(self.owner:getPosition(), weapon.range + 1, targetPoints),
+         animation = spectrum.animations.Explode(self.owner:getPosition(), weapon.range + 1, targetPoints, prism.Color4.WHITE),
          blocking = true
       })
    else

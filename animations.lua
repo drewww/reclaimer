@@ -43,7 +43,8 @@ end)
 --- @param center Vector2
 --- @param radius number
 --- @param targetPoints Vector2[]? -- Optional mask of specific points to explode at
-spectrum.registerAnimation("Explode", function(center, radius, targetPoints)
+--- @param color Color4? -- Optional color for the explosion (defaults to orange)
+spectrum.registerAnimation("Explode", function(center, radius, targetPoints, color)
    return spectrum.Animation(function(t, display)
       local totalDuration = 0.25
       local maxRadius = radius
@@ -66,8 +67,8 @@ spectrum.registerAnimation("Explode", function(center, radius, targetPoints)
          end
       end
 
-      -- Single bright orange color for the wave
-      local orangeColor = prism.Color4(1.0, 0.5, 0.1, 1.0)
+      -- Use provided color or default to bright orange
+      local explosionColor = color or prism.Color4(1.0, 0.5, 0.1, 1.0)
       local blackColor = prism.Color4(0.0, 0.0, 0.0, 1.0)
 
       -- Draw the explosion area
@@ -98,9 +99,9 @@ spectrum.registerAnimation("Explode", function(center, radius, targetPoints)
                      intensity = intensity * randomFactor
 
                      local finalColor = prism.Color4(
-                        orangeColor.r,
-                        orangeColor.g,
-                        orangeColor.b,
+                        explosionColor.r,
+                        explosionColor.g,
+                        explosionColor.b,
                         intensity
                      )
 
@@ -113,11 +114,11 @@ spectrum.registerAnimation("Explode", function(center, radius, targetPoints)
                      local maxFade = waveWidth * 0.8
                      local fadeAmount = math.min(fadeDistance / maxFade, 1.0)
 
-                     -- Fade from orange to black
+                     -- Fade from explosion color to black
                      local trailColor = prism.Color4(
-                        orangeColor.r * (1 - fadeAmount),
-                        orangeColor.g * (1 - fadeAmount),
-                        orangeColor.b * (1 - fadeAmount),
+                        explosionColor.r * (1 - fadeAmount),
+                        explosionColor.g * (1 - fadeAmount),
+                        explosionColor.b * (1 - fadeAmount),
                         0.8 + (fadeAmount * 0.2) -- Gradually become more opaque/black
                      )
 
