@@ -14,7 +14,8 @@ prism.registerActor("BotLaser", function()
          aoe = 0,
          template = "line",
          hotkey = 4,
-         active = true
+         active = true,
+         ammoType = "Laser"
       })
    }
 end)

@@ -27,7 +27,7 @@ function BotController:act(level, actor)
        (weaponComponent.ammo >= weaponComponent.ammopershot)
 
    local hasAmmo = false
-   local ammoStack = inventory:getStack(prism.actors.AmmoStack)
+   local ammoStack = inventory:getStack(AMMO_TYPES[weaponComponent.ammoType])
    if ammoStack then
       local ammoStackC = ammoStack:get(prism.components.Item)
       if ammoStackC then

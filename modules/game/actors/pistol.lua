@@ -13,7 +13,8 @@ prism.registerActor("Pistol", function()
          ammopershot = 1,
          aoe = 0,
          template = "point",
-         hotkey = 2
+         hotkey = 2,
+         ammoType = "Pistol"
       })
    }
 end)

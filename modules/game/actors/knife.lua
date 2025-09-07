@@ -10,7 +10,7 @@ prism.registerActor("Knife", function()
          range = 1,
          ammo = 1,
          maxAmmo = 1,
-         ammopershot = 1,
+         ammopershot = 0,
          aoe = 0,
          template = "melee",
          hotkey = 1
