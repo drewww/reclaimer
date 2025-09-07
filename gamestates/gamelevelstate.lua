@@ -132,6 +132,7 @@ end
 --- @param secondary Senses[]
 function GameLevelState:draw(primary, secondary)
    self.display:clear()
+   self.uiDisplay:clear()
 
    local player = self.level:query(prism.components.PlayerController):first()
    assert(player)
@@ -236,10 +237,8 @@ function GameLevelState:draw(primary, secondary)
    self.uiDisplay:draw()
 
    -- custom love2d drawing goes here!
-
-   -- draw a square over the cell we're hovering over
-
-   -- self.display:putFilledRect(10, 10, 100, 100, "*", prism.Color4.WHITE, prism.Color4.RED, math.huge)
+   -- love.graphics.pop("all")
+   love.graphics.setColor(1, 1, 1, 1)
 end
 
 function GameLevelState:mousepressed(x, y, button, istouch, presses)
