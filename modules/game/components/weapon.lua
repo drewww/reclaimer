@@ -9,6 +9,7 @@
 --- @field template string
 --- @field hotkey string|integer
 --- @field active boolean
+--- @field ammoType string
 local WeaponOptions = {}
 WeaponOptions.__index = WeaponOptions
 
@@ -27,7 +28,7 @@ function WeaponOptions:new(options)
    self.template = opts.template or "point"
    self.hotkey = opts.hotkey or 1
    self.active = opts.active or false
-
+   self.ammoType = opts.ammoType or "pistol"
    return self
 end
 
@@ -42,6 +43,7 @@ end
 --- @field ammo integer
 --- @field maxAmmo integer
 --- @field aoe number
+--- @field ammoType string
 local Weapon = prism.Component:extend("Weapon")
 
 -- TODO add ammo type
@@ -65,6 +67,7 @@ function Weapon:__new(options)
    self.maxAmmo = opts.maxAmmo
    self.active = opts.active
    self.aoe = opts.aoe
+   self.ammoType = opts.ammoType
 end
 
 -- Export both classes

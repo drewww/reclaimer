@@ -23,39 +23,39 @@ function Reload:canPerform(level)
 
    -- don't allow reloads on non-ammo weapons, or if there is no missing ammo
    if weapon then
-      local weaponComponent = weapon:get(prism.components.Weaopn)
-
+      local weaponComponent = weapon:get(prism.components.Weapon)
+      prism.logger.info(" canPerform-RELOAD has weapon, c? ", weaponComponent)
       if weaponComponent then
+         prism.logger.info(" canPerform-RELOAD has weaponComponent")
          if weaponComponent.ammopershot == 0 then
             do
                return false
             end
          end
 
-         prism.logger.info("ammo check ", weaponComponent.maxAmmo, weaponComponent.ammo)
+         prism.logger.info("ammo check ", weaponComponent.ammoType, weaponComponent.maxAmmo, weaponComponent.ammo)
          if weaponComponent.maxAmmo == weaponComponent.ammo then
             return false
          end
-      end
 
+         local ammo = inventory:getStack(AMMO_TYPES[weaponComponent.ammoType])
+         if ammo then
+            local ammoComponent = ammo:get(prism.components.Item)
+            if ammoComponent then
+               if ammoComponent.stackCount > 0 then
+                  return true
+               else
+                  return false
+               end
+            end
+         end
+      end
 
       if weapon:get(prism.components.Weapon).ammopershot == 0 then
          return false
       end
    else
       return false
-   end
-
-   local ammo = inventory:getStack(prism.actors.AmmoStack)
-   if ammo then
-      local ammoComponent = ammo:get(prism.components.Item)
-      if ammoComponent then
-         if ammoComponent.stackCount > 0 then
-            return true
-         else
-            return false
-         end
-      end
    end
 end
 
@@ -69,9 +69,12 @@ function Reload:perform(level)
    local weapon = WeaponUtil.getActive(inventory)
    assert(weapon)
 
-   local ammo = inventory:getStack(prism.actors.AmmoStack)
+
    local weaponComponent = weapon:get(prism.components.Weapon)
-   if ammo and weaponComponent then
+   assert(weaponComponent)
+   local ammo = inventory:getStack(AMMO_TYPES[weaponComponent.ammoType])
+
+   if ammo then
       local totalAmmo = ammo:get(prism.components.Item).stackCount
 
       local missingAmmo = weaponComponent.maxAmmo - weaponComponent.ammo

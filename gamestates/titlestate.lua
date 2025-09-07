@@ -50,7 +50,7 @@ function TitleState:update(dt)
       local inventory = player:get(prism.components.Inventory)
       if inventory then
          -- DEFINE STARTING INVENTORY
-         local ammo = prism.actors.AmmoStack()
+         local ammo = AMMO_TYPES["pistol"]()
          ammo:get(prism.components.Item).stackCount = 50
          inventory:addItem(ammo)
 
@@ -58,17 +58,17 @@ function TitleState:update(dt)
          pistol:get(prism.components.Weapon).active = true
          inventory:addItem(pistol)
 
-         local knife = prism.actors.Knife()
-         inventory:addItem(knife)
+         -- local knife = prism.actors.Knife()
+         -- inventory:addItem(knife)
 
-         local shotgun = prism.actors.Shotgun()
-         inventory:addItem(shotgun)
+         -- local shotgun = prism.actors.Shotgun()
+         -- inventory:addItem(shotgun)
 
-         local laser = prism.actors.Laser()
-         inventory:addItem(laser)
+         -- local laser = prism.actors.Laser()
+         -- inventory:addItem(laser)
 
-         local rocket = prism.actors.Rocket()
-         inventory:addItem(rocket)
+         -- local rocket = prism.actors.Rocket()
+         -- inventory:addItem(rocket)
       end
 
 

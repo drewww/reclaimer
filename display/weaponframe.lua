@@ -36,10 +36,12 @@ function WeaponFrame:draw(display)
 
          display:putFilledRect(originX, originY + baseRow, 15, 2, " ", prism.Color4.TRANSPARENT, bg)
 
+         -- prism.logger.info("ammoType: ", weapon.ammoType)
          if (weapon.ammopershot ~= 0) then
             local totalAmmo = 0
-            if inventory and inventory:getStack(prism.actors.AmmoStack) then
-               local ammoStack = inventory:getStack(prism.actors.AmmoStack):get(prism.components.Item)
+            if inventory and inventory:getStack(AMMO_TYPES[weapon.ammoType]) then
+               -- prism.logger.info(" found inventory and ammo")
+               local ammoStack = inventory:getStack(AMMO_TYPES[weapon.ammoType]):get(prism.components.Item)
                if ammoStack then
                   totalAmmo = ammoStack.stackCount
                else
