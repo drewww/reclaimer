@@ -43,7 +43,7 @@
       "hide": "never"
    },
    {
-      "label": "Update Tiles",
+      "label": "Update Custom Tiles",
       "command": "magick",
       "args": [
          "/Applications/REXPaint-v1.70/images/reclaimer_tiles.png",
@@ -56,5 +56,23 @@
       "allow_concurrent_runs": false,
       "reveal": "always",
       "hide": "never"
+   },
+   {
+      "label": "Update Default Tiles",
+      "command": "magick",
+      "args": [
+         "display/mrmotext_16x16.png",
+         "display/cp437_16x16.png",
+         "-append",
+         "-transparent",
+         "black",
+         "display/base_tiles.png"
+      ],
+      "cwd": "$ZED_WORKTREE_ROOT",
+      "use_new_terminal": false,
+      "allow_concurrent_runs": false,
+      "reveal": "always",
+      "hide": "never"
    }
+
 ]
