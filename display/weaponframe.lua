@@ -64,9 +64,9 @@ function WeaponFrame:draw()
          self.display:putString(originX + 6, originY + baseRow + 1, tostring(weapon.push), fg, bg)
 
          self.display:putString(originX + 9, originY + baseRow + 1, tostring(math.floor(weapon.range)), fg, bg)
-         self.display:put(originX + 2, originY + baseRow + 1, 484, fg, bg)
-         self.display:put(originX + 5, originY + baseRow + 1, 656, fg, bg)
-         self.display:put(originX + 8, originY + baseRow + 1, 510, fg, bg)
+         self.display:put(originX + 2, originY + baseRow + 1, HEART, fg, bg)
+         self.display:put(originX + 5, originY + baseRow + 1, PUSH, fg, bg)
+         self.display:put(originX + 8, originY + baseRow + 1, RANGE, fg, bg)
       end
    end
 

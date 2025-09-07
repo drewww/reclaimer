@@ -1,5 +1,5 @@
-SCREEN_WIDTH = 41
-SCREEN_HEIGHT = 25
+SCREEN_WIDTH = 31
+SCREEN_HEIGHT = 15
 
 WALL_COLLIDE_DAMAGE = 5
 
@@ -21,3 +21,10 @@ ROCKET_BASE = 11 * 16 + 1
 BULLET_BASE = 12 * 16 + 1
 
 BOT_HEAD = 5 * 16 + 1
+
+
+-- these are for the BASE TILES sprites
+HEART = 16 * 15 + 4
+CENTS = 16 * 56 + 11
+PUSH = 16 * 61 + 1
+RANGE = 16 * 42 + 10

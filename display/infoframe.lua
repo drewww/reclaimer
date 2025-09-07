@@ -20,7 +20,7 @@ function InfoFrame:draw()
 
    if health then
       self.display:putFilledRect(4, 1, health.maxHP, 1, " ", prism.Color4.WHITE, prism.Color4.NAVY)
-      self.display:putFilledRect(4, 1, health.hp, 1, (15 * 32) + 4, prism.Color4.WHITE, prism.Color4.NAVY)
+      self.display:putFilledRect(4, 1, health.hp, 1, HEART, prism.Color4.WHITE, prism.Color4.NAVY)
    end
 
    local inventory = player and player:get(prism.components.Inventory)
@@ -32,7 +32,7 @@ function InfoFrame:draw()
          amount = bits:get(prism.components.Item).stackCount
       end
 
-      self.display:put(30, 1, 636, prism.Color4.WHITE, prism.Color4.NAVY)
+      self.display:put(30, 1, CENTS, prism.Color4.WHITE, prism.Color4.NAVY)
       self.display:putString(31, 1, tostring(amount), prism.Color4.WHITE, prism.Color4.NAVY)
    end
 
