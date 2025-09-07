@@ -21,6 +21,56 @@ spectrum.registerAnimation("Projectile", function(owner, targetPosition, char)
    end)
 end)
 
+spectrum.registerAnimation("Melee", function(position, color)
+   return spectrum.Animation(function(t, display)
+      local totalDuration = 0.2
+      local progress = math.min(t / totalDuration, 1.0)
+
+      if progress >= 1 then
+         return true
+      end
+
+      -- Use Vector2.neighborhood8 in clockwise order starting from UP
+      local offsets = {
+         prism.Vector2.UP,         -- top
+         prism.Vector2.UP_RIGHT,   -- top-right
+         prism.Vector2.RIGHT,      -- right
+         prism.Vector2.DOWN_RIGHT, -- bottom-right
+         prism.Vector2.DOWN,       -- bottom
+         prism.Vector2.DOWN_LEFT,  -- bottom-left
+         prism.Vector2.LEFT,       -- left
+         prism.Vector2.UP_LEFT     -- top-left
+      }
+
+      local spinColor = color or prism.Color4(1.0, 0.8, 0.3, 0.8)
+
+      -- Calculate how many cells to light up based on progress
+      local numCells = math.floor(progress * #offsets) + 1
+
+      local x, y = position:decompose()
+
+      -- Light up cells in clockwise order
+      for i = 1, math.min(numCells, #offsets) do
+         local offset = offsets[i]
+         local cellX = x + offset.x
+         local cellY = y + offset.y
+
+         -- Fade earlier cells
+         local cellIntensity = 1.0 - ((numCells - i) / #offsets) * 0.5
+         local cellColor = prism.Color4(
+            spinColor.r,
+            spinColor.g,
+            spinColor.b,
+            spinColor.a * cellIntensity
+         )
+
+         display:putBG(cellX, cellY, cellColor, math.huge)
+      end
+
+      return false
+   end)
+end)
+
 spectrum.registerAnimation("Damage", function(value)
    local startColor = prism.Color4.RED
    local lighterColor = startColor:copy()
