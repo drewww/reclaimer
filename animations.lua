@@ -108,13 +108,13 @@ spectrum.registerAnimation("Notice", function(text, x, y)
       end
 
       if text == "EMPTY" then
-         display:put(mX + 1, mY, EMPTY_BASE, color)
-         display:put(mX + 2, mY, EMPTY_BASE + 1, color)
-         display:put(mX + 3, mY, EMPTY_BASE + 2, color)
+         display:put(x + 0, y, EMPTY_BASE, color)
+         display:put(x + 2, y, EMPTY_BASE + 1, color)
+         display:put(x + 3, y, EMPTY_BASE + 2, color)
       elseif text == "RELOAD" then
-         display:put(mX + 1, mY, RELOAD_BASE, color)
-         display:put(mX + 2, mY, EMPTY_BASE + 1, color)
-         display:put(mX + 3, mY, EMPTY_BASE + 2, color)
+         display:put(x + 0, y, RELOAD_BASE, color)
+         display:put(x + 1, y, RELOAD_BASE + 1, color)
+         display:put(x + 2, y, RELOAD_BASE + 2, color)
       end
 
 
