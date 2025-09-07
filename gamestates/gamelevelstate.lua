@@ -47,6 +47,10 @@ function turn(level, actor, controller)
       continueTurn = (actor:has(prism.components.Dashing)
          and (prism.actions.Move:is(action)) or prism.actions.Dash:is(action))
 
+      if prism.actions.SelectWeapon:is(action) then
+         continueTurn = true
+      end
+
       if not actor:has(prism.components.PlayerController) then
          continueTurn = false
       end
