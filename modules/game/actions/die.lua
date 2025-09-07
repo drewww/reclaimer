@@ -39,8 +39,6 @@ function Die:perform(level)
    else
       prism.logger.info("Actor died: " .. self.owner:getName())
 
-      if not level:query(prism.components.PlayerController):first() then level:yield(prism.messages.Lose()) end
-
       if self.owner:has(prism.components.Targeting) then
          local targeting = self.owner:get(prism.components.Targeting)
          assert(targeting)
@@ -60,6 +58,8 @@ function Die:perform(level)
       end
 
       level:removeActor(self.owner)
+
+      if not level:query(prism.components.PlayerController):first() then level:yield(prism.messages.Lose()) end
    end
 
 
