@@ -79,9 +79,9 @@ spectrum.registerAnimation("Damage", function(value)
    local lighestColor = startColor:copy()
    lighestColor.a = 0.3
 
-   local on = { index = tostring(value), color = startColor }
-   local fade1 = { index = tostring(value), color = lighterColor }
-   local fade2 = { index = tostring(value), color = lighestColor }
+   local on = { index = DAMAGE_BASE + value, color = startColor }
+   local fade1 = { index = DAMAGE_BASE + value, color = lighterColor }
+   local fade2 = { index = DAMAGE_BASE + value, color = lighestColor }
 
    return spectrum.Animation(
       { on, on, on, on, on, on, on, fade1, fade2 },
@@ -92,7 +92,7 @@ end)
 
 spectrum.registerAnimation("Notice", function(text, x, y)
    return spectrum.Animation(function(t, display)
-      local totalDuration = 0.5
+      local totalDuration = 1.0
       local progress = math.min(t / totalDuration, 1.0)
 
       -- put a reload string where the mouse was clicked
@@ -107,7 +107,16 @@ spectrum.registerAnimation("Notice", function(text, x, y)
          y = mY
       end
 
-      display:putString(mX + 1, mY, text, color)
+      if text == "EMPTY" then
+         display:put(mX + 1, mY, EMPTY_BASE, color)
+         display:put(mX + 2, mY, EMPTY_BASE + 1, color)
+         display:put(mX + 3, mY, EMPTY_BASE + 2, color)
+      elseif text == "RELOAD" then
+         display:put(mX + 1, mY, RELOAD_BASE, color)
+         display:put(mX + 2, mY, EMPTY_BASE + 1, color)
+         display:put(mX + 3, mY, EMPTY_BASE + 2, color)
+      end
+
 
       if progress >= 1.0 then
          return true
