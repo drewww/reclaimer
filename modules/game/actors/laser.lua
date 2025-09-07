@@ -13,7 +13,8 @@ prism.registerActor("Laser", function()
          ammopershot = 1,
          aoe = 0,
          template = "line",
-         hotkey = 4
+         hotkey = 4,
+         ammoType = "Laser"
       })
    }
 end)

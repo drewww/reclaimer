@@ -14,7 +14,8 @@ prism.registerActor("Rocket", function(active)
          aoe = 4,
          template = "aoe",
          hotkey = 5,
-         active = active
+         active = active,
+         ammoType = "Rocket"
       })
    }
 end)
