@@ -1,11 +1,14 @@
 local Game = require "game"
 --- @class GameOverState : GameState
 --- @field display Display
---- @overload fun(display: Display): GameOverState
+--- @overload fun(): GameOverState
 local GameOverState = spectrum.GameState:extend("GameOverState")
 
-function GameOverState:__new(display)
-   self.display = display
+function GameOverState:__new()
+   local cp437Atlas = require "display.cp437_atlas"
+
+   self.display     = spectrum.Display(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, cp437Atlas, prism.Vector2(16, 16))
+   self.display:fitWindowToTerminal()
 
    Game.stats:finalize()
    Game.stats:print()

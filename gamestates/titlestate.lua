@@ -4,7 +4,7 @@ local Game           = require "game"
 
 --- @class TitleState : GameState
 --- @field display Display
---- @overload fun(display: Display): GameOverState
+--- @overload fun(): GameState
 local TitleState     = spectrum.GameState:extend("TitleState")
 local cp437Atlas     = require "display.cp437_atlas"
 
