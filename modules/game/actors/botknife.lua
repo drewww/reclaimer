@@ -4,6 +4,16 @@ prism.registerActor("BotKnife", function()
       prism.components.Position(),
       prism.components.Drawable { index = "w", color = prism.Color4.YELLOW },
       prism.components.Item(),
-      prism.components.Weapon(1, 2, 1, 1, 1, 0, 0, "melee", 1)
+      prism.components.Weapon({
+         damage = 1,
+         push = 2,
+         range = 1,
+         ammo = 1,
+         maxAmmo = 1,
+         ammopershot = 0,
+         aoe = 0,
+         template = "melee",
+         hotkey = 1
+      })
    }
 end)

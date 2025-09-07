@@ -4,6 +4,16 @@ prism.registerActor("Pistol", function()
       prism.components.Position(),
       prism.components.Drawable { index = "w", color = prism.Color4.YELLOW },
       prism.components.Item(),
-      prism.components.Weapon(1, 2, 5, 5, 5, 1, 0, "point", 2)
+      prism.components.Weapon({
+         damage = 1,
+         push = 2,
+         range = 5,
+         ammo = 5,
+         maxAmmo = 5,
+         ammopershot = 1,
+         aoe = 0,
+         template = "point",
+         hotkey = 2
+      })
    }
 end)
