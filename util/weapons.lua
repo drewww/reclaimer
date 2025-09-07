@@ -98,6 +98,16 @@ function WeaponUtil.getTargetPoints(level, actor, target)
             end
          end
       end
+   elseif weapon and weapon.template == "melee" then
+      -- manhattan distance
+      for i = math.floor(-weapon.range), math.ceil(weapon.range) do
+         for j = math.floor(-weapon.range), math.ceil(weapon.range) do
+            if not (i == 0 and j == 0) then
+               local point = prism.Vector2(i, j) + source
+               table.insert(points, point)
+            end
+         end
+      end
    elseif weapon and weapon.template == "aoe" then
       local range = weapon.range
       local aoe = weapon.aoe
