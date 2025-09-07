@@ -38,7 +38,7 @@ function Reload:canPerform(level)
             return false
          end
 
-         local ammo = inventory:getStack(AMMO_TYPES[weaponComponent.ammoType])
+         local ammo = inventory:getStack(prism.actors["Ammo" .. weaponComponent.ammoType])
          if ammo then
             local ammoComponent = ammo:get(prism.components.Item)
             if ammoComponent then
@@ -72,7 +72,7 @@ function Reload:perform(level)
 
    local weaponComponent = weapon:get(prism.components.Weapon)
    assert(weaponComponent)
-   local ammo = inventory:getStack(AMMO_TYPES[weaponComponent.ammoType])
+   local ammo = inventory:getStack(prism.actors["Ammo" .. weaponComponent.ammoType])
 
    if ammo then
       local totalAmmo = ammo:get(prism.components.Item).stackCount
