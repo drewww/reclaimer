@@ -58,9 +58,14 @@ function BotController:act(level, actor)
       if not actor:has(prism.components.Targeting) and weaponComponent then
          prism.logger.info("BEGINING TARGETING")
          -- set the target. draw a line from actor:getPosition
+
          local targetDirection = player:getPosition() - actor:getPosition()
 
          local target = targetDirection:normalize() * weaponComponent.range + actor:getPosition()
+
+         if weaponComponent.template == "aoe" then
+            target = player:getPosition()
+         end
 
          target.x = math.floor(target.x)
          target.y = math.floor(target.y)
