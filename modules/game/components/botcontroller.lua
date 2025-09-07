@@ -18,7 +18,15 @@ function BotController:act(level, actor)
 
    local inventory = actor:get(prism.components.Inventory)
    local weapon, weaponComponent = WeaponUtil.getActive(inventory)
+   assert(weaponComponent)
 
+   local hasAmmo = weaponComponent.ammopershot == 0 or
+       (weaponComponent.ammo > weaponComponent.ammopershot)
+
+   if not hasAmmo then
+      -- switch to melee
+      WeaponUtil.setActive(inventory, 1)
+   end
 
    if actor:has(prism.components.Targeting) then
       prism.logger.info("FIRE! - Actor has targeting component")
@@ -55,7 +63,9 @@ function BotController:act(level, actor)
    local destination
 
    if player then
-      if not actor:has(prism.components.Targeting) and weaponComponent then
+      local inRange = actor:getPosition():distance(player:getPosition()) <= weaponComponent.range
+
+      if not actor:has(prism.components.Targeting) and hasAmmo and inRange then
          prism.logger.info("BEGINING TARGETING")
          -- set the target. draw a line from actor:getPosition
 
@@ -77,28 +87,26 @@ function BotController:act(level, actor)
          -- enter targeted mode
          actor:give(targeting)
 
-         if weaponComponent and actor:getPosition():distance(player:getPosition()) <= weaponComponent.range then
-            -- if we're in range then target
-            local targetPositions = WeaponUtil.getTargetPoints(level, actor, target)
+         -- if we're in range then target
+         local targetPositions = WeaponUtil.getTargetPoints(level, actor, target)
 
-            for i, p in ipairs(targetPositions) do
-               -- set targeting on these cells
-               local cell = level:getCell(p.x, p.y)
-               local targetedComponent = cell:get(prism.components.Targeted())
+         for i, p in ipairs(targetPositions) do
+            -- set targeting on these cells
+            local cell = level:getCell(p.x, p.y)
+            local targetedComponent = cell:get(prism.components.Targeted())
 
-               table.insert(targeting.cells, p)
+            table.insert(targeting.cells, p)
 
-               if targetedComponent then
-                  targetedComponent.times = targetedComponent.times + 1
-               else
-                  cell:give(prism.components.Targeted(1))
-               end
+            if targetedComponent then
+               targetedComponent.times = targetedComponent.times + 1
+            else
+               cell:give(prism.components.Targeted(1))
             end
-
-            return prism.actions.Wait(actor)
          end
+
+         return prism.actions.Wait(actor)
       end
-      -- if the actor sees the player, enter targeting mode
+
       destination = player:getPosition()
       alert.lastseen = player:getPosition()
    elseif alert.lastseen then

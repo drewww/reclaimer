@@ -179,7 +179,7 @@ function GameLevelState:draw(primary, secondary)
 
          if cell:has(prism.components.Targeted) then
             color = prism.Color4(1.0, 0, 0, 0.5)
-            layer = 100
+            layer = math.huge - 10
          end
 
          self.display:putBG(cellX + cameraX, cellY + cameraY, color, layer)

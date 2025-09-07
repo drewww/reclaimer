@@ -16,7 +16,8 @@ prism.registerActor("Bot", function()
          totalCount = 1,
          items = {
             prism.actors.AmmoStack(10),
-            prism.actors.BotLaser()
+            prism.actors.BotLaser(),
+            prism.actors.BotKnife()
          },
       },
    }
