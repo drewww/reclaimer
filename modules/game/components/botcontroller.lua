@@ -23,7 +23,7 @@ function BotController:act(level, actor)
    local hasAmmo = weaponComponent.ammopershot == 0 or
        (weaponComponent.ammo > weaponComponent.ammopershot)
 
-   if not hasAmmo then
+   if not hasAmmo and weaponComponent.ammopershot > 0 then
       -- switch to melee
       WeaponUtil.setActive(inventory, 1)
    end
@@ -63,7 +63,14 @@ function BotController:act(level, actor)
    local destination
 
    if player then
+      prism.logger.info(" considering targeting ")
       local inRange = actor:getPosition():distance(player:getPosition()) <= weaponComponent.range
+
+      if weaponComponent.template == "melee" then
+         local distance = actor:getPosition():distanceChebyshev(player:getPosition())
+         inRange = distance <= weaponComponent.range
+         prism.logger.info("checking melee range: ", inRange, distance, hasAmmo)
+      end
 
       if not actor:has(prism.components.Targeting) and hasAmmo and inRange then
          prism.logger.info("BEGINING TARGETING")
@@ -122,8 +129,8 @@ function BotController:act(level, actor)
       if level:canPerform(move) then return move end
    end
 
-   local attack = prism.actions.Attack(actor, player)
-   if level:canPerform(attack) then level:perform(attack) end
+   -- local attack = prism.actions.Attack(actor, player)
+   -- if level:canPerform(attack) then level:perform(attack) end
 
    return prism.actions.Wait(actor)
 end
