@@ -47,8 +47,6 @@
       "command": "magick",
       "args": [
          "/Applications/REXPaint-v1.70/images/reclaimer_tiles.png",
-         "display/cp437_32x32.png",
-         "-append",
          "-transparent",
          "black",
          "display/reclaimer_tiles.png"

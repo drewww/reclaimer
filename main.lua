@@ -32,12 +32,9 @@ local Game = require("game")
 -- prism.logger.info("Loaded TILE MAP: " .. #cp437Map .. " entries")
 -- prism.logger.info(" location of `A`: " .. cp437Map[1150])
 
-local spriteAtlas = spectrum.SpriteAtlas.fromGrid("display/reclaimer_tiles.png", 32, 32)
-
-local display = spectrum.Display(41, 25, spriteAtlas, prism.Vector2(32, 32))
 
 -- Automatically size the window to match the terminal dimensions
-display:fitWindowToTerminal()
+-- display:fitWindowToTerminal()
 
 -- spin up our state machine
 --- @type GameStateManager
@@ -46,7 +43,7 @@ local manager = spectrum.StateManager()
 -- we put out levelstate on top here, but you could create a main menu
 --- @diagnostic disable-next-line
 function love.load()
-   manager:push(TitleState(display))
+   manager:push(TitleState())
    manager:hook()
    spectrum.Input:hook()
 end

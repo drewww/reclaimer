@@ -6,9 +6,11 @@ local Game           = require "game"
 --- @field display Display
 --- @overload fun(display: Display): GameOverState
 local TitleState     = spectrum.GameState:extend("TitleState")
+local cp437Atlas     = require "display.cp437_atlas"
 
-function TitleState:__new(display)
-   self.display = display
+function TitleState:__new()
+   self.display = spectrum.Display(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, cp437Atlas, prism.Vector2(16, 16))
+   self.display:fitWindowToTerminal()
 
    self.controls = spectrum.Input.Controls {
       controls = {
@@ -79,7 +81,7 @@ function TitleState:update(dt)
       local builder = Game:generateNextFloor(player)
       prism.logger:info("entering game state")
 
-      self.manager:enter(GameLevelState(self.display, builder, Game:getLevelSeed()))
+      self.manager:enter(GameLevelState(builder, Game:getLevelSeed()))
    elseif self.controls.quit.pressed then
       love.event.quit()
    elseif self.controls.generate.pressed then

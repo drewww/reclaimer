@@ -2,7 +2,7 @@
 -- Image: cp437_16x16.png
 -- Grid: 16x76
 
-return {
+local map = {
    -- Rows 61-76: CP437 character set (16 rows of 16 characters each)
    -- Row 61 (codes 0-15): Control characters and symbols
    " ", "☺", "☻", "♥", "♦", "♣", "♠", "•", "◘", "○", "◙", "♂", "♀", "♪", "♫", "☼",
@@ -37,3 +37,9 @@ return {
    -- Row 76 (codes 240-255): Final symbols and characters
    "≡", "±", "≥", "≤", "⌠", "⌡", "÷", "≈", "°", "∙", "·", "√", "ⁿ", "²", "■", ""
 }
+
+return spectrum.SpriteAtlas.fromGrid(
+   "display/cp437_16x16.png",
+   16, 16,
+   map
+)

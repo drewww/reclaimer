@@ -61,10 +61,9 @@ function turn(level, actor, controller)
    until not continueTurn
 end
 
---- @param display Display
 --- @param builder LevelBuilder
 --- @param seed string
-function GameLevelState:__new(display, builder, seed)
+function GameLevelState:__new(builder, seed)
    -- Construct a simple test map using LevelBuilder.
    -- In a complete game, you'd likely extract this logic to a separate module
    -- and pass in an existing player object between levels.
@@ -81,22 +80,21 @@ function GameLevelState:__new(display, builder, seed)
    -- setup custom turn handler
    builder:addTurnHandler(turn)
 
+   local spriteAtlas = spectrum.SpriteAtlas.fromGrid("display/reclaimer_tiles.png", 32, 32)
+   self.display = spectrum.Display(SCREEN_WIDTH, SCREEN_HEIGHT, spriteAtlas, prism.Vector2(32, 32))
+   self.display:fitWindowToTerminal()
+
    -- Initialize with the created level and display, the heavy lifting is done by
    -- the parent class.
-   spectrum.LevelState.__new(self, builder:build(), display)
+   spectrum.LevelState.__new(self, builder:build(), self.display)
 
    self.mouseCellPosition = nil
 
    -- TODO consider if this should be inlined
    self.controls = require "controls"
-   local cp437Map = require "display.cp437_map"
+   local cp437Atlas = require "display.cp437_atlas"
 
-   local cp437Atlas = spectrum.SpriteAtlas.fromGrid(
-      "display/cp437_16x16.png",
-      16, 16,
-      cp437Map
-   )
-   self.uiDisplay = spectrum.Display(display.width * 2, display.height * 2, cp437Atlas, prism.Vector2(16, 16))
+   self.uiDisplay = spectrum.Display(self.display.width * 2, self.display.height * 2, cp437Atlas, prism.Vector2(16, 16))
 
    self.infoFrame = InfoFrame(self.level, self.uiDisplay)
    self.weaponFrame = WeaponFrame(self.level, self.uiDisplay)
