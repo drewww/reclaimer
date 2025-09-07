@@ -98,7 +98,7 @@ function GameLevelState:__new(display, builder, seed)
    )
    self.uiDisplay = spectrum.Display(display.width * 2, display.height * 2, cp437Atlas, prism.Vector2(16, 16))
 
-   self.infoFrame = InfoFrame(self.level)
+   self.infoFrame = InfoFrame(self.level, self.uiDisplay)
    self.weaponFrame = WeaponFrame(self.level, self.uiDisplay)
 end
 
@@ -230,7 +230,7 @@ function GameLevelState:draw(primary, secondary)
    -- offset it for custom non-terminal UI elements. If you do scale the UI
    -- just remember that display:getCellUnderMouse expects the mouse in the
    -- display's local pixel coordinates
-   self.infoFrame:draw(self.display)
+   self.infoFrame:draw()
    self.weaponFrame:draw()
 
 
