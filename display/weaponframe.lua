@@ -1,15 +1,16 @@
 local WeaponFrame = prism.Object:extend("WeaponFrame")
 
 --- @param level Level
-function WeaponFrame:__new(level)
+function WeaponFrame:__new(level, display)
    self.level = level
+   self.display = display
 end
 
---- @param display Display
-function WeaponFrame:draw(display)
+function WeaponFrame:draw()
    -- start by painting a background
-   local originX, originY = display.width - 14, 2
-
+   -- local originX, originY = 41 - 14, 2
+   local originX, originY = self.display.width - 15, 3
+   -- self.display:setCamera(self.display.width - 14, 2)
    -- display:putFilledRect(originX, originY, 15, 6, " ", prism.Color4.TRANSPARENT, prism.Color4.RED)
 
    -- okay now we want to rotate through weapons in the inventory, two rows per weapon.
@@ -34,7 +35,7 @@ function WeaponFrame:draw(display)
             fg = prism.Color4.BLACK
          end
 
-         display:putFilledRect(originX, originY + baseRow, 15, 2, " ", prism.Color4.TRANSPARENT, bg)
+         self.display:putFilledRect(originX, originY + baseRow, 15, 2, " ", prism.Color4.TRANSPARENT, bg)
 
          -- prism.logger.info("ammoType: ", weapon.ammoType)
          if (weapon.ammopershot ~= 0) then
@@ -49,25 +50,27 @@ function WeaponFrame:draw(display)
                end
             end
 
-            display:putString(originX, originY + baseRow, tostring(weapon.ammo) .. "/" .. tostring(totalAmmo),
+            self.display:putString(originX, originY + baseRow, tostring(weapon.ammo) .. "/" .. tostring(totalAmmo),
                fg, bg,
                math.huge, "right", 15)
          end
 
-         display:putString(originX, originY + baseRow, tostring(weapon.hotkey) .. " " .. weaponActor:getName(),
+         self.display:putString(originX, originY + baseRow, tostring(weapon.hotkey) .. " " .. weaponActor:getName(),
             fg, bg,
             math.huge, "left", 15)
 
          -- now list weapon stats
-         display:putString(originX + 3, originY + baseRow + 1, tostring(weapon.damage), fg, bg)
-         display:putString(originX + 6, originY + baseRow + 1, tostring(weapon.push), fg, bg)
+         self.display:putString(originX + 3, originY + baseRow + 1, tostring(weapon.damage), fg, bg)
+         self.display:putString(originX + 6, originY + baseRow + 1, tostring(weapon.push), fg, bg)
 
-         display:putString(originX + 9, originY + baseRow + 1, tostring(math.floor(weapon.range)), fg, bg)
-         display:put(originX + 2, originY + baseRow + 1, 484, fg, bg)
-         display:put(originX + 5, originY + baseRow + 1, 656, fg, bg)
-         display:put(originX + 8, originY + baseRow + 1, 510, fg, bg)
+         self.display:putString(originX + 9, originY + baseRow + 1, tostring(math.floor(weapon.range)), fg, bg)
+         self.display:put(originX + 2, originY + baseRow + 1, 484, fg, bg)
+         self.display:put(originX + 5, originY + baseRow + 1, 656, fg, bg)
+         self.display:put(originX + 8, originY + baseRow + 1, 510, fg, bg)
       end
    end
+
+   self.display:draw()
 end
 
 return WeaponFrame

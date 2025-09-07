@@ -87,11 +87,19 @@ function GameLevelState:__new(display, builder, seed)
 
    self.mouseCellPosition = nil
 
-   self.infoFrame = InfoFrame(self.level)
-   self.weaponFrame = WeaponFrame(self.level)
-
    -- TODO consider if this should be inlined
    self.controls = require "controls"
+   local cp437Map = require "display.cp437_map"
+
+   local cp437Atlas = spectrum.SpriteAtlas.fromGrid(
+      "display/cp437_16x16.png",
+      16, 16,
+      cp437Map
+   )
+   self.uiDisplay = spectrum.Display(display.width * 2, display.height * 2, cp437Atlas, prism.Vector2(16, 16))
+
+   self.infoFrame = InfoFrame(self.level)
+   self.weaponFrame = WeaponFrame(self.level, self.uiDisplay)
 end
 
 function GameLevelState:handleMessage(message)
@@ -223,9 +231,11 @@ function GameLevelState:draw(primary, secondary)
    -- just remember that display:getCellUnderMouse expects the mouse in the
    -- display's local pixel coordinates
    self.infoFrame:draw(self.display)
-   self.weaponFrame:draw(self.display)
+   self.weaponFrame:draw()
+
 
    self.display:draw()
+   self.uiDisplay:draw()
 
    -- custom love2d drawing goes here!
 
