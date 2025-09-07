@@ -178,7 +178,10 @@ function GameLevelState:draw(primary, secondary)
          if cell:has(prism.components.Dashing) then color = prism.Color4(0.5, 0.5, 1.0, 0.5) end
 
          if cell:has(prism.components.Targeted) then
-            color = prism.Color4(1.0, 0, 0, 0.5)
+            local targeted = cell:get(prism.components.Targeted)
+            assert(targeted)
+
+            color = prism.Color4(1.0, 0, 0, 0.3 + 0.2 * targeted.times)
             layer = math.huge - 10
          end
 
