@@ -33,8 +33,8 @@ local cp437Map = require "display.reclaimer_tiles_map"
 prism.logger.info("Loaded TILE MAP: " .. #cp437Map .. " entries")
 -- prism.logger.info(" location of `A`: " .. cp437Map[1150])
 
-local spriteAtlas = spectrum.SpriteAtlas.fromGrid("display/reclaimer_tiles.png", 16, 16, cp437Map)
-local display = spectrum.Display(61, 31, spriteAtlas, prism.Vector2(16, 16))
+local spriteAtlas = spectrum.SpriteAtlas.fromGrid("display/reclaimer_tiles.png", 32, 32, cp437Map)
+local display = spectrum.Display(41, 25, spriteAtlas, prism.Vector2(32, 32))
 
 -- Automatically size the window to match the terminal dimensions
 display:fitWindowToTerminal()
