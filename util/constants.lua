@@ -23,8 +23,12 @@ CHEST_BASE = 7 * 16 + 1
 LOOT_BASE = 7 * 16 + 1
 ROCKET_BASE = 11 * 16 + 1
 BULLET_BASE = 12 * 16 + 1
-
+AMMO = 13 * 16 + 1
+GUN = 13 * 16 + 2
+STAIRS = 13 * 16 + 3
 BOT_HEAD = 5 * 16 + 1
+
+
 
 
 -- these are for the BASE TILES sprites

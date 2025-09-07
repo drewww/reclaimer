@@ -2,7 +2,7 @@ prism.registerActor("BotLaser", function()
    return prism.Actor.fromComponents {
       prism.components.Name("BotLaser"),
       prism.components.Position(),
-      prism.components.Drawable { index = "l", color = prism.Color4.YELLOW },
+      prism.components.Drawable { index = GUN, color = prism.Color4.YELLOW },
       prism.components.Item(),
       prism.components.Weapon({
          damage = 1,

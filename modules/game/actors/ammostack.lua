@@ -3,7 +3,7 @@ AMMO_TYPES = {}
 local function registerAmmo(type)
    local constructor = function(count)
       return prism.Actor.fromComponents {
-         prism.components.Drawable { index = "a", color = prism.Color4.YELLOW },
+         prism.components.Drawable { index = AMMO, color = prism.Color4.YELLOW },
          prism.components.Health(1),
          prism.components.Item({
             stackable = AMMO_TYPES[type],

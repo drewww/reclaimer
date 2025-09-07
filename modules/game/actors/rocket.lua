@@ -2,7 +2,7 @@ prism.registerActor("Rocket", function(active)
    return prism.Actor.fromComponents {
       prism.components.Name("Rocket"),
       prism.components.Position(),
-      prism.components.Drawable { index = "R", color = prism.Color4.YELLOW },
+      prism.components.Drawable { index = GUN, color = prism.Color4.YELLOW },
       prism.components.Item(),
       prism.components.Weapon({
          damage = 3,
