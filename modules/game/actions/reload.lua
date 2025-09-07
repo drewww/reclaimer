@@ -1,13 +1,11 @@
 local WeaponUtil = require "util.weapons"
--- local ReloadTarget = prism.Target():isPrototype(prism.Actor):with(prism.components.Weapon)
--- local ReloadTarget = prism.Target():isPrototype(prism.Actor)
 
 --- @class Reload : Action
 --- @field name string
 --- @field targets Target[]
 local Reload = prism.Action:extend("Reload")
 Reload.name = "reload"
--- Reload.targets = { ReloadTarget }
+
 Reload.targets = {}
 
 Reload.requiredComponents = {
@@ -88,8 +86,16 @@ function Reload:perform(level)
       inventory:removeQuantity(ammo, ammoToLoad)
       weaponComponent.ammo = weaponComponent.ammo + ammoToLoad
 
+      -- if it's the player, show reload animation at cursor
+      -- otherwise next to the actor
+      local x, y = nil, nil
+      if not self.owner:has(prism.components.PlayerController) then
+         x, y = self.owner:getPosition():decompose()
+         x = x + 1
+      end
+
       level:yield(prism.messages.Animation {
-         animation = spectrum.animations.Notice("RELOAD"),
+         animation = spectrum.animations.Notice("RELOAD", x, y),
          blocking = false
       })
    end

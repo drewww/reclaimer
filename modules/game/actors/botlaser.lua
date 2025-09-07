@@ -4,6 +4,6 @@ prism.registerActor("BotLaser", function()
       prism.components.Position(),
       prism.components.Drawable { index = "l", color = prism.Color4.YELLOW },
       prism.components.Item(),
-      prism.components.Weapon(1, 0, 10, 3, 3, 1, 0, "line", 4, true)
+      prism.components.Weapon(1, 0, 10, 1, 1, 1, 0, "line", 4, true)
    }
 end)

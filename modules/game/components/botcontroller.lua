@@ -2,6 +2,7 @@ local BotController = prism.components.Controller:extend("BotController")
 BotController.name = "BotController"
 
 local WeaponUtil = require "util.weapons"
+local sf = string.format
 
 
 --- @param level Level
@@ -19,12 +20,28 @@ function BotController:act(level, actor)
    local inventory = actor:get(prism.components.Inventory)
    local weapon, weaponComponent = WeaponUtil.getActive(inventory)
    assert(weaponComponent)
+   assert(inventory)
 
-   local hasAmmo = weaponComponent.ammopershot == 0 or
-       (weaponComponent.ammo > weaponComponent.ammopershot)
+   prism.logger.info(sf("ammo: %d ammopershot: %d", weaponComponent.ammo, weaponComponent.ammopershot))
+   local weaponLoaded = weaponComponent.ammopershot == 0 or
+       (weaponComponent.ammo >= weaponComponent.ammopershot)
 
-   if not hasAmmo and weaponComponent.ammopershot > 0 then
+   local hasAmmo = false
+   local ammoStack = inventory:getStack(prism.actors.AmmoStack)
+   if ammoStack then
+      local ammoStackC = ammoStack:get(prism.components.Item)
+      if ammoStackC then
+         hasAmmo = ammoStackC.stackCount > weaponComponent.ammopershot
+      end
+   end
+
+   prism.logger.info(sf("hasAmmo: %s weaponLoaded: %s infiniteAmmo: %s", hasAmmo, weaponLoaded,
+      weaponComponent.ammopershot == 0))
+   -- if you're out of ammo, the weapon is not loaded, and your weapon doesn't have infinite ammo THEN
+   -- switch to melee
+   if not weaponLoaded and weaponComponent.ammopershot > 0 and not hasAmmo then
       -- switch to melee
+      prism.logger.info("Weapon unloaded, and no ammo to reload. Switch to melee.")
       WeaponUtil.setActive(inventory, 1)
    end
 
@@ -66,13 +83,20 @@ function BotController:act(level, actor)
       prism.logger.info(" considering targeting ")
       local inRange = actor:getPosition():distance(player:getPosition()) <= weaponComponent.range
 
+      -- if you're out of ammo and the weapon is not loaded but you DO have ammo in your inventory AND you can see the player, then reload.
+      -- then reload!
+      if hasAmmo and not weaponLoaded and weaponComponent.ammopershot > 0 then
+         prism.logger.info("reloading")
+         return prism.actions.Reload(actor)
+      end
+
       if weaponComponent.template == "melee" then
          local distance = actor:getPosition():distanceChebyshev(player:getPosition())
          inRange = distance <= weaponComponent.range
-         prism.logger.info("checking melee range: ", inRange, distance, hasAmmo)
+         prism.logger.info("checking melee range: ", inRange, distance, weaponLoaded)
       end
 
-      if not actor:has(prism.components.Targeting) and hasAmmo and inRange then
+      if not actor:has(prism.components.Targeting) and weaponLoaded and inRange then
          prism.logger.info("BEGINING TARGETING")
          -- set the target. draw a line from actor:getPosition
 
