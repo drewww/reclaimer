@@ -14,23 +14,27 @@
 AMMO_TYPES = {}
 
 local function registerAmmo(type)
-   --- @return Actor
-   return function()
+   local constructor = function()
       return prism.Actor.fromComponents {
          prism.components.Drawable { index = "a", color = prism.Color4.YELLOW },
          prism.components.Health(1),
          prism.components.Item({
-            stackable = AMMO_TYPES[type], -- TODO work out how to make these stack separately by type.
+            stackable = AMMO_TYPES[type],
             stackCount = 1,
             stackLimit = 99
          })
       }
    end
+
+   prism.registerActor("Ammo" .. type, constructor)
+   --- @return Actor
+   return constructor
 end
+
 -- table stores ACTOR constructors that we can pass into Item.stackable
 
-AMMO_TYPES["pistol"] = registerAmmo("pistol")
-AMMO_TYPES["rocket"] = registerAmmo("rocket")
-AMMO_TYPES["shotgun"] = registerAmmo("shotgun")
-AMMO_TYPES["laser"] = registerAmmo("laser")
-AMMO_TYPES["rifle"] = registerAmmo("rifle")
+AMMO_TYPES["Pistol"] = registerAmmo("Pistol")
+AMMO_TYPES["Rocket"] = registerAmmo("Rocket")
+AMMO_TYPES["Shotgun"] = registerAmmo("Shotgun")
+AMMO_TYPES["Laser"] = registerAmmo("Laser")
+AMMO_TYPES["Rifle"] = registerAmmo("Rifle")

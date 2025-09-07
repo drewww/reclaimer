@@ -86,6 +86,8 @@ function Reload:perform(level)
       -- load as much as we can. typically this will be all the missing ammo, but
       -- don't overload more ammo than exists in inventory.
       local ammoToLoad = math.min(missingAmmo, totalAmmo)
+
+      prism.logger.info("ammo, ammoToLoad totalAmmo", ammo, ammoToLoad, totalAmmo)
       inventory:removeQuantity(ammo, ammoToLoad)
       weaponComponent.ammo = weaponComponent.ammo + ammoToLoad
 
