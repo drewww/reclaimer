@@ -24,14 +24,16 @@ local GameLevelState = spectrum.LevelState:extend "GameLevelState"
 function turn(level, actor, controller)
    local continueTurn = false
    repeat
+      prism.logger.info("IN TURN FOR ACTOR ", actor:getName())
       local action = controller:act(level, actor)
-      if actor:has(prism.components.PlayerController) then
-         -- prism.logger.info("action: " .. action.className .. " for actor: " .. actor.className)
-      end
+      -- if actor:has(prism.components.PlayerController) then
+      prism.logger.info("action: " .. action.className .. " for actor: " .. actor.className)
+      -- end
       -- we make sure we got an action back from the controller for sanity's sake
       assert(action, "Actor " .. actor:getName() .. " returned nil from act()")
 
       if (level:canPerform(action)) then
+         prism.logger.info("Returning action.")
          level:perform(action)
       else
          prism.logger.error("Failed to perform action: " .. tostring(action))
@@ -44,6 +46,10 @@ function turn(level, actor, controller)
       -- also, we will want to limit dash distances. both per dash and overall dash energy available.
       continueTurn = (actor:has(prism.components.Dashing)
          and (prism.actions.Move:is(action)) or prism.actions.Dash:is(action))
+
+      if not actor:has(prism.components.PlayerController) then
+         continueTurn = false
+      end
 
       if actor:has(prism.components.PlayerController) then
          -- prism.logger.info("continueTurn: " .. tostring(continueTurn))

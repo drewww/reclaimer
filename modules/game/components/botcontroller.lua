@@ -21,7 +21,7 @@ function BotController:act(level, actor)
 
 
    if actor:has(prism.components.Targeting) then
-      prism.logger.info("FIRE!")
+      prism.logger.info("FIRE! - Actor has targeting component")
       -- return shoot
 
 
@@ -55,14 +55,26 @@ function BotController:act(level, actor)
    local destination
 
    if player then
-      if not actor:has(prism.components.Targeting) then
-         local targeting = prism.components.Targeting(player:getPosition())
+      if not actor:has(prism.components.Targeting) and weaponComponent then
+         prism.logger.info("BEGINING TARGETING")
+         -- set the target. draw a line from actor:getPosition
+         local targetDirection = player:getPosition() - actor:getPosition()
+
+         local target = targetDirection:normalize() * weaponComponent.range + actor:getPosition()
+
+         target.x = math.floor(target.x)
+         target.y = math.floor(target.y)
+
+         local targeting = prism.components.Targeting(target)
+
+         prism.logger.info("FOUND TARGET: ", target)
+
          -- enter targeted mode
          actor:give(targeting)
 
          if weaponComponent and actor:getPosition():distance(player:getPosition()) <= weaponComponent.range then
             -- if we're in range then target
-            local targetPositions = WeaponUtil.getTargetPoints(level, actor, player:getPosition())
+            local targetPositions = WeaponUtil.getTargetPoints(level, actor, target)
 
             for i, p in ipairs(targetPositions) do
                -- set targeting on these cells
