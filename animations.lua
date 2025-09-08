@@ -144,6 +144,7 @@ spectrum.registerAnimation("Laser", function(source, target, color, range)
 
          if point:getRange(source) > 0 and point:getRange(source) < range then
             display:putBG(point.x, point.y, curColor, math.huge)
+            prism.logger.info("point: ", point, curColor)
          end
       end
 
@@ -178,6 +179,19 @@ spectrum.registerAnimation("Push", function(actor, path)
          if drawable then
             -- get the base cell and render that instead at high level
             local x, y = actor:getPosition():decompose()
+            x = x - display.camera.x
+            y = y - display.camera.y
+
+            -- local maxX = #display.cells
+            -- prism.logger.info("push cells: ", x, y, maxX)
+
+            -- local maxY = #display.cells[x]
+            -- prism.logger.info(" ...y=", maxY)
+            -- if the actor we're moving is outside SCREEN bounds, do nothing.
+            if x > SCREEN_WIDTH or y > SCREEN_HEIGHT or x <= 0 or y <= 0 then
+               return false
+            end
+
             local cell = display.cells[x][y]
 
             if cell then
@@ -191,6 +205,13 @@ spectrum.registerAnimation("Push", function(actor, path)
             end
 
             local destX, destY = path[#path]:decompose()
+            destX = destX - display.camera.x
+            destY = destY - display.camera.y
+
+            if destX > SCREEN_WIDTH or destY > SCREEN_HEIGHT or destX <= 0 or destY <= 0 then
+               return false
+            end
+
             local destCell = display.cells[destX][destY]
 
             if destCell then
