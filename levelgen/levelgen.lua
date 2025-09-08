@@ -123,7 +123,7 @@ return function(rng, player, width, height)
 
          prism.logger.info("adding actor of type " .. hint.type .. " at ", x, y)
          if hint.type == "enemy" then
-            if rng:random() < 0.2 then
+            if rng:random() < 0.4 then
                builder:addActor(prism.actors.Bot(), x, y)
             end
          elseif hint.type == "chest" then
