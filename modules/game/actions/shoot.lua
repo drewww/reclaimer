@@ -93,15 +93,15 @@ function Shoot:perform(level, target)
          blocking = true
       })
    elseif weapon.template == "melee" then
-      level:yield(prism.messages.Animation {
-         animation = spectrum.animations.Melee(self.owner:getPosition()),
-         blocking = true
-      })
+      -- level:yield(prism.messages.Animation {
+      --    animation = spectrum.animations.Melee(self.owner:getPosition()),
+      --    blocking = true
+      -- })
    elseif weapon.template == "line" then
-      level:yield(prism.messages.Animation {
-         animation = spectrum.animations.Laser(self.owner:getPosition(), target, prism.Color4.LIME, weapon.range),
-         blocking = true
-      })
+      -- level:yield(prism.messages.Animation {
+      --    animation = spectrum.animations.Laser(self.owner:getPosition(), target, prism.Color4.LIME, weapon.range),
+      --    blocking = true
+      -- })
    else
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Projectile(self.owner, target, BULLET_BASE),

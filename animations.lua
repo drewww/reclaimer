@@ -98,7 +98,7 @@ spectrum.registerAnimation("Notice", function(text, x, y)
       -- put a reload string where the mouse was clicked
       local color = prism.Color4.WHITE:copy()
 
-      color.a = progress < 0.5 and 1.0 or (1 - progress * 2)
+      color.a = progress < 0.5 and 1.0 or (1 - (progress - 0.5) * 2)
 
       local mX, mY = display:getCellUnderMouse()
 
