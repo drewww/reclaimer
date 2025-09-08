@@ -19,8 +19,6 @@ function TitleState:__new()
          generate = { "g" }
       }
    }
-
-   self.rocket = love.graphics.newImage("display/weapons/weapon_1.png")
 end
 
 function TitleState:draw()
@@ -37,8 +35,6 @@ function TitleState:draw()
    self.display:putString(midpointX + 2, 22, "[Q]uit", nil, nil, nil, "left", midpointX - 2)
 
    self.display:draw()
-
-   love.graphics.draw(self.rocket, 200, 200)
 end
 
 function TitleState:update(dt)

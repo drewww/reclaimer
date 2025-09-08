@@ -1,11 +1,17 @@
 local WeaponFrame = prism.Object:extend("WeaponFrame")
+local WeaponUtil = require "util.weapons"
 
 --- @param level Level
 function WeaponFrame:__new(level, display)
    self.level = level
    self.display = display
 
-   self.rocketImage = love.graphics.newImage("display/weapons/weapon_1.png")
+   self.weaponImages = {
+      Pistol = love.graphics.newImage("display/weapons/weapon_0.png"),
+      Rocket = love.graphics.newImage("display/weapons/weapon_1.png"),
+      Laser = love.graphics.newImage("display/weapons/weapon_2.png"),
+      Shotgun = love.graphics.newImage("display/weapons/weapon_3.png"),
+   }
 end
 
 function WeaponFrame:draw()
@@ -32,12 +38,16 @@ function WeaponFrame:draw()
 
          local bg = prism.Color4.NAVY
          local fg = prism.Color4.WHITE
+         local activeOffset = 0
          if weapon.active then
             bg = prism.Color4.WHITE
             fg = prism.Color4.NAVY
+            activeOffset = -1
          end
 
-         self.display:putFilledRect(originX + baseColumn, originY, 12, 2, " ", prism.Color4.TRANSPARENT, bg)
+         self.display:putFilledRect(originX + baseColumn, originY + activeOffset, 12, 2 - activeOffset, " ",
+            prism.Color4.TRANSPARENT,
+            bg)
 
          -- prism.logger.info("ammoType: ", weapon.ammoType)
          if (weapon.ammopershot ~= 0) then
@@ -57,29 +67,51 @@ function WeaponFrame:draw()
             --    math.huge, "right", 15)
 
 
-            self.display:put(originX + baseColumn + 2, originY + 1, AMMO, fg, bg)
-            self.display:putString(originX + baseColumn + 3, originY + 1,
+            self.display:put(originX + baseColumn + 2, originY + 1 + activeOffset, AMMO, fg, bg)
+            self.display:putString(originX + baseColumn + 3, originY + 1 + activeOffset,
                tostring(weapon.ammo) .. " (" .. tostring(totalAmmo) .. ")",
                fg, bg)
          end
 
-         self.display:putString(originX + baseColumn, originY,
+         self.display:putString(originX + baseColumn, originY + activeOffset,
             tostring(weapon.hotkey) .. " " .. weaponActor:getName(),
             fg, bg,
             math.huge, "left", 15)
 
 
          -- now list weapon stats
-         -- self.display:putString(originX + 3, originY + baseRow + 1, tostring(weapon.damage), fg, bg)
-         -- self.display:putString(originX + 6, originY + baseRow + 1, tostring(weapon.push), fg, bg)
+         if weapon.active then
+            self.display:putString(originX + 3 + baseColumn, originY + 1, tostring(weapon.damage), fg, bg)
+            self.display:putString(originX + 6 + baseColumn, originY + 1, tostring(weapon.push), fg, bg)
 
-         -- self.display:putString(originX + 9, originY + baseRow + 1, tostring(math.floor(weapon.range)), fg, bg)
-         -- self.display:put(originX + 2, originY + baseRow + 1, HEART, fg, bg)
-         -- self.display:put(originX + 5, originY + baseRow + 1, PUSH, fg, bg)
-         -- self.display:put(originX + 8, originY + baseRow + 1, RANGE, fg, bg)
+            self.display:putString(originX + 9 + baseColumn, originY + 1, tostring(math.floor(weapon.range)), fg, bg)
+            self.display:put(originX + 2 + baseColumn, originY + 1, HEART, fg, bg)
+            self.display:put(originX + 5 + baseColumn, originY + 1, PUSH, fg, bg)
+            self.display:put(originX + 8 + baseColumn, originY + 1, RANGE, fg, bg)
+         end
       end
    end
    -- love.graphics.draw(self.rocketImage, 100, 100)
+end
+
+function WeaponFrame:drawActiveWeapon()
+   local player = self.level:query(prism.components.PlayerController):first()
+
+   if player then
+      local inventory = player:get(prism.components.Inventory)
+      assert(inventory)
+
+
+      local weapon, weaponC = WeaponUtil.getActive(inventory)
+      assert(weaponC)
+
+      local baseColumn = (tonumber(weaponC.hotkey) - 1) * 12 + 1
+
+      local image = self.weaponImages[weaponC.ammoType]
+      if image then
+         love.graphics.draw(image, baseColumn * 16, (self.display.height - 5) * 16 - 1)
+      end
+   end
 end
 
 return WeaponFrame

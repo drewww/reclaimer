@@ -239,6 +239,10 @@ function GameLevelState:draw(primary, secondary)
    -- custom love2d drawing goes here!
    -- love.graphics.pop("all")
    love.graphics.setColor(1, 1, 1, 1)
+
+   -- now, based on active weapon -- show an appropriate weapon image.
+   -- figure out looking up after, just place it.
+   self.weaponFrame:drawActiveWeapon()
 end
 
 function GameLevelState:mousepressed(x, y, button, istouch, presses)

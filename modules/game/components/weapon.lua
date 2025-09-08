@@ -28,7 +28,7 @@ function WeaponOptions:new(options)
    self.template = opts.template or "point"
    self.hotkey = opts.hotkey or 1
    self.active = opts.active or false
-   self.ammoType = opts.ammoType or "pistol"
+   self.ammoType = opts.ammoType or "Pistol"
    return self
 end
 
