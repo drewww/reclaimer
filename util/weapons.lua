@@ -84,7 +84,16 @@ function WeaponUtil.getTargetPoints(level, actor, target)
 
       -- we could use senses for most of these
       if senses and senses.cells:get(target:decompose()) then
-         table.insert(points, target)
+         if actor:getPosition():getRange(target) <= weapon.range then
+            table.insert(points, target)
+         else
+            -- if it's not in range, get the max range version
+            local direction = target - actor:getPosition()
+            local maxRange = direction:normalize() * weapon.range + actor:getPosition()
+
+            prism.logger.info("maxRange: ", maxRange)
+            table.insert(points, prism.Vector2(math.floor(maxRange.x + 0.5), math.floor(maxRange.y + 0.5)))
+         end
       end
    elseif weapon and weapon.template == "line" then
       local line, found = prism.Bresenham(source.x, source.y, target.x, target.y)
@@ -189,7 +198,7 @@ function WeaponUtil.getTargetPoints(level, actor, target)
       -- this is not working and I have no clue why. the logic for inBounds
       -- checks x>0 and if you pass 0 in it can return true still.
       if level:inBounds(p.x, p.y) then
-         -- prism.logger.info(" adding point: ", p)
+         prism.logger.info(" adding point: ", p)
          table.insert(inBoundPoints, p)
       end
    end

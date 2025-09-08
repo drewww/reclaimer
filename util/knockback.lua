@@ -40,7 +40,7 @@ return function(level, startPos, direction, maxCells, moveMask)
       if x == x0 and y == y0 then return true end
 
       -- Check if this position is passable
-      if level:inBounds(x, y) and level:getCellPassable(x, y, moveMask) then
+      if level:inBounds(x, y) and not level:getCellPassable(x, y, moveMask) then
          hitWall = true
          return false -- Stop the line algorithm here
       end

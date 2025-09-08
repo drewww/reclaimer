@@ -177,13 +177,13 @@ function GameLevelState:draw(primary, secondary)
          -- checks -- player can see, and it's in range of current weapon
          -- position is playerPosition
 
-         if weapon and
-             player:getPosition():distance(prism.Vector2(cellX, cellY)) <= weapon.range
-             and playerSenses
-             and playerSenses.cells:get(cellX, cellY)
-         then
-            color = prism.Color4(0.5, 0.5, 1.0, 0.2)
-         end
+         -- if weapon and
+         --     player:getPosition():distance(prism.Vector2(cellX, cellY)) <= weapon.range
+         --     and playerSenses
+         --     and playerSenses.cells:get(cellX, cellY)
+         -- then
+         --    color = prism.Color4(0.5, 0.5, 1.0, 0.2)
+         -- end
 
          local layer = 50
          if cell:has(prism.components.Dashing) then color = prism.Color4(0.5, 0.5, 1.0, 0.5) end
