@@ -1,5 +1,5 @@
-local BLOCK_WIDTH = 20
-local BLOCK_HEIGHT = 20
+local BLOCK_WIDTH = 5
+local BLOCK_HEIGHT = 5
 
 -- Okay, the approach here. We're going to have "blocks" of some size. The map is
 -- composed of those blocks randomly composed. There may be rules to what blocks can go
@@ -42,7 +42,7 @@ local function getBlockBuilder(type, rot)
    else
       -- fucking send it
       prism.logger.info("loading " .. type .. ".lz4 ad hoc")
-      builder = prism.LevelBuilder.fromLz4("levelgen/blocks/" .. type .. ".lz4", prism.defaultCell)
+      builder = prism.LevelBuilder.fromLz4("levelgen/blocks/5_" .. type .. ".lz4", prism.defaultCell)
    end
 
    return builder
@@ -77,23 +77,19 @@ return function(rng, player, width, height)
    for i = 1, blockWidth do
       levelBlocks[i] = {}
       for j = 1, blockHeight do
-         local rand = rng:random()
-
-         if rand < 0.2 then
-            levelBlocks[i][j] = "20x20-open"
-         elseif rand < 0.3 then
-            levelBlocks[i][j] = "20x20-hallway"
-         elseif rand < 0.5 then
-            levelBlocks[i][j] = "20x20-open-guards"
-         elseif rand < 0.65 then
-            levelBlocks[i][j] = "20x20-hallway"
-         elseif rand < 0.8 then
-            levelBlocks[i][j] = "20x20-chesta"
-         elseif rand < 0.9 then
-            levelBlocks[i][j] = "20x20-chestb"
-         else
-            levelBlocks[i][j] = "20x20-chestc"
+         local rooms = {}
+         local dir = love.filesystem.getDirectoryItems("levelgen/blocks/")
+         for _, filename in ipairs(dir) do
+            local blockName = filename:match("^5_(.+)%.lz4$")
+            if blockName then
+               table.insert(rooms, blockName)
+            end
          end
+
+         local rand = rng:random(1, #rooms)
+
+         -- even odds for all rooms
+         levelBlocks[i][j] = rooms[rand]
       end
    end
 
@@ -127,7 +123,9 @@ return function(rng, player, width, height)
 
          prism.logger.info("adding actor of type " .. hint.type .. " at ", x, y)
          if hint.type == "enemy" then
-            builder:addActor(prism.actors.Bot(), x, y)
+            if rng:random() < 0.2 then
+               builder:addActor(prism.actors.Bot(), x, y)
+            end
          elseif hint.type == "chest" then
             builder:addActor(prism.actors.Chest(), x, y)
          elseif hint.type == "barrel" then
