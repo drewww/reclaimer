@@ -42,7 +42,7 @@ local function getBlockBuilder(type, rot)
    else
       -- fucking send it
       prism.logger.info("loading " .. type .. ".lz4 ad hoc")
-      builder = prism.LevelBuilder.fromLz4("levelgen/blocks/5_" .. type .. ".lz4", prism.defaultCell)
+      builder = prism.LevelBuilder.fromLz4("levelgen/blocks/" .. type .. ".lz4", prism.defaultCell)
    end
 
    return builder
@@ -82,7 +82,7 @@ return function(rng, player, width, height)
          for _, filename in ipairs(dir) do
             local blockName = filename:match("^5_(.+)%.lz4$")
             if blockName then
-               table.insert(rooms, blockName)
+               table.insert(rooms, "5_" .. blockName)
             end
          end
 
@@ -90,8 +90,15 @@ return function(rng, player, width, height)
 
          -- even odds for all rooms
          levelBlocks[i][j] = rooms[rand]
+         prism.logger.info("room " .. tostring(i) .. "," .. tostring(j) .. " = " .. levelBlocks[i][j])
       end
    end
+
+   -- now, pick a random i/j and make it the start location. can't be on the left edge.
+   -- local startX, startY = rng:random(2, blockWidth), rng:random(1, blockHeight)
+   local startX, startY = 4, 4
+   levelBlocks[startX][startY] = "SP5_start_right"
+   levelBlocks[startX - 1][startY] = "5_base"
 
    -- now, iterate through the block list and drop them in. (this could be collapsed,
    -- but I expect that we will want multiple passes to do various consistency checks.
@@ -108,7 +115,7 @@ return function(rng, player, width, height)
    end
 
    -- wrap the world in a border
-   builder:rectangle("line", 1, 1, width, height, prism.cells.Wall)
+   -- builder:rectangle("line", 1, 1, width, height, prism.cells.Wall)
 
    -- now iterate through all the cells and respond to hints.
    for x, y, cell in builder:eachCell() do
@@ -130,12 +137,11 @@ return function(rng, player, width, height)
             builder:addActor(prism.actors.Chest(), x, y)
          elseif hint.type == "barrel" then
             builder:addActor(prism.actors.Barrel(), x, y)
+         elseif hint.type == "player" then
+            builder:addActor(player, x, y)
          end
       end
    end
-
-   local playerPos = prism.Vector2(4, 4)
-   builder:addActor(player, playerPos.x, playerPos.y)
 
    builder:pad(1, prism.cells.Wall)
 
