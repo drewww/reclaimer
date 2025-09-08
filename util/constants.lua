@@ -19,7 +19,45 @@ FLOOR_BASE = 10 * 16 + 1
 WALL_BASE = 10 * 16 + 2
 BARREL_BASE = 10 * 16 + 3
 
-CHEST_BASE = 7 * 16 + 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CHEST_BASE = 8 * 16 + 1
 LOOT_BASE = 7 * 16 + 1
 ROCKET_BASE = 11 * 16 + 1
 BULLET_BASE = 12 * 16 + 1

@@ -57,6 +57,7 @@ end
 --- @param target Vector2
 function Shoot:perform(level, target)
    local inventory = self.owner:get(prism.components.Inventory)
+   local direction = target - self.owner:getPosition()
 
    local weapon = WeaponUtil.getActive(inventory):get(prism.components.Weapon)
    assert(weapon)
@@ -73,7 +74,6 @@ function Shoot:perform(level, target)
    end
 
    if weapon.template == "aoe" then
-      local direction = target - self.owner:getPosition()
       local angle = math.atan2(direction.y, direction.x)
       -- Convert angle to sprite offset: 0=up, 1=right, 2=down, 3=left
       local spriteOffset = math.floor((angle + math.pi * 2.5) / (math.pi * 0.5)) % 4
@@ -93,15 +93,15 @@ function Shoot:perform(level, target)
          blocking = true
       })
    elseif weapon.template == "melee" then
-      -- level:yield(prism.messages.Animation {
-      --    animation = spectrum.animations.Melee(self.owner:getPosition()),
-      --    blocking = true
-      -- })
+      level:yield(prism.messages.Animation {
+         animation = spectrum.animations.Melee(self.owner:getPosition()),
+         blocking = true
+      })
    elseif weapon.template == "line" then
-      -- level:yield(prism.messages.Animation {
-      --    animation = spectrum.animations.Laser(self.owner:getPosition(), target, prism.Color4.LIME, weapon.range),
-      --    blocking = true
-      -- })
+      level:yield(prism.messages.Animation {
+         animation = spectrum.animations.Laser(self.owner:getPosition(), target, prism.Color4.LIME, weapon.range),
+         blocking = true
+      })
    else
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Projectile(self.owner, target, BULLET_BASE),
@@ -110,7 +110,7 @@ function Shoot:perform(level, target)
    end
    -- Move the target to final position
    for i, p in ipairs(targetPoints) do
-      -- test for actors for each of thet arget points
+      -- test for actors for each of the target points
       local targetActor = level:query():at(p:decompose()):first()
       if targetActor then
          local startPos = p
@@ -129,32 +129,30 @@ function Shoot:perform(level, target)
          -- end
          level:perform(push)
 
-         -- local finalPos, hitWall, cellsMoved = knockback(level, startPos, direction, weapon.push, mask)
-
 
          -- Calculate damage based on whether they hit a wall
          local damageValue = weapon.damage
 
          local damage = prism.actions.Damage(targetActor, damageValue)
 
-         -- -- Why do I need to ask first? I guess this is type protection more or less.
+         -- -- -- Why do I need to ask first? I guess this is type protection more or less.
          if level:canPerform(damage) then level:perform(damage) end
 
-         local shotName = Name.lower(targetActor)
-         local ownerName = Name.lower(self.owner)
-         local dmgstr = ""
+         -- local shotName = Name.lower(targetActor)
+         -- local ownerName = Name.lower(self.owner)
+         -- local dmgstr = ""
 
-         -- TODO increment this even if you miss. especially if we support shooting random spots.
-         -- if damage.dealt then
+         -- -- TODO increment this even if you miss. especially if we support shooting random spots.
+         -- -- if damage.dealt then
          if self.owner:has(prism.components.PlayerController) then
             Game.stats:increment("shots")
          end
-         -- end
+         -- -- end
 
-         if damage.dealt then dmgstr = sf("%i damage.", damage.dealt) end
-         Log.addMessage(self.owner, sf("You shot the %s. %s", shotName, dmgstr))
-         Log.addMessage(targetActor, sf("The %s shot you! %s", ownerName, dmgstr))
-         Log.addMessageSensed(level, self, sf("The %s shoots the %s. %s", ownerName, shotName, dmgstr))
+         -- if damage.dealt then dmgstr = sf("%i damage.", damage.dealt) end
+         -- Log.addMessage(self.owner, sf("You shot the %s. %s", shotName, dmgstr))
+         -- Log.addMessage(targetActor, sf("The %s shot you! %s", ownerName, dmgstr))
+         -- Log.addMessageSensed(level, self, sf("The %s shoots the %s. %s", ownerName, shotName, dmgstr))
       end
    end
 end

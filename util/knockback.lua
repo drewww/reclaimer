@@ -40,9 +40,9 @@ return function(level, startPos, direction, maxCells, moveMask)
       if x == x0 and y == y0 then return true end
 
       -- Check if this position is passable
-      if not level:getCellPassable(x, y, moveMask) then
+      if level:inBounds(x, y) and level:getCellPassable(x, y, moveMask) then
          hitWall = true
-         return false    -- Stop the line algorithm here
+         return false -- Stop the line algorithm here
       end
       return true
    end
@@ -59,7 +59,7 @@ return function(level, startPos, direction, maxCells, moveMask)
    -- Determine final position limited by maxCells
    -- path[1] is the starting position, so actual moves start at path[2]
    local cellsMoved = math.min(maxCells, math.max(0, #path - 1))
-   local finalPosIndex = cellsMoved + 1    -- +1 because path includes start position
+   local finalPosIndex = cellsMoved + 1 -- +1 because path includes start position
    local finalPos = (#path >= finalPosIndex) and path[finalPosIndex] or startPos
 
    -- We hit a wall if the line didn't complete OR we couldn't move the full distance due to obstacles

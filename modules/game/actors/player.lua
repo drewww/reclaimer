@@ -9,7 +9,7 @@ prism.registerActor("Player", function()
       prism.components.Sight { range = 20, fov = true },
       prism.components.Mover { "walk" },
       prism.components.Health(10),
-      prism.components.Log(),
+      -- prism.components.Log(),
       prism.components.Energy(4, 0.2),
       prism.components.Inventory {
          limitCount = 26,
