@@ -92,6 +92,7 @@ end)
 
 spectrum.registerAnimation("Notice", function(text, x, y)
    return spectrum.Animation(function(t, display)
+      prism.logger.info("in notice animation")
       local totalDuration = 1.0
       local progress = math.min(t / totalDuration, 1.0)
 
@@ -159,8 +160,15 @@ end
 
 --- @param actor Actor
 --- @param path Vector2[]
-spectrum.registerAnimation("Push", function(actor, path)
+spectrum.registerAnimation("Push", function(actor, path, cameraAdjust)
+   prism.logger.info("calling path animation")
+
+   if not cameraAdjust then
+      cameraAdjust = true
+   end
+
    return spectrum.Animation(function(t, display)
+      prism.logger.info("Push animation running")
       local stepDuration = 0.1
       local totalDuration = stepDuration * #path
 
@@ -175,24 +183,30 @@ spectrum.registerAnimation("Push", function(actor, path)
       if currentStep > 0 and currentStep <= #path then
          local position = path[currentStep]
          local drawable = actor:get(prism.components.Drawable)
-
+         prism.logger.info(" ANIMATE pushing to : ", position)
          if drawable then
             -- get the base cell and render that instead at high level
             local x, y = actor:getPosition():decompose()
-            x = x - display.camera.x
-            y = y - display.camera.y
+
+            if cameraAdjust then
+               x = x - display.camera.x
+               y = y - display.camera.y
+            end
 
             -- local maxX = #display.cells
-            -- prism.logger.info("push cells: ", x, y, maxX)
+            prism.logger.info("push cells: ", x, y, cameraAdjust)
 
             -- local maxY = #display.cells[x]
             -- prism.logger.info(" ...y=", maxY)
             -- if the actor we're moving is outside SCREEN bounds, do nothing.
             if x > SCREEN_WIDTH or y > SCREEN_HEIGHT or x <= 0 or y <= 0 then
+               prism.logger.info("pushing outside bounds")
                return false
             end
 
             local cell = display.cells[x][y]
+
+            prism.logger.info("found cell: ", cell)
 
             if cell then
                display:put(

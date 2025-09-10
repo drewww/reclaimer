@@ -16,7 +16,7 @@ return function(level, startPos, direction, maxCells, moveMask)
       return startPos:copy(), false, 0, { startPos:copy() }
    end
 
-   local normalizedDirection = direction / dirLength
+   local normalizedDirection = direction:normalize()
 
    -- For diagonal movement, we need to extend further to ensure we get maxCells steps
    -- Use Manhattan distance scaling to ensure sufficient line length
@@ -40,7 +40,7 @@ return function(level, startPos, direction, maxCells, moveMask)
       if x == x0 and y == y0 then return true end
 
       -- Check if this position is passable
-      if level:inBounds(x, y) and level:getCellPassable(x, y, moveMask) then
+      if level:inBounds(x, y) and not level:getCellPassable(x, y, moveMask) then
          hitWall = true
          return false -- Stop the line algorithm here
       end

@@ -3,6 +3,7 @@ local InfoFrame = require "display.infoframe"
 local Game = require "game"
 local WeaponUtil = require "util.weapons"
 local WeaponFrame = require "display.weaponframe"
+local knockback = require "util.knockback"
 
 --- @class GameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,
@@ -88,7 +89,9 @@ function GameLevelState:__new(builder, seed)
    -- the parent class.
    spectrum.LevelState.__new(self, builder:build(), self.display)
 
+   --- @type Vector2?
    self.mouseCellPosition = nil
+   self.mouseCellPositionChanged = false
 
    -- TODO consider if this should be inlined
    self.controls = require "controls"
@@ -209,11 +212,53 @@ function GameLevelState:draw(primary, secondary)
       -- figure out what points to highlight given the current weapon
       if player then
          local weapon = WeaponUtil.getActive(player:get(prism.components.Inventory))
+         assert(weapon, "No weapon")
 
          local points = WeaponUtil.getTargetPoints(self.level, player, prism.Vector2(mouseX, mouseY))
 
          for i, point in ipairs(points) do
             self.display:putBG(point.x + cameraX, point.y + cameraY, prism.Color4(0.5, 0.5, 1.0, 0.5), 50)
+         end
+
+         -- to see if this is working, only do this if the target point has changed, not every frame.
+
+         -- consider if there are entities in the set of points.
+         -- if there are, and the current weapon has push, loop a non-blocking push animation
+         -- for that entity.
+         if self.mouseCellPositionChanged then
+            prism.logger.info("mouseCellPositionChanged")
+            local weaponC = weapon:get(prism.components.Weapon)
+            local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
+            if #points > 0 and weaponC and weaponC.push then
+               for _, point in ipairs(points) do
+                  local entity = self.level:query(prism.components.Collider):at(point:decompose()):first()
+                  prism.logger.info("Entity at weapon target point: ", point, entity)
+
+                  if entity then
+                     prism.logger.info("entity: ", entity:getName())
+                     -- return function(level, startPos, direction, maxCells, moveMask)
+                     -- TODO this needs to adapt to the AOE knockback variation, but this works
+                     -- for everything else.
+                     local direction = point - player:getPosition()
+                     prism.logger.info("direction: ", direction)
+                     local finalPos, hitWall, cellsMoved, path = knockback(self.level, point, direction, weaponC.push,
+                        mask)
+
+                     -- TODO: Implement the push animation here
+                     prism.logger.info("starting push. final, hit, cells: ", finalPos, hitWall, cellsMoved)
+                     for _, p in ipairs(path) do
+                        prism.logger.info("pushing entity to: ", p)
+                     end
+
+                     prism.logger.info("triggering animation: ", entity, #path)
+
+                     self.display:yieldAnimation(prism.messages.Animation {
+                        animation = spectrum.animations.Push(entity, path, false),
+                        blocking = true
+                     })
+                  end
+               end
+            end
          end
       end
    end
@@ -272,7 +317,20 @@ function GameLevelState:mousemoved()
 
    if playerSenses then
       if playerSenses.cells:get(cellX, cellY) then
-         self.mouseCellPosition = targetCell and prism.Vector2(cellX, cellY) or nil
+         if self.mouseCellPosition and self.mouseCellPosition:equals(cellX, cellY) and targetCell then
+            self.mouseCellPositionChanged = false
+         else
+            self.mouseCellPositionChanged = true
+            self.mouseCellPosition = targetCell and prism.Vector2(cellX, cellY) or nil
+
+            -- prism.logger.info("yielding to notice")
+            -- self.level:yield(
+            --    prism.messages.Animation {
+            --       animation = spectrum.animations.Notice("RELOAD", cellX, cellY),
+            --       blocking = false
+            --    }
+            -- )
+         end
       else
          self.mouseCellPosition = nil
       end
