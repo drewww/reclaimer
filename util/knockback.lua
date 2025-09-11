@@ -9,6 +9,7 @@ local Bresenham = require "prism.engine.math.bresenham"
 ---@return boolean hitWall Whether movement was stopped by a wall
 ---@return integer cellsMoved Number of cells actually moved
 ---@return Vector2[] path Array of positions along the path
+--- @return Vector2 impassablePos Position where movement was stopped by an impassable object
 return function(level, startPos, direction, maxCells, moveMask)
    local dirLength = direction:length()
    if dirLength == 0 then
@@ -34,6 +35,7 @@ return function(level, startPos, direction, maxCells, moveMask)
 
    -- Create a passability callback
    local hitWall = false
+   local impassablePosition = nil
 
    local passabilityCallback = function(x, y)
       -- Skip the starting position
@@ -42,6 +44,7 @@ return function(level, startPos, direction, maxCells, moveMask)
       -- Check if this position is passable
       if level:inBounds(x, y) and not level:getCellPassable(x, y, moveMask) then
          hitWall = true
+         impassablePosition = prism.Vector2(x, y)
          return false -- Stop the line algorithm here
       end
       return true
@@ -65,5 +68,11 @@ return function(level, startPos, direction, maxCells, moveMask)
    -- We hit a wall if the line didn't complete OR we couldn't move the full distance due to obstacles
    hitWall = not lineComplete
 
-   return finalPos, hitWall, cellsMoved, path
+   -- if hitWall then
+   --    -- append the wall position and then the last position again
+   --    table.insert(path, impassablePosition)
+   --    table.insert(path, finalPos)
+   -- end
+
+   return finalPos, hitWall, cellsMoved, path, impassablePosition
 end

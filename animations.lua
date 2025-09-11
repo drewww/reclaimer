@@ -160,11 +160,13 @@ end
 
 --- @param actor Actor
 --- @param path Vector2[]
-spectrum.registerAnimation("Push", function(actor, path, cameraAdjust)
+--- @param prediction boolean Whether the animation is being played for prediction purposes
+--- @param impassablePos Vector2 Position where movement was stopped by an impassable object
+spectrum.registerAnimation("Push", function(actor, path, prediction, impassablePos)
    prism.logger.info("calling path animation")
 
-   if not cameraAdjust then
-      cameraAdjust = true
+   if not prediction then
+      prediction = false
    end
 
    return spectrum.Animation(function(t, display)
@@ -188,13 +190,13 @@ spectrum.registerAnimation("Push", function(actor, path, cameraAdjust)
             -- get the base cell and render that instead at high level
             local x, y = actor:getPosition():decompose()
 
-            if cameraAdjust then
+            if not prediction then
                x = x - display.camera.x
                y = y - display.camera.y
             end
 
             -- local maxX = #display.cells
-            prism.logger.info("push cells: ", x, y, cameraAdjust)
+            prism.logger.info("push cells: ", x, y, prediction)
 
             -- local maxY = #display.cells[x]
             -- prism.logger.info(" ...y=", maxY)
@@ -208,7 +210,7 @@ spectrum.registerAnimation("Push", function(actor, path, cameraAdjust)
 
             prism.logger.info("found cell: ", cell)
 
-            if cell then
+            if cell and not prediction then
                display:put(
                   x, y,
                   cell.char,
@@ -219,8 +221,11 @@ spectrum.registerAnimation("Push", function(actor, path, cameraAdjust)
             end
 
             local destX, destY = path[#path]:decompose()
-            destX = destX - display.camera.x
-            destY = destY - display.camera.y
+
+            if not prediction then
+               destX = destX - display.camera.x
+               destY = destY - display.camera.y
+            end
 
             if destX > SCREEN_WIDTH or destY > SCREEN_HEIGHT or destX <= 0 or destY <= 0 then
                return false
@@ -228,7 +233,7 @@ spectrum.registerAnimation("Push", function(actor, path, cameraAdjust)
 
             local destCell = display.cells[destX][destY]
 
-            if destCell then
+            if destCell and not prediction then
                display:put(
                   destX, destY,
                   destCell.char,
@@ -242,7 +247,7 @@ spectrum.registerAnimation("Push", function(actor, path, cameraAdjust)
                position.x,
                position.y,
                drawable.index,
-               drawable.color,
+               prediction and prism.Color4.GREY or drawable.color,
                drawable.background,
                math.huge
             )

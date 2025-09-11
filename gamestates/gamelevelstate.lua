@@ -253,7 +253,7 @@ function GameLevelState:draw(primary, secondary)
                      prism.logger.info("triggering animation: ", entity, #path)
 
                      self.display:yieldAnimation(prism.messages.Animation {
-                        animation = spectrum.animations.Push(entity, path, false),
+                        animation = spectrum.animations.Push(entity, path, true),
                         blocking = true
                      })
                   end
