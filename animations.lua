@@ -185,7 +185,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
 
       -- add an extra step if we hit a wall
       if impassablePos then
-         -- prism.logger.info("impassable, hit wall at ", tostring(impassablePos))
+         prism.logger.info("adding extra step, ", totalDuration, " to ", totalDuration + stepDuration)
          totalDuration = totalDuration + stepDuration
       end
 
@@ -198,11 +198,14 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
 
       -- Calculate which step we're on
       local progress = t / totalDuration
-      local currentStep = math.min(math.floor(progress * #path) + 1, #path)
+      local currentStep = math.floor(progress * (#path + (impassablePos and 1 or 0))) + 1
+
+      prism.logger.info("currentStep, maxStep, t, totalDuration", currentStep, #path, t, totalDuration)
+
+      local drawable = actor:get(prism.components.Drawable)
 
       if currentStep > 0 and currentStep <= #path then
          local position = path[currentStep]
-         local drawable = actor:get(prism.components.Drawable)
          prism.logger.info(" ANIMATE pushing to : ", position)
          if drawable then
             -- get the base cell and render that instead at high level
@@ -227,7 +230,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             local cell = display.cells[x][y]
 
             if cell and not prediction then
-               display:put(
+               display:putBG(
                   x, y,
                   cell.char,
                   cell.fg,
@@ -250,7 +253,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             local destCell = display.cells[destX][destY]
 
             if destCell and not prediction then
-               display:put(
+               display:putBG(
                   destX, destY,
                   destCell.char,
                   destCell.fg,
@@ -272,12 +275,11 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
          prism.logger.info("ANIMATE flash")
          -- we have stepDuration worth of time here, so let's
          -- split it into four chunks.
-         local flashProgress = (t - (stepDuration * #path) / stepDuration)
+         local flashProgress = (t - (stepDuration * #path)) / stepDuration
 
 
          if flashProgress > 0 then
-            local flashDuration = stepDuration / 2
-            local flashIndex = math.floor(flashProgress / flashDuration) + 1
+            local flashIndex = math.floor(flashProgress * 3) + 1
             local flashColor = flashIndex % 2 == 0 and prism.Color4.RED or prism.Color4.BLACK
 
             prism.logger.info("flashProgress: " ..
@@ -288,7 +290,6 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             -- use full path because if there is no actual movement, then path will be empty.
             local destX, destY = fullPath[#fullPath]:decompose()
 
-
             if x > SCREEN_WIDTH or y > SCREEN_HEIGHT or x <= 0 or y <= 0 then
                prism.logger.info("pushing outside bounds")
                return false
@@ -298,11 +299,11 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             local destCell = display.cells[destX][destY]
 
             if cell and destCell then
-               display:put(
+               display:putBG(
                   impassablePos.x,
                   impassablePos.y,
-                  cell.char,
-                  cell.fg,
+                  -- cell.char,
+                  -- cell.fg,
                   flashColor,
                   math.huge
                )
@@ -311,8 +312,8 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
                display:put(
                   destX,
                   destY,
-                  destCell.char,
-                  destCell.fg,
+                  drawable.index,
+                  prism.Color4.GREY,
                   flashColor,
                   math.huge
                )
