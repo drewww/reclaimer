@@ -169,10 +169,17 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
       prediction = false
    end
 
+   if prediction then
+      table.remove(path, 1)
+   end
+
    return spectrum.Animation(function(t, display)
       prism.logger.info("Push animation running")
-      local stepDuration = 0.1
+      local stepDuration = 0.15
+
       local totalDuration = stepDuration * #path
+
+      prism.logger.info("totalDuration: ", totalDuration)
 
       if t >= totalDuration then
          return true
@@ -185,7 +192,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
       if currentStep > 0 and currentStep <= #path then
          local position = path[currentStep]
          local drawable = actor:get(prism.components.Drawable)
-         prism.logger.info(" ANIMATE pushing to : ", position)
+         -- prism.logger.info(" ANIMATE pushing to : ", position)
          if drawable then
             -- get the base cell and render that instead at high level
             local x, y = actor:getPosition():decompose()
@@ -208,7 +215,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
 
             local cell = display.cells[x][y]
 
-            prism.logger.info("found cell: ", cell)
+            -- prism.logger.info("found cell: ", cell)
 
             if cell and not prediction then
                display:put(
