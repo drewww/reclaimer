@@ -241,7 +241,8 @@ function GameLevelState:draw(primary, secondary)
                      -- for everything else.
                      local direction = point - player:getPosition()
                      prism.logger.info("direction: ", direction)
-                     local finalPos, hitWall, cellsMoved, path = knockback(self.level, point, direction, weaponC.push,
+                     local finalPos, hitWall, cellsMoved, path, impassablePos = knockback(self.level, point, direction,
+                        weaponC.push,
                         mask)
 
                      -- TODO: Implement the push animation here
@@ -253,7 +254,7 @@ function GameLevelState:draw(primary, secondary)
                      prism.logger.info("triggering animation: ", entity, #path)
 
                      self.display:yieldAnimation(prism.messages.Animation {
-                        animation = spectrum.animations.Push(entity, path, true),
+                        animation = spectrum.animations.Push(entity, path, true, impassablePos),
                         blocking = true
                      })
                   end

@@ -163,10 +163,15 @@ end
 --- @param prediction boolean Whether the animation is being played for prediction purposes
 --- @param impassablePos Vector2 Position where movement was stopped by an impassable object
 spectrum.registerAnimation("Push", function(actor, path, prediction, impassablePos)
-   prism.logger.info("calling path animation")
+   -- prism.logger.info("calling path animation")
 
    if not prediction then
       prediction = false
+   end
+
+   local fullPath = {}
+   for i, p in ipairs(path) do
+      table.insert(fullPath, p)
    end
 
    if prediction then
@@ -174,12 +179,18 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
    end
 
    return spectrum.Animation(function(t, display)
-      prism.logger.info("Push animation running")
       local stepDuration = 0.15
 
       local totalDuration = stepDuration * #path
 
-      prism.logger.info("totalDuration: ", totalDuration)
+      -- add an extra step if we hit a wall
+      if impassablePos then
+         -- prism.logger.info("impassable, hit wall at ", tostring(impassablePos))
+         totalDuration = totalDuration + stepDuration
+      end
+
+
+      -- prism.logger.info("totalDuration: ", totalDuration)
 
       if t >= totalDuration then
          return true
@@ -192,7 +203,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
       if currentStep > 0 and currentStep <= #path then
          local position = path[currentStep]
          local drawable = actor:get(prism.components.Drawable)
-         -- prism.logger.info(" ANIMATE pushing to : ", position)
+         prism.logger.info(" ANIMATE pushing to : ", position)
          if drawable then
             -- get the base cell and render that instead at high level
             local x, y = actor:getPosition():decompose()
@@ -214,8 +225,6 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             end
 
             local cell = display.cells[x][y]
-
-            -- prism.logger.info("found cell: ", cell)
 
             if cell and not prediction then
                display:put(
@@ -258,6 +267,56 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
                drawable.background,
                math.huge
             )
+         end
+      else
+         prism.logger.info("ANIMATE flash")
+         -- we have stepDuration worth of time here, so let's
+         -- split it into four chunks.
+         local flashProgress = (t - (stepDuration * #path) / stepDuration)
+
+
+         if flashProgress > 0 then
+            local flashDuration = stepDuration / 2
+            local flashIndex = math.floor(flashProgress / flashDuration) + 1
+            local flashColor = flashIndex % 2 == 0 and prism.Color4.RED or prism.Color4.BLACK
+
+            prism.logger.info("flashProgress: " ..
+               tostring(flashProgress) ..
+               ", flashIndex: " .. tostring(flashIndex) .. ", flashColor: " .. tostring(flashColor))
+            local x, y = impassablePos:decompose()
+
+            -- use full path because if there is no actual movement, then path will be empty.
+            local destX, destY = fullPath[#fullPath]:decompose()
+
+
+            if x > SCREEN_WIDTH or y > SCREEN_HEIGHT or x <= 0 or y <= 0 then
+               prism.logger.info("pushing outside bounds")
+               return false
+            end
+
+            local cell = display.cells[x][y]
+            local destCell = display.cells[destX][destY]
+
+            if cell and destCell then
+               display:put(
+                  impassablePos.x,
+                  impassablePos.y,
+                  cell.char,
+                  cell.fg,
+                  flashColor,
+                  math.huge
+               )
+
+
+               display:put(
+                  destX,
+                  destY,
+                  destCell.char,
+                  destCell.fg,
+                  flashColor,
+                  math.huge
+               )
+            end
          end
       end
 
