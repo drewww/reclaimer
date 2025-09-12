@@ -112,7 +112,7 @@ function GameLevelState:handleMessage(message)
 
    -- This is where you'd process custom messages like advancing to the next
    -- level or triggering a game over.
-   if prism.messages.Lose:is(message) then self.manager:enter(GameOverState()) end
+   if prism.messages.Lose:is(message) then self.manager:enter(GameOverState(true)) end
 
    if prism.messages.Descend:is(message) then
       prism.logger.info("DESCENDING")
@@ -122,8 +122,12 @@ function GameLevelState:handleMessage(message)
       Game.stats:increment("depth", 1)
       Game.stats:print()
 
-      --- @cast message DescendMessage
-      self.manager:enter(GameLevelState(Game:generateNextFloor(message.descender), Game:getLevelSeed()))
+      if Game.depth == 0 then
+         self.manager:enter(GameOverState(false))
+      else
+         --- @cast message DescendMessage
+         self.manager:enter(GameLevelState(Game:generateNextFloor(message.descender), Game:getLevelSeed()))
+      end
    end
 end
 

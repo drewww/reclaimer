@@ -4,7 +4,9 @@ local Game = require "game"
 --- @overload fun(): GameOverState
 local GameOverState = spectrum.GameState:extend("GameOverState")
 
-function GameOverState:__new()
+function GameOverState:__new(died)
+   self.died        = died
+
    local cp437Atlas = require "display.cp437_atlas"
 
    self.display     = spectrum.Display(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, cp437Atlas, prism.Vector2(16, 16))
@@ -26,7 +28,13 @@ function GameOverState:draw()
    local midpointX, midpointY = math.floor(self.display.width / 2), math.floor(self.display.height / 2)
 
    self.display:clear()
-   self.display:putString(3, 3, "EXPEDITION OVER", nil, nil, nil, "left", self.display.width)
+
+   if self.died then
+      self.display:putString(3, 3, "EXPEDITION FAILED", nil, nil, nil, "left",
+         self.display.width)
+   else
+      self.display:putString(3, 3, "EXPEDITION OVER", nil, nil, nil, "left", self.display.width)
+   end
 
    self.display:putString(midpointX + 2, midpointY + 5, "R TO RESTART", nil, nil, nil, "left", self.display.width)
    self.display:putString(midpointX + 2, midpointY + 6, "Q TO QUIT", nil, nil, nil, "left", self.display.width)
@@ -62,12 +70,14 @@ function GameOverState:draw()
    self.display:draw()
 end
 
-function GameOverState:updateDecision(dt, owner, decision)
+function GameOverState:date(dt)
    self.controls:update()
 
-   if self.controls:get("restart") == "restart" then
+   if self.controls.start.pressed then
       love.event.restart()
-   elseif self.controls:get("quit") == "quit" then
+   end
+
+   if self.controls.quit.pressed then
       love.event.quit()
    end
 end

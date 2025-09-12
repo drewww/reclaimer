@@ -23,8 +23,6 @@ end
 --- @param player Actor
 --- @return LevelBuilder builder
 function Game:generateNextFloor(player)
-   self.depth = self.depth + 1
-
    local genRNG = prism.RNG(self:getLevelSeed())
    return levelgen(self.depth, genRNG, player, 30, 30)
 end
