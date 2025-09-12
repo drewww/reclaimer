@@ -206,7 +206,10 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
 
       if t >= totalDuration then
          -- drawable.layer = initialLayer
-         actor:give(drawable)
+         -- handles the case when the actor is dead at this point
+         if actor and drawable then
+            actor:give(drawable)
+         end
          display:pop()
 
          return true
