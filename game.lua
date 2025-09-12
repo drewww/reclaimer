@@ -26,7 +26,7 @@ function Game:generateNextFloor(player)
    self.depth = self.depth + 1
 
    local genRNG = prism.RNG(self:getLevelSeed())
-   return levelgen(genRNG, player, 60, 60)
+   return levelgen(genRNG, player, 30, 30)
 end
 
 return Game(tostring(os.time()))

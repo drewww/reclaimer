@@ -1,5 +1,5 @@
-local BLOCK_WIDTH = 20
-local BLOCK_HEIGHT = 20
+local BLOCK_WIDTH = 5
+local BLOCK_HEIGHT = 5
 
 -- Okay, the approach here. We're going to have "blocks" of some size. The map is
 -- composed of those blocks randomly composed. There may be rules to what blocks can go
@@ -77,25 +77,28 @@ return function(rng, player, width, height)
    for i = 1, blockWidth do
       levelBlocks[i] = {}
       for j = 1, blockHeight do
-         local rand = rng:random()
-
-         if rand < 0.2 then
-            levelBlocks[i][j] = "20x20-open"
-         elseif rand < 0.3 then
-            levelBlocks[i][j] = "20x20-hallway"
-         elseif rand < 0.5 then
-            levelBlocks[i][j] = "20x20-open-guards"
-         elseif rand < 0.65 then
-            levelBlocks[i][j] = "20x20-hallway"
-         elseif rand < 0.8 then
-            levelBlocks[i][j] = "20x20-chesta"
-         elseif rand < 0.9 then
-            levelBlocks[i][j] = "20x20-chestb"
-         else
-            levelBlocks[i][j] = "20x20-chestc"
+         local rooms = {}
+         local dir = love.filesystem.getDirectoryItems("levelgen/blocks/")
+         for _, filename in ipairs(dir) do
+            local blockName = filename:match("^5_(.+)%.lz4$")
+            if blockName then
+               table.insert(rooms, "5_" .. blockName)
+            end
          end
+
+         local rand = rng:random(1, #rooms)
+
+         -- even odds for all rooms
+         levelBlocks[i][j] = rooms[rand]
+         prism.logger.info("room " .. tostring(i) .. "," .. tostring(j) .. " = " .. levelBlocks[i][j])
       end
    end
+
+   -- now, pick a random i/j and make it the start location. can't be on the left edge.
+   -- local startX, startY = rng:random(2, blockWidth), rng:random(1, blockHeight)
+   local startX, startY = 4, 4
+   levelBlocks[startX][startY] = "SP5_start_right"
+   levelBlocks[startX - 1][startY] = "5_base"
 
    -- now, iterate through the block list and drop them in. (this could be collapsed,
    -- but I expect that we will want multiple passes to do various consistency checks.
@@ -112,7 +115,7 @@ return function(rng, player, width, height)
    end
 
    -- wrap the world in a border
-   builder:rectangle("line", 1, 1, width, height, prism.cells.Wall)
+   -- builder:rectangle("line", 1, 1, width, height, prism.cells.Wall)
 
    -- now iterate through all the cells and respond to hints.
    for x, y, cell in builder:eachCell() do
@@ -127,17 +130,18 @@ return function(rng, player, width, height)
 
          prism.logger.info("adding actor of type " .. hint.type .. " at ", x, y)
          if hint.type == "enemy" then
-            builder:addActor(prism.actors.Bot(), x, y)
+            if rng:random() < 0.3 then
+               builder:addActor(prism.actors.Bot(), x, y)
+            end
          elseif hint.type == "chest" then
             builder:addActor(prism.actors.Chest(), x, y)
          elseif hint.type == "barrel" then
             builder:addActor(prism.actors.Barrel(), x, y)
+         elseif hint.type == "player" then
+            builder:addActor(player, x, y)
          end
       end
    end
-
-   local playerPos = prism.Vector2(4, 4)
-   builder:addActor(player, playerPos.x, playerPos.y)
 
    builder:pad(1, prism.cells.Wall)
 
