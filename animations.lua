@@ -202,7 +202,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
       local progress = t / totalDuration
       local currentStep = math.floor(progress * (#path + (impassablePos and 1 or 0))) + 1
 
-      prism.logger.info("currentStep, maxStep, t, totalDuration", currentStep, #path, t, totalDuration)
+      -- prism.logger.info("currentStep, maxStep, t, totalDuration", currentStep, #path, t, totalDuration)
 
       local drawable = actor:get(prism.components.Drawable)
 
@@ -242,11 +242,19 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             -- if the actor we're moving is outside SCREEN bounds, do nothing.
 
             -- this needs to be in screen terms, so we need to pull camera out
-            local currentCell = display.cells[position.x + display.camera.x][position.y + display.camera.y]
+            local positionScreen = position:copy()
+            positionScreen = positionScreen + display.camera
+            if positionScreen.x <= 0 or positionScreen.y <= 0 or positionScreen.x > SCREEN_WIDTH or positionScreen.y > SCREEN_HEIGHT then
+               display:pop()
+               return false
+            end
+
+            local currentCell = display.cells[positionScreen.x][positionScreen.y]
 
             if currentCell and not prediction then
                -- this blanks the current cell. not totally sure why it's necessary. but
                -- it's not happening during prediction so it's not our issue.
+               --
                display:put(
                   position.x, position.y,
                   currentCell.char,
@@ -262,7 +270,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             --    destY = destY - display.camera.y
             -- end
 
-            if destX > SCREEN_WIDTH or destY > SCREEN_HEIGHT or destX <= 0 or destY <= 0 then
+            if destX + display.camera.x > SCREEN_WIDTH or destY + display.camera.y > SCREEN_HEIGHT or destX + display.camera.x <= 0 or destY + display.camera.y <= 0 then
                display:pop()
                return false
             end
@@ -282,6 +290,8 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             end
 
             -- this puts the actual actor drawable in position
+            prism.logger.info("putting actual actor at ", position, " with pushed: ", display.pushed, " and camera ",
+               display.camera)
             display:put(
                position.x,
                position.y,
@@ -292,7 +302,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             )
          end
       else
-         prism.logger.info("ANIMATE flash")
+         -- prism.logger.info("ANIMATE flash")
          -- we have stepDuration worth of time here, so let's
          -- split it into four chunks.
          local flashProgress = (t - (stepDuration * #path)) / stepDuration
@@ -302,20 +312,20 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             local flashIndex = math.floor(flashProgress * 3) + 1
             local flashColor = flashIndex % 2 == 0 and prism.Color4.RED or prism.Color4.BLACK
 
-            prism.logger.info("flashProgress: " ..
-               tostring(flashProgress) ..
-               ", flashIndex: " .. tostring(flashIndex) .. ", flashColor: " .. tostring(flashColor))
+            -- prism.logger.info("flashProgress: " ..
+            -- tostring(flashProgress) ..
+            -- ", flashIndex: " .. tostring(flashIndex) .. ", flashColor: " .. tostring(flashColor))
             local x, y = impassablePos:decompose()
 
             -- use full path because if there is no actual movement, then path will be empty.
             local impassableX, impassableY = fullPath[#fullPath]:decompose()
 
-            if x > SCREEN_WIDTH or y > SCREEN_HEIGHT or x <= 0 or y <= 0 then
-               prism.logger.info("pushing outside bounds")
-               display:pop()
+            -- if x > SCREEN_WIDTH or y > SCREEN_HEIGHT or x <= 0 or y <= 0 then
+            --    prism.logger.info("pushing outside bounds")
+            --    display:pop()
 
-               return false
-            end
+            --    return false
+            -- end
 
             -- local cell = display.cells[x + display.camera.x][y + display.camera.y]
             -- local destCell = display.cells[impassableX + display.camera.x][impassableY + display.camera.y]

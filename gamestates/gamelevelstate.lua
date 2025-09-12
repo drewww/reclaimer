@@ -226,7 +226,7 @@ function GameLevelState:draw(primary, secondary)
          -- if there are, and the current weapon has push, loop a non-blocking push animation
          -- for that entity.
          if self.mouseCellPositionChanged then
-            prism.logger.info("mouseCellPositionChanged")
+            -- prism.logger.info("mouseCellPositionChanged")
             self.display:skipAnimations()
 
             local weaponC = weapon:get(prism.components.Weapon)
@@ -234,25 +234,25 @@ function GameLevelState:draw(primary, secondary)
             if #points > 0 and weaponC and weaponC.push then
                for _, point in ipairs(points) do
                   local entity = self.level:query(prism.components.Collider):at(point:decompose()):first()
-                  prism.logger.info("Entity at weapon target point: ", point, entity)
+                  -- prism.logger.info("Entity at weapon target point: ", point, entity)
 
                   if entity then
-                     prism.logger.info("entity: ", entity:getName())
+                     -- prism.logger.info("entity: ", entity:getName())
                      -- return function(level, startPos, direction, maxCells, moveMask)
                      -- TODO this needs to adapt to the AOE knockback variation, but this works
                      -- for everything else.
                      local direction = point - player:getPosition()
-                     prism.logger.info("direction: ", direction)
+                     -- prism.logger.info("direction: ", direction)
                      local finalPos, hitWall, cellsMoved, path, impassablePos = knockback(self.level, point, direction,
                         weaponC.push,
                         mask)
 
-                     prism.logger.info("starting push. final, hit, cells: ", finalPos, hitWall, cellsMoved)
+                     -- prism.logger.info("starting push. final, hit, cells: ", finalPos, hitWall, cellsMoved)
                      for _, p in ipairs(path) do
                         prism.logger.info("pushing entity to: ", p)
                      end
 
-                     prism.logger.info("triggering animation: ", entity, #path)
+                     -- prism.logger.info("triggering animation: ", entity, #path)
 
                      self.display:yieldAnimation(prism.messages.Animation {
                         animation = spectrum.animations.Push(entity, path, true, impassablePos),
