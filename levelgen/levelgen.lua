@@ -96,8 +96,16 @@ return function(rng, player, width, height)
 
    -- now, pick a random i/j and make it the start location. can't be on the left edge.
    -- local startX, startY = rng:random(2, blockWidth), rng:random(1, blockHeight)
-   local startX, startY = 4, 4
+   local startX, startY = rng:random(2, blockWidth), rng:random(1, blockHeight)
+   local exitX, exitY
+   repeat
+      exitX, exitY = rng:random(1, blockWidth), rng:random(1, blockHeight)
+   until not (startX == exitX and startY == exitY)
+
+   -- prism.logger.info("start ", startX, startY, " exit", exitX, exitY)
+
    levelBlocks[startX][startY] = "SP5_start_right"
+   levelBlocks[exitX][exitY] = "SP5_stair"
    levelBlocks[startX - 1][startY] = "5_base"
 
    -- now, iterate through the block list and drop them in. (this could be collapsed,
