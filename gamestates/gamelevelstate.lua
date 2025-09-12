@@ -1,4 +1,5 @@
 local GameOverState = require "gamestates.gameoverstate"
+local ResupplyState = require "gamestates.resupplystate"
 local InfoFrame = require "display.infoframe"
 local Game = require "game"
 local WeaponUtil = require "util.weapons"
@@ -126,7 +127,8 @@ function GameLevelState:handleMessage(message)
          self.manager:enter(GameOverState(false))
       else
          --- @cast message DescendMessage
-         self.manager:enter(GameLevelState(Game:generateNextFloor(message.descender), Game:getLevelSeed()))
+         self.manager:enter(ResupplyState())
+         -- self.manager:enter(GameLevelState(Game:generateNextFloor(), Game:getLevelSeed()))
       end
    end
 end

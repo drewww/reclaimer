@@ -76,9 +76,9 @@ function TitleState:update(dt)
          inventory:addItem(AMMO_TYPES["Rocket"](2))
       end
 
+      Game.player = player
 
-
-      local builder = Game:generateNextFloor(player)
+      local builder = Game:generateNextFloor()
       prism.logger:info("entering game state")
 
       self.manager:enter(GameLevelState(builder, Game:getLevelSeed()))

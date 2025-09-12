@@ -23,6 +23,7 @@ prism.defaultCell = prism.cells.Pit
 local GameLevelState = require "gamestates.gamelevelstate"
 local TitleState = require "gamestates.titlestate"
 
+
 local Game = require("game")
 
 -- Load a sprite atlas and configure the terminal-style display,

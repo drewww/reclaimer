@@ -70,10 +70,10 @@ function GameOverState:draw()
    self.display:draw()
 end
 
-function GameOverState:date(dt)
+function GameOverState:update(dt, owner, decision)
    self.controls:update()
 
-   if self.controls.start.pressed then
+   if self.controls.restart.pressed then
       love.event.restart()
    end
 
