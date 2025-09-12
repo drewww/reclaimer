@@ -174,14 +174,23 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
       table.insert(fullPath, p)
    end
 
+
+   -- local initialLayer = actor:get(prism.components.Drawable).layer
    -- if prediction then
    --    table.remove(path, 1)
    -- end
+   local drawable = actor:get(prism.components.Drawable)
+
+   if not prediction then
+      actor:remove(prism.components.Drawable)
+   end
+
 
    return spectrum.Animation(function(t, display)
       local stepDuration = 0.15
 
       display:push()
+
 
       local totalDuration = stepDuration * #path
 
@@ -192,9 +201,14 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
       end
 
 
+
       -- prism.logger.info("totalDuration: ", totalDuration)
 
       if t >= totalDuration then
+         -- drawable.layer = initialLayer
+         actor:give(drawable)
+         display:pop()
+
          return true
       end
 
@@ -204,7 +218,8 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
 
       -- prism.logger.info("currentStep, maxStep, t, totalDuration", currentStep, #path, t, totalDuration)
 
-      local drawable = actor:get(prism.components.Drawable)
+
+      -- drawable.layer = -10000
 
       -- the problem is sometimes path is empty because the push is up against a wall
       -- so it would be ...
@@ -254,7 +269,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             if currentCell and not prediction then
                -- this blanks the current cell. not totally sure why it's necessary. but
                -- it's not happening during prediction so it's not our issue.
-               --
+
                display:put(
                   position.x, position.y,
                   currentCell.char,
@@ -280,12 +295,13 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             if destCell and not prediction then
                -- blank the destination because the actor has probably already been
                -- moved there. so get the cell there and redraw it over the actor
+               prism.logger.info("blanking destination: ", destX, destY, destCell.char, destCell.fg, destCell.bg)
                display:put(
                   destX, destY,
                   destCell.char,
                   destCell.fg,
                   destCell.bg,
-                  math.huge - 100
+                  math.huge - 10
                )
             end
 

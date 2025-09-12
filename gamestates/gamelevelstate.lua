@@ -299,7 +299,7 @@ function GameLevelState:draw(primary, secondary)
 end
 
 function GameLevelState:mousepressed(x, y, button, istouch, presses)
-   self.display:skipAnimations()
+   -- self.display:skipAnimations()
    -- get the cell under the mouse button
    local cellX, cellY, targetCell = self:getCellUnderMouse()
 
@@ -353,11 +353,13 @@ end
 -- action and set it in the decision object. It will then be executed by
 -- the level. This is a similar pattern to the example KoboldController.
 function GameLevelState:updateDecision(dt, owner, decision)
+   prism.logger.info("In update decision")
    self.controls:update()
+   prism.logger.info("post controls update")
 
    -- if self.controls.move.pressed or self.controls.dash.pressed then
    if self.controls.move.pressed then
-      self.display:skipAnimations()
+      -- self.display:skipAnimations()
 
       local vector
       -- if self.controls.move.pressed then

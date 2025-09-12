@@ -39,13 +39,15 @@ function Push:perform(level, amount, from)
       level:perform(damage)
    end
 
-   -- animate in here
-   level:moveActor(target, finalPos)
 
    level:yield(prism.messages.Animation {
       animation = spectrum.animations.Push(self.owner, path),
-      blocking = false
+      blocking = true,
+      skipptable = true
    })
+
+   -- animate in here
+   level:moveActor(target, finalPos)
 end
 
 return Push
