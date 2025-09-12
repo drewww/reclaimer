@@ -14,14 +14,14 @@ function Damage:perform(level, damage)
    health.hp = health.hp - damage
    self.dealt = damage
 
-   -- if health.hp > 0 then
+   -- use absolute positions because the owner may be dead by the time this finishes
    level:yield(prism.messages.Animation {
       animation = spectrum.animations.Damage(damage),
-      actor = self.owner,
-      y = -1,
+      -- actor = self.owner,
+      x = self.owner:getPosition().x,
+      y = self.owner:getPosition().y - 1,
       blocking = false
    })
-   -- end
 
    if health.hp <= 0 then
       level:perform(prism.actions.Die(self.owner))

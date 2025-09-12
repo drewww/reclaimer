@@ -37,7 +37,7 @@ function Die:perform(level)
 
       for actor, component in level:query(prism.components.Health):iter() do
          if actor:getPosition():distanceChebyshev(source) <= 3 then
-            level:tryPerform(prism.actions.Damage(actor, 5))
+            level:tryPerform(prism.actions.Damage(actor, BARREL_EXPLODE_DAMAGE))
          end
       end
    else

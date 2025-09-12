@@ -2,6 +2,7 @@ SCREEN_WIDTH = 31
 SCREEN_HEIGHT = 20
 
 WALL_COLLIDE_DAMAGE = 5
+BARREL_EXPLODE_DAMAGE = 5
 
 CHEST_DURATION = 10
 
@@ -18,42 +19,6 @@ RELOAD_BASE = 17 * 16 + 1
 FLOOR_BASE = 10 * 16 + 1
 WALL_BASE = 10 * 16 + 2
 BARREL_BASE = 10 * 16 + 3
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
