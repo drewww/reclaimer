@@ -46,7 +46,7 @@ function InfoFrame:draw()
    end
 
    self.display:putString(40, 1, "DEPTH", prism.Color4.WHITE, prism.Color4.NAVY)
-   self.display:putString(47, 1, "-" .. tostring(9 - Game.depth), prism.Color4.WHITE, prism.Color4.NAVY)
+   self.display:putString(47, 1, tostring(Game.depth), prism.Color4.WHITE, prism.Color4.NAVY)
 end
 
 return InfoFrame

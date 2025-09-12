@@ -52,7 +52,7 @@ end
 --- @param player Actor
 --- @param width integer
 --- @param height integer
-return function(rng, player, width, height)
+return function(depth, rng, player, width, height)
    -- loadBlocks()
 
    local builder = prism.LevelBuilder(prism.cells.Pit)
