@@ -100,12 +100,14 @@ function Shoot:perform(level, target)
    elseif weapon.template == "line" then
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Laser(self.owner:getPosition(), target, prism.Color4.LIME, weapon.range),
-         blocking = true
+         blocking = true,
+         skippable = true
       })
    else
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Projectile(self.owner, target, BULLET_BASE),
-         blocking = true
+         blocking = true,
+         skippable = true,
       })
    end
    -- Move the target to final position

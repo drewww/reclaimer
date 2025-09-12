@@ -179,7 +179,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
    -- end
 
    return spectrum.Animation(function(t, display)
-      local stepDuration = 0.75
+      local stepDuration = 0.15
 
       display:push()
 

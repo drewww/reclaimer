@@ -231,7 +231,7 @@ function GameLevelState:draw(primary, secondary)
 
             local weaponC = weapon:get(prism.components.Weapon)
             local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
-            if #points > 0 and weaponC and weaponC.push then
+            if #points > 0 and weaponC and weaponC.push > 0 then
                for _, point in ipairs(points) do
                   local entity = self.level:query(prism.components.Collider):at(point:decompose()):first()
                   -- prism.logger.info("Entity at weapon target point: ", point, entity)
@@ -242,6 +242,11 @@ function GameLevelState:draw(primary, secondary)
                      -- TODO this needs to adapt to the AOE knockback variation, but this works
                      -- for everything else.
                      local direction = point - player:getPosition()
+
+                     if weaponC.template == "aoe" then
+                        direction = point - prism.Vector2(mouseX, mouseY)
+                     end
+
                      -- prism.logger.info("direction: ", direction)
                      local finalPos, hitWall, cellsMoved, path, impassablePos = knockback(self.level, point, direction,
                         weaponC.push,
@@ -352,6 +357,8 @@ function GameLevelState:updateDecision(dt, owner, decision)
 
    -- if self.controls.move.pressed or self.controls.dash.pressed then
    if self.controls.move.pressed then
+      self.display:skipAnimations()
+
       local vector
       -- if self.controls.move.pressed then
       vector = self.controls.move.vector
