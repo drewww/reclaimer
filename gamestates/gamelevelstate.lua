@@ -227,6 +227,8 @@ function GameLevelState:draw(primary, secondary)
          -- for that entity.
          if self.mouseCellPositionChanged then
             prism.logger.info("mouseCellPositionChanged")
+            self.display:skipAnimations()
+
             local weaponC = weapon:get(prism.components.Weapon)
             local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
             if #points > 0 and weaponC and weaponC.push then
@@ -245,7 +247,6 @@ function GameLevelState:draw(primary, secondary)
                         weaponC.push,
                         mask)
 
-                     -- TODO: Implement the push animation here
                      prism.logger.info("starting push. final, hit, cells: ", finalPos, hitWall, cellsMoved)
                      for _, p in ipairs(path) do
                         prism.logger.info("pushing entity to: ", p)
@@ -255,7 +256,8 @@ function GameLevelState:draw(primary, secondary)
 
                      self.display:yieldAnimation(prism.messages.Animation {
                         animation = spectrum.animations.Push(entity, path, true, impassablePos),
-                        blocking = true
+                        blocking = false,
+                        skippable = true
                      })
                   end
                end
@@ -292,6 +294,7 @@ function GameLevelState:draw(primary, secondary)
 end
 
 function GameLevelState:mousepressed(x, y, button, istouch, presses)
+   self.display:skipAnimations()
    -- get the cell under the mouse button
    local cellX, cellY, targetCell = self:getCellUnderMouse()
 

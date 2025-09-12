@@ -15,12 +15,15 @@ function Damage:perform(level, damage)
    self.dealt = damage
 
    -- use absolute positions because the owner may be dead by the time this finishes
+   local x, y = self.owner:getPosition():decompose()
+   prism.logger.info("triggering damage anim at ", x, y)
    level:yield(prism.messages.Animation {
       animation = spectrum.animations.Damage(damage),
       -- actor = self.owner,
-      x = self.owner:getPosition().x,
-      y = self.owner:getPosition().y - 1,
-      blocking = false
+      x = x,
+      y = y - 1,
+      blocking = false,
+      skippable = true,
    })
 
    if health.hp <= 0 then
