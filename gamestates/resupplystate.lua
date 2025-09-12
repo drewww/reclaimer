@@ -19,7 +19,7 @@ function ResupplyState:__new()
    -- Menu grid setup
    self.menuGrid = {}
    self.gridWidth = 4
-   self.gridHeight = 4
+   self.gridHeight = 7
    self.cursorX = 1
    self.cursorY = 1
 
@@ -87,11 +87,24 @@ function ResupplyState:initializeMenu()
       purchased = false
    }
 
-
    self.menuGrid[self:coordKey(1, 4)] = {
       actor = nil,
       displayName = "Health (2)",
       price = 1,
+      purchased = false
+   }
+
+   self.menuGrid[self:coordKey(1, 6)] = {
+      actor = nil,
+      displayName = "RESET",
+      price = 0,
+      purchased = false
+   }
+
+   self.menuGrid[self:coordKey(2, 6)] = {
+      actor = nil,
+      displayName = "COMPLETE",
+      price = 0,
       purchased = false
    }
 end
@@ -105,8 +118,22 @@ function ResupplyState:getCurrentItem()
 end
 
 function ResupplyState:moveCursor(dx, dy)
-   local newX = math.max(1, math.min(self.gridWidth, self.cursorX + dx))
-   local newY = math.max(1, math.min(self.gridHeight, self.cursorY + dy))
+   local newX = self.cursorX + dx
+   local newY = self.cursorY + dy
+
+   -- Wrap around horizontally
+   if newX < 1 then
+      newX = self.gridWidth
+   elseif newX > self.gridWidth then
+      newX = 1
+   end
+
+   -- Wrap around vertically
+   if newY < 1 then
+      newY = self.gridHeight
+   elseif newY > self.gridHeight then
+      newY = 1
+   end
 
    self.cursorX = newX
    self.cursorY = newY
@@ -138,7 +165,10 @@ function ResupplyState:draw()
             end
 
             self.display:putString(displayX, displayY, prefix .. item.displayName, color, nil, nil, "left")
-            self.display:putString(displayX, displayY + 1, "Price: " .. item.price, color, nil, nil, "left")
+
+            if item.price > 0 then
+               self.display:putString(displayX, displayY + 1, "Price: " .. item.price, color, nil, nil, "left")
+            end
          end
       end
    end
@@ -151,8 +181,13 @@ function ResupplyState:update(dt)
 
    if self.controls.move.pressed then
       local vector = self.controls.move.vector
-      self:moveCursor(vector.x, vector.y)
-      prism.logger.info("Moving cursor to: %d, %d", self.cursorX, self.cursorY)
+
+      repeat
+         self:moveCursor(vector.x, vector.y)
+      until self:getCurrentItem()
+
+
+      prism.logger.info("Moving cursor to: ", self.cursorX, self.cursorY)
    end
 
    if self.controls.select.pressed then
@@ -161,14 +196,15 @@ function ResupplyState:update(dt)
          if not currentItem.purchased then
             -- TODO: Check if player has enough money/resources
             currentItem.purchased = true
-            prism.logger.info("Purchased: %s", currentItem.displayName)
+            prism.logger.info("Purchased: ", currentItem.displayName)
 
             -- TODO: Add the actor/item to player inventory
             -- if currentItem.actor then
             --    Game.player:addItem(currentItem.actor)
             -- end
          else
-            prism.logger.info("Item already purchased: %s", currentItem.displayName)
+            currentItem.purchased = false
+            prism.logger.info("Item already purchased: ", currentItem.displayName)
          end
       else
          -- No item selected, exit to next level
