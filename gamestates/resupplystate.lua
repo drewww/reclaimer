@@ -61,27 +61,27 @@ function ResupplyState:initializeMenu()
    }
 
    self.menuGrid[self:coordKey(1, 2)] = {
-      actor = nil,
+      actor = AMMO_TYPES["Pistol"](20),
       displayName = "Pistol Ammo (20)",
       price = 1,
       purchased = false
    }
    self.menuGrid[self:coordKey(2, 2)] = {
-      actor = nil,
-      displayName = "Shotgun Ammo (10)",
+      actor = AMMO_TYPES["Shotgun"](8),
+      displayName = "Shotgun Ammo (8)",
       price = 2,
       purchased = false
    }
 
    self.menuGrid[self:coordKey(3, 2)] = {
-      actor = nil,
+      actor = AMMO_TYPES["Laser"](5),
       displayName = "Laser Ammo (5)",
       price = 2,
       purchased = false
    }
 
    self.menuGrid[self:coordKey(1, 3)] = {
-      actor = nil,
+      actor = AMMO_TYPES["Rocket"](2),
       displayName = "Rocket Ammo (2)",
       price = 2,
       purchased = false
@@ -89,7 +89,7 @@ function ResupplyState:initializeMenu()
 
    self.menuGrid[self:coordKey(1, 4)] = {
       actor = nil,
-      displayName = "Health (2)",
+      displayName = "Heal All",
       price = 1,
       purchased = false
    }
@@ -206,6 +206,16 @@ function ResupplyState:update(dt)
 
          if currentItem.displayName == "COMPLETE" then
             -- execute the purchases
+            local inventory = Game.player:get(prism.components.Inventory)
+            for _, item in pairs(self.menuGrid) do
+               if item.displayName == "Heal All" then
+                  local health = Game.player:get(prism.components.Health)
+                  health:heal(health.maxHP)
+               elseif item.purchased and inventory then
+                  prism.logger.info("Adding item: ", item.displayName)
+                  inventory:addItem(item.actor)
+               end
+            end
 
             local GameLevelState = require "gamestates.gamelevelstate"
             self.manager:enter(GameLevelState(Game:generateNextFloor(), Game:getLevelSeed()))
