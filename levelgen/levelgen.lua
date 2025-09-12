@@ -104,7 +104,13 @@ return function(depth, rng, player, width, height)
 
    -- prism.logger.info("start ", startX, startY, " exit", exitX, exitY)
 
-   levelBlocks[startX][startY] = "SP5_start_right"
+   -- plus one because we increment on creation
+   if depth == START_DEPTH + 1 then
+      levelBlocks[startX][startY] = "SP5_start_right"
+   else
+      levelBlocks[startX][startY] = "SP5_stair_exit"
+   end
+
    levelBlocks[exitX][exitY] = "SP5_stair"
    levelBlocks[startX - 1][startY] = "5_base"
 
