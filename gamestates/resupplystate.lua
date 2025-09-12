@@ -2,6 +2,11 @@ local Game = require "game"
 
 --- @class ResupplyState : GameState
 --- @field display Display
+--- @field menuGrid table
+--- @field gridWidth number
+--- @field gridHeight number
+--- @field cursorX number
+--- @field cursorY number
 --- @overload fun(): ResupplyState
 local ResupplyState = spectrum.GameState:extend("ResupplyState")
 
@@ -10,6 +15,13 @@ function ResupplyState:__new()
 
    self.display     = spectrum.Display(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, cp437Atlas, prism.Vector2(16, 16))
    self.display:fitWindowToTerminal()
+
+   -- Menu grid setup
+   self.menuGrid = {}
+   self.gridWidth = 4
+   self.gridHeight = 4
+   self.cursorX = 1
+   self.cursorY = 1
 
    self.controls = spectrum.Input.Controls {
       controls = {
@@ -24,6 +36,80 @@ function ResupplyState:__new()
          move = { "move_up", "move_left", "move_right", "move_down" }
       }
    }
+
+   -- Initialize the menu items
+   self:initializeMenu()
+end
+
+function ResupplyState:coordKey(x, y)
+   return x .. "," .. y
+end
+
+function ResupplyState:initializeMenu()
+   -- Example menu items - replace with actual actors/items
+   self.menuGrid[self:coordKey(1, 1)] = {
+      actor = nil,
+      displayName = "Laser",
+      price = 10,
+      purchased = false
+   }
+   self.menuGrid[self:coordKey(2, 1)] = {
+      actor = nil,
+      displayName = "Shotgun",
+      price = 10,
+      purchased = false
+   }
+
+   self.menuGrid[self:coordKey(1, 2)] = {
+      actor = nil,
+      displayName = "Pistol Ammo (20)",
+      price = 1,
+      purchased = false
+   }
+   self.menuGrid[self:coordKey(2, 2)] = {
+      actor = nil,
+      displayName = "Shotgun Ammo (10)",
+      price = 2,
+      purchased = false
+   }
+
+   self.menuGrid[self:coordKey(3, 2)] = {
+      actor = nil,
+      displayName = "Laser Ammo (5)",
+      price = 2,
+      purchased = false
+   }
+
+   self.menuGrid[self:coordKey(1, 3)] = {
+      actor = nil,
+      displayName = "Rocket Ammo (2)",
+      price = 2,
+      purchased = false
+   }
+
+
+   self.menuGrid[self:coordKey(1, 4)] = {
+      actor = nil,
+      displayName = "Health (2)",
+      price = 1,
+      purchased = false
+   }
+end
+
+function ResupplyState:getItemAt(x, y)
+   return self.menuGrid[self:coordKey(x, y)]
+end
+
+function ResupplyState:getCurrentItem()
+   return self:getItemAt(self.cursorX, self.cursorY)
+end
+
+function ResupplyState:moveCursor(dx, dy)
+   local newX = math.max(1, math.min(self.gridWidth, self.cursorX + dx))
+   local newY = math.max(1, math.min(self.gridHeight, self.cursorY + dy))
+
+   self.cursorX = newX
+   self.cursorY = newY
 end
 
 function ResupplyState:draw()
@@ -33,6 +119,30 @@ function ResupplyState:draw()
 
    self.display:putString(3, 3, "RESUPPLY", nil, nil, nil, "left")
 
+   -- Draw menu grid
+   local startX, startY = 5, 8
+   for y = 1, self.gridHeight do
+      for x = 1, self.gridWidth do
+         local item = self:getItemAt(x, y)
+         local displayX = startX + (x - 1) * 20
+         local displayY = startY + (y - 1) * 3
+
+         if item then
+            local color = item.purchased and prism.Color4.GREY or prism.Color4.WHITE
+            local prefix = ""
+
+            -- Add cursor indicator
+            if x == self.cursorX and y == self.cursorY then
+               prefix = "> "
+               color = prism.Color4.YELLOW
+            end
+
+            self.display:putString(displayX, displayY, prefix .. item.displayName, color, nil, nil, "left")
+            self.display:putString(displayX, displayY + 1, "Price: " .. item.price, color, nil, nil, "left")
+         end
+      end
+   end
+
    self.display:draw()
 end
 
@@ -41,15 +151,31 @@ function ResupplyState:update(dt)
 
    if self.controls.move.pressed then
       local vector = self.controls.move.vector
-      prism.logger.info("Moving in direction: %s", vector)
+      self:moveCursor(vector.x, vector.y)
+      prism.logger.info("Moving cursor to: %d, %d", self.cursorX, self.cursorY)
    end
 
    if self.controls.select.pressed then
-      prism.logger.info("Select pressed")
-      -- for now, transition to next level.
-      local GameLevelState = require "gamestates.gamelevelstate"
+      local currentItem = self:getCurrentItem()
+      if currentItem then
+         if not currentItem.purchased then
+            -- TODO: Check if player has enough money/resources
+            currentItem.purchased = true
+            prism.logger.info("Purchased: %s", currentItem.displayName)
 
-      self.manager:enter(GameLevelState(Game:generateNextFloor(), Game:getLevelSeed()))
+            -- TODO: Add the actor/item to player inventory
+            -- if currentItem.actor then
+            --    Game.player:addItem(currentItem.actor)
+            -- end
+         else
+            prism.logger.info("Item already purchased: %s", currentItem.displayName)
+         end
+      else
+         -- No item selected, exit to next level
+         prism.logger.info("No item selected, proceeding to next level")
+         local GameLevelState = require "gamestates.gamelevelstate"
+         self.manager:enter(GameLevelState(Game:generateNextFloor(), Game:getLevelSeed()))
+      end
    end
 end
 
