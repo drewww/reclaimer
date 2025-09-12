@@ -1,4 +1,5 @@
 local InfoFrame = prism.Object:extend("InfoFrame")
+local Game = require("game")
 
 --- @param level Level
 --- @param display Display
@@ -43,6 +44,9 @@ function InfoFrame:draw()
          prism.Color4.WHITE,
          prism.Color4.NAVY)
    end
+
+   self.display:putString(40, 1, "DEPTH", prism.Color4.WHITE, prism.Color4.NAVY)
+   self.display:putString(47, 1, "-" .. tostring(9 - Game.depth), prism.Color4.WHITE, prism.Color4.NAVY)
 end
 
 return InfoFrame

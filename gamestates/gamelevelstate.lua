@@ -116,6 +116,9 @@ function GameLevelState:handleMessage(message)
 
    if prism.messages.Descend:is(message) then
       prism.logger.info("DESCENDING")
+
+      Game.depth = Game.depth + 1
+
       Game.stats:increment("depth", 1)
       Game.stats:print()
 
