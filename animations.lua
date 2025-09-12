@@ -174,12 +174,14 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
       table.insert(fullPath, p)
    end
 
-   if prediction then
-      table.remove(path, 1)
-   end
+   -- if prediction then
+   --    table.remove(path, 1)
+   -- end
 
    return spectrum.Animation(function(t, display)
       local stepDuration = 0.15
+
+      display:push()
 
       local totalDuration = stepDuration * #path
 
@@ -204,56 +206,73 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
 
       local drawable = actor:get(prism.components.Drawable)
 
+      -- the problem is sometimes path is empty because the push is up against a wall
+      -- so it would be ...
+      local startX, startY = path[1]:decompose()
+      local destX, destY = path[#path]:decompose()
+
+      -- if #path == 0 then
+      --    destX, destY = startX, startY
+      -- end
+
+
       if currentStep > 0 and currentStep <= #path then
          local position = path[currentStep]
+
+
          prism.logger.info(" ANIMATE pushing to : ", position)
          if drawable then
             -- get the base cell and render that instead at high level
-            local x, y = actor:getPosition():decompose()
+            -- part of what's awkward here is that this could be destination
+            -- OR source. do we always move the actor first?
+            -- in the case of prediction, the actor hasn't moved so it's source.
+            -- in the case of the actual push it's the destination.
+            -- local x, y = actor:getPosition():decompose()
 
-            if not prediction then
-               x = x - display.camera.x
-               y = y - display.camera.y
-            end
+            -- if not prediction then
+            --    x = x - display.camera.x
+            --    y = y - display.camera.y
+            -- end
 
             -- local maxX = #display.cells
-            prism.logger.info("push cells: ", x, y, prediction)
+            -- prism.logger.info("push cells: ", x, y, prediction)
 
             -- local maxY = #display.cells[x]
             -- prism.logger.info(" ...y=", maxY)
             -- if the actor we're moving is outside SCREEN bounds, do nothing.
-            if x > SCREEN_WIDTH or y > SCREEN_HEIGHT or x <= 0 or y <= 0 then
-               prism.logger.info("pushing outside bounds")
-               return false
-            end
 
-            local cell = display.cells[x][y]
+            -- this needs to be in screen terms, so we need to pull camera out
+            local currentCell = display.cells[position.x + display.camera.x][position.y + display.camera.y]
 
-            if cell and not prediction then
-               display:putBG(
-                  x, y,
-                  cell.char,
-                  cell.fg,
-                  cell.bg,
+            if currentCell and not prediction then
+               -- this blanks the current cell. not totally sure why it's necessary. but
+               -- it's not happening during prediction so it's not our issue.
+               display:put(
+                  position.x, position.y,
+                  currentCell.char,
+                  currentCell.fg,
+                  currentCell.bg,
                   math.huge - 100
                )
             end
 
-            local destX, destY = path[#path]:decompose()
 
-            if not prediction then
-               destX = destX - display.camera.x
-               destY = destY - display.camera.y
-            end
+            -- if not prediction then
+            --    destX = destX - display.camera.x
+            --    destY = destY - display.camera.y
+            -- end
 
             if destX > SCREEN_WIDTH or destY > SCREEN_HEIGHT or destX <= 0 or destY <= 0 then
+               display:pop()
                return false
             end
 
-            local destCell = display.cells[destX][destY]
+            local destCell = display.cells[destX + display.camera.x][destY + display.camera.y]
 
             if destCell and not prediction then
-               display:putBG(
+               -- blank the destination because the actor has probably already been
+               -- moved there. so get the cell there and redraw it over the actor
+               display:put(
                   destX, destY,
                   destCell.char,
                   destCell.fg,
@@ -262,6 +281,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
                )
             end
 
+            -- this puts the actual actor drawable in position
             display:put(
                position.x,
                position.y,
@@ -288,39 +308,43 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
             local x, y = impassablePos:decompose()
 
             -- use full path because if there is no actual movement, then path will be empty.
-            local destX, destY = fullPath[#fullPath]:decompose()
+            local impassableX, impassableY = fullPath[#fullPath]:decompose()
 
             if x > SCREEN_WIDTH or y > SCREEN_HEIGHT or x <= 0 or y <= 0 then
                prism.logger.info("pushing outside bounds")
+               display:pop()
+
                return false
             end
 
-            local cell = display.cells[x][y]
-            local destCell = display.cells[destX][destY]
+            -- local cell = display.cells[x + display.camera.x][y + display.camera.y]
+            -- local destCell = display.cells[impassableX + display.camera.x][impassableY + display.camera.y]
 
-            if cell and destCell then
-               display:putBG(
-                  impassablePos.x,
-                  impassablePos.y,
-                  -- cell.char,
-                  -- cell.fg,
-                  flashColor,
-                  math.huge
-               )
+            -- if cell and destCell then
+            -- flash the impasasble object that got hit
+            display:putBG(
+               impassablePos.x,
+               impassablePos.y,
+               -- cell.char,
+               -- cell.fg,
+               flashColor,
+               math.huge
+            )
 
-
-               display:put(
-                  destX,
-                  destY,
-                  drawable.index,
-                  prism.Color4.GREY,
-                  flashColor,
-                  math.huge
-               )
-            end
+            -- flash the final cell in the path
+            display:putBG(
+               destX,
+               destY,
+               -- drawable.index,
+               -- prism.Color4.GREY,
+               flashColor,
+               math.huge
+            )
+            -- end
          end
       end
 
+      display:pop()
       return false
    end)
 end)
