@@ -306,6 +306,11 @@ function GameLevelState:mousepressed(x, y, button, istouch, presses)
    -- self.display:skipAnimations()
    -- get the cell under the mouse button
    local cellX, cellY, targetCell = self:getCellUnderMouse()
+   local playerSenses = self.level:query(prism.components.PlayerController):first():get(prism.components.Senses)
+
+   if playerSenses and not playerSenses.cells:get(cellX, cellY) then
+      return
+   end
 
    local target = prism.Vector2(cellX, cellY)
 

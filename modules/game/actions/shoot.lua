@@ -42,11 +42,11 @@ function Shoot:canPerform(level, target)
       end
 
       -- now check range
-      -- local range = self.owner:getPosition():getRange(target)
-      -- local inRange = false
-      -- if range <= weapon.range then
-      --    inRange = true
-      -- end
+      local range = self.owner:getPosition():getRange(target)
+      local inRange = false
+      if range <= weapon.range then
+         inRange = true
+      end
       prism.logger.info("Available ammo: ", availableAmmo)
       return availableAmmo
    else
@@ -105,7 +105,7 @@ function Shoot:perform(level, target)
       })
    else
       level:yield(prism.messages.Animation {
-         animation = spectrum.animations.Projectile(self.owner, target, BULLET_BASE),
+         animation = spectrum.animations.Projectile(self.owner, targetPoints[1], BULLET_BASE),
          blocking = true,
          -- skippable = true,
       })
