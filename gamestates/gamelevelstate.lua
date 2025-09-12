@@ -353,9 +353,7 @@ end
 -- action and set it in the decision object. It will then be executed by
 -- the level. This is a similar pattern to the example KoboldController.
 function GameLevelState:updateDecision(dt, owner, decision)
-   prism.logger.info("In update decision")
    self.controls:update()
-   prism.logger.info("post controls update")
 
    -- if self.controls.move.pressed or self.controls.dash.pressed then
    if self.controls.move.pressed then
