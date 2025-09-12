@@ -29,7 +29,7 @@ function ResupplyState:__new()
          move_left  = { "a", "h" },
          move_right = { "d", "l" },
          move_down  = { "s", "j" },
-         select     = { "enter", "space" },
+         select     = { "return", "space" },
       },
 
       pairs = {
@@ -193,6 +193,25 @@ function ResupplyState:update(dt)
    if self.controls.select.pressed then
       local currentItem = self:getCurrentItem()
       if currentItem then
+         if currentItem.displayName == "RESET" then
+            -- loop through all items and set them to not purchased
+            prism.logger.info("Resetting purchases")
+            for _, item in pairs(self.menuGrid) do
+               prism.logger.info("Resetting item: ", item.displayName)
+               item.purchased = false
+            end
+
+            return
+         end
+
+         if currentItem.displayName == "COMPLETE" then
+            -- execute the purchases
+
+            local GameLevelState = require "gamestates.gamelevelstate"
+            self.manager:enter(GameLevelState(Game:generateNextFloor(), Game:getLevelSeed()))
+            return
+         end
+
          if not currentItem.purchased then
             -- TODO: Check if player has enough money/resources
             currentItem.purchased = true
@@ -206,11 +225,6 @@ function ResupplyState:update(dt)
             currentItem.purchased = false
             prism.logger.info("Item already purchased: ", currentItem.displayName)
          end
-      else
-         -- No item selected, exit to next level
-         prism.logger.info("No item selected, proceeding to next level")
-         local GameLevelState = require "gamestates.gamelevelstate"
-         self.manager:enter(GameLevelState(Game:generateNextFloor(), Game:getLevelSeed()))
       end
    end
 end
