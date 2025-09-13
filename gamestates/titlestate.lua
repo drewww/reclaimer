@@ -19,7 +19,8 @@ function TitleState:__new()
       controls = {
          start = { "p" },
          quit = { "q" },
-         generate = { "g" }
+         generate = { "g" },
+         credits = { "c" }
       }
    }
 end
@@ -88,6 +89,9 @@ function TitleState:update(dt)
       love.event.quit()
    elseif self.controls.generate.pressed then
       self.manager:enter(MapState(self.display))
+   elseif self.controls.credits.pressed then
+      -- TODO merge this in.
+      -- self.manager:enter(CreditsState(self.display))
    end
 end
 

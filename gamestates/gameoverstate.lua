@@ -22,7 +22,8 @@ function GameOverState:__new(died)
    self.controls = spectrum.Input.Controls {
       controls = {
          restart = { "r" },
-         quit = { "q" }
+         quit = { "q" },
+         credits = { "c" }
       }
    }
 end
@@ -64,7 +65,7 @@ function GameOverState:draw()
    self.display:draw()
 end
 
-function GameOverState:update(dt, owner, decision)
+function GameOverState:update(dt)
    self.controls:update()
 
    if self.controls.restart.pressed then
@@ -73,6 +74,10 @@ function GameOverState:update(dt, owner, decision)
 
    if self.controls.quit.pressed then
       love.event.quit()
+   end
+
+   if self.controls.credits.pressed then
+      -- TODO switch to credits
    end
 end
 
