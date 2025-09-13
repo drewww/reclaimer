@@ -13,6 +13,7 @@ function DestructSystem:onTurnEnd(level, actor)
          prism.logger.info("EXPLODE")
          for x, y, cell in level:eachCell() do
             local target = prism.Vector2(x, y)
+
             if math.random() < 0.05 then
                if player:getPosition():getRange(target) < 2 then
                   local damage = prism.actions.Damage(player, 1)

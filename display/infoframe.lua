@@ -24,6 +24,23 @@ function InfoFrame:draw()
       self.display:putFilledRect(4, 1, health.hp, 1, HEART, prism.Color4.WHITE, prism.Color4.NAVY)
    end
 
+   local energy = player and player:get(prism.components.Energy)
+   if energy then
+      self.display:put(16, 1, LIGHTNING, prism.Color4.WHITE, prism.Color4.NAVY)
+      self.display:putString(18, 1, tostring(math.floor(energy.energy)) .. "/" .. tostring(energy.maxEnergy),
+         prism.Color4.WHITE,
+         prism.Color4.NAVY)
+   end
+
+   local dashColor = prism.Color4.BLUE
+   if player and player:has(prism.components.Dashing) then
+      dashColor = prism.Color4.WHITE
+   end
+   self.display:putString(22, 1, "DASH", dashColor, prism.Color4.NAVY)
+
+   self.display:putString(41, 1, "LVL", prism.Color4.WHITE, prism.Color4.NAVY)
+   self.display:putString(44, 1, tostring(Game.depth), prism.Color4.WHITE, prism.Color4.NAVY)
+
    local inventory = player and player:get(prism.components.Inventory)
    if inventory then
       local bits = inventory:getStack(prism.actors.Loot)
@@ -33,28 +50,12 @@ function InfoFrame:draw()
          amount = bits:get(prism.components.Item).stackCount
       end
 
-      self.display:put(51, 1, CENTS, prism.Color4.WHITE, prism.Color4.NAVY)
-      self.display:putString(52, 1, tostring(amount), prism.Color4.WHITE, prism.Color4.NAVY)
+      self.display:put(49, 1, CENTS, prism.Color4.WHITE, prism.Color4.NAVY)
+      self.display:putString(50, 1, tostring(amount), prism.Color4.WHITE, prism.Color4.NAVY)
    end
 
-   local energy = player and player:get(prism.components.Energy)
-   if energy then
-      self.display:put(16, 1, LIGHTNING, prism.Color4.WHITE, prism.Color4.NAVY)
-      self.display:putString(18, 1, tostring(math.floor(energy.energy)) .. "/" .. tostring(energy.maxEnergy),
-         prism.Color4.WHITE,
-         prism.Color4.NAVY)
-   end
 
-   self.display:putString(45, 1, "LVL", prism.Color4.WHITE, prism.Color4.NAVY)
-   self.display:putString(48, 1, tostring(Game.depth), prism.Color4.WHITE, prism.Color4.NAVY)
-
-   local dashColor = prism.Color4.BLUE
-   if player and player:has(prism.components.Dashing) then
-      dashColor = prism.Color4.WHITE
-   end
-   self.display:putString(22, 1, "DASH", dashColor, prism.Color4.NAVY)
-
-   self.display:putString(52, 1, "T-" .. tostring(MAX_TURNS_IN_LEVEL - Game.turnsInLevel), prism.Color4.WHITE,
+   self.display:putString(55, 1, "T-" .. tostring(MAX_TURNS_IN_LEVEL - Game.turnsInLevel), prism.Color4.WHITE,
       prism.Color4.NAVY)
 end
 

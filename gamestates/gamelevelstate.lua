@@ -61,10 +61,6 @@ function turn(level, actor, controller)
          -- prism.logger.info("continueTurn: " .. tostring(continueTurn))
       end
    until not continueTurn
-
-   if actor:has(prism.components.PlayerController) then
-      Game:turn()
-   end
 end
 
 --- @param builder LevelBuilder
