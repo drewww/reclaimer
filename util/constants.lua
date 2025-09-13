@@ -10,6 +10,18 @@ DASH_ENERGY_COST_PER_TILE = 1
 
 START_DEPTH = -9
 
+DEPTHS = {
+   { enemyOdds = 0.3, weights = "basic", weapons = {} },
+   { enemyOdds = 0.4, weights = "basic", weapons = { "shotgun" } },
+   { enemyOdds = 0.5, weights = "basic", weapons = { "shotgun" } },
+   { enemyOdds = 0.3, weights = "basic", weapons = { "shotgun" } },
+   { enemyOdds = 0.3, weights = "basic", weapons = { "shotgun", "laser" } },
+   { enemyOdds = 0.3, weights = "basic", weapons = { "laser" } },
+   { enemyOdds = 0.3, weights = "basic", weapons = { "laser", "rocket" } },
+   { enemyOdds = 0.3, weights = "basic", weapons = { "laser", "rocket" } },
+   { enemyOdds = 0.3, weights = "basic", weapons = { "rocket" } },
+}
+
 -- sprite locations
 PLAYER = 1
 ENEMY = 2

@@ -3,6 +3,7 @@ local BLOCK_HEIGHT = 7
 
 -- Weighted block selection data structure
 -- Keys are block filenames, values are weights
+
 local blockWeights = {
    ["7_base"] = 4,
    ["7_big_pillar"] = 2,
@@ -119,12 +120,24 @@ return function(depth, rng, player, width, height)
       tostring(blockHeight) .. " @" .. tostring(BLOCK_WIDTH) .. "x" .. tostring(BLOCK_HEIGHT) .. " tiles per block.")
    -- initialize the blocks. this will eventually have logic, but for now just
    -- places the default "room" type
+
+   local depthInfo = DEPTHS[depth * -1]
+
+   local weights = blockWeights
+   if depthInfo.weights == "basic" then
+      weights = blockWeights
+   elseif depthInfo.weights == "barrels" then
+      -- weights =
+      -- TOOD make these weights
+   end
+
+
    local levelBlocks = {}
    for i = 1, blockWidth do
       levelBlocks[i] = {}
       for j = 1, blockHeight do
          -- Use weighted random selection for block placement
-         levelBlocks[i][j] = selectWeightedRandom(rng, blockWeights)
+         levelBlocks[i][j] = selectWeightedRandom(rng, weights)
          prism.logger.info("room " .. tostring(i) .. "," .. tostring(j) .. " = " .. levelBlocks[i][j])
       end
    end
@@ -195,9 +208,11 @@ return function(depth, rng, player, width, height)
          -- TODO need to be smarter about this
          drawable.color = prism.Color4.WHITE
 
+
+
          prism.logger.info("adding actor of type " .. hint.type .. " at ", x, y)
          if hint.type == "enemy" then
-            if rng:random() < 0.3 then
+            if rng:random() < depthInfo.enemyOdds then
                builder:addActor(prism.actors.Bot(), x, y)
             end
          elseif hint.type == "chest" then
