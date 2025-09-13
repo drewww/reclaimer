@@ -7,6 +7,7 @@ local Game = require "game"
 --- @field gridHeight number
 --- @field cursorX number
 --- @field cursorY number
+--- @field maxSpend number
 --- @overload fun(): ResupplyState
 local ResupplyState = spectrum.GameState:extend("ResupplyState")
 
@@ -22,6 +23,12 @@ function ResupplyState:__new()
    self.gridHeight = 7
    self.cursorX = 1
    self.cursorY = 1
+
+   -- Get player's current money from inventory
+   local inventory = Game.player:get(prism.components.Inventory)
+   self.maxSpend = inventory and inventory:getStack(prism.actors.Loot):get(prism.components.Item).stackCount or 0
+
+   prism.logger.info("maxSpend = " .. self.maxSpend)
 
    self.controls = spectrum.Input.Controls {
       controls = {
@@ -39,6 +46,12 @@ function ResupplyState:__new()
 
    -- Initialize the menu items
    self:initializeMenu()
+
+
+   -- local inventory = Game.player:get(prism.components.Inventory)
+   -- local cash = inventory:getStack(prism.actors.Loot)
+
+   -- self.maxSpend = cash.stackCount
 end
 
 function ResupplyState:coordKey(x, y)
@@ -117,6 +130,16 @@ function ResupplyState:getCurrentItem()
    return self:getItemAt(self.cursorX, self.cursorY)
 end
 
+function ResupplyState:getTotalSpend()
+   local total = 0
+   for _, item in pairs(self.menuGrid) do
+      if item.purchased and item.price > 0 then
+         total = total + item.price
+      end
+   end
+   return total
+end
+
 function ResupplyState:moveCursor(dx, dy)
    local newX = self.cursorX + dx
    local newY = self.cursorY + dy
@@ -146,8 +169,16 @@ function ResupplyState:draw()
 
    self.display:putString(3, 3, "RESUPPLY", nil, nil, nil, "left")
 
+   -- Display money information
+   local totalSpend = self:getTotalSpend()
+   local remaining = self.maxSpend - totalSpend
+   self.display:putString(3, 5, "Money Available: " .. self.maxSpend, prism.Color4.WHITE, nil, nil, "left")
+   self.display:putString(3, 6, "Total Spend: " .. totalSpend, prism.Color4.WHITE, nil, nil, "left")
+   self.display:putString(3, 7, "Money Remaining: " .. remaining,
+      remaining >= 0 and prism.Color4.GREEN or prism.Color4.RED, nil, nil, "left")
+
    -- Draw menu grid
-   local startX, startY = 5, 8
+   local startX, startY = 5, 10
    for y = 1, self.gridHeight do
       for x = 1, self.gridWidth do
          local item = self:getItemAt(x, y)
@@ -158,10 +189,22 @@ function ResupplyState:draw()
             local color = item.purchased and prism.Color4.GREY or prism.Color4.WHITE
             local prefix = ""
 
+            -- Check if item is affordable
+            local totalSpend = self:getTotalSpend()
+            local canAfford = item.purchased or (totalSpend + item.price <= self.maxSpend) or item.price == 0
+
+            if not canAfford then
+               color = prism.Color4.RED
+            end
+
             -- Add cursor indicator
             if x == self.cursorX and y == self.cursorY then
                prefix = "> "
-               color = prism.Color4.YELLOW
+               if canAfford then
+                  color = prism.Color4.YELLOW
+               else
+                  color = prism.Color4.RED
+               end
             end
 
             self.display:putString(displayX, displayY, prefix .. item.displayName, color, nil, nil, "left")
@@ -205,13 +248,21 @@ function ResupplyState:update(dt)
          end
 
          if currentItem.displayName == "COMPLETE" then
-            -- execute the purchases
+            -- execute the purchases and deduct money
             local inventory = Game.player:get(prism.components.Inventory)
+            local totalSpend = self:getTotalSpend()
+
+            -- Remove the spent money from inventory
+            if inventory and totalSpend > 0 then
+               local loot = inventory:getStack(prism.actors.Loot)
+               inventory:removeQuantity(loot, totalSpend)
+            end
+
             for _, item in pairs(self.menuGrid) do
-               if item.displayName == "Heal All" then
+               if item.displayName == "Heal All" and item.purchased then
                   local health = Game.player:get(prism.components.Health)
                   health:heal(health.maxHP)
-               elseif item.purchased and inventory then
+               elseif item.purchased and inventory and item.actor then
                   prism.logger.info("Adding item: ", item.displayName)
                   inventory:addItem(item.actor)
                end
@@ -223,17 +274,17 @@ function ResupplyState:update(dt)
          end
 
          if not currentItem.purchased then
-            -- TODO: Check if player has enough money/resources
-            currentItem.purchased = true
-            prism.logger.info("Purchased: ", currentItem.displayName)
-
-            -- TODO: Add the actor/item to player inventory
-            -- if currentItem.actor then
-            --    Game.player:addItem(currentItem.actor)
-            -- end
+            -- Check if player has enough money/resources
+            local totalSpend = self:getTotalSpend()
+            if currentItem.price == 0 or totalSpend + currentItem.price <= self.maxSpend then
+               currentItem.purchased = true
+               prism.logger.info("Purchased: ", currentItem.displayName)
+            else
+               prism.logger.info("Cannot afford: ", currentItem.displayName)
+            end
          else
             currentItem.purchased = false
-            prism.logger.info("Item already purchased: ", currentItem.displayName)
+            prism.logger.info("Item unpurchased: ", currentItem.displayName)
          end
       end
    end
