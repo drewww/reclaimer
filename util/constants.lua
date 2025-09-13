@@ -50,10 +50,10 @@ BOT_HEAD = 5 * 16 + 1
 
 
 -- these are for the BASE TILES sprites
-HEART = 16 * 15 + 4
-CENTS = 16 * 56 + 11
-PUSH = 16 * 61 + 1
-RANGE = 16 * 42 + 10
-AMMO = 16 * 4 + 11
+HEART = 16 * 15 + 4 + 16 * 16
+CENTS = 16 * 56 + 11 + 16 * 16
+PUSH = 16 * 61 + 1 + 16 * 16
+RANGE = 16 * 42 + 10 + 16 * 16
+AMMO = 16 * 4 + 11 + 16 * 16
 
-BLANK = 1
+BLANK = 1 + 16 * 16

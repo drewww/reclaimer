@@ -61,8 +61,8 @@
       "label": "Update Default Tiles",
       "command": "magick",
       "args": [
-         "display/mrmotext_16x16.png",
          "display/cp437_16x16.png",
+         "display/mrmotext_16x16.png",
          "-append",
          "-transparent",
          "black",
