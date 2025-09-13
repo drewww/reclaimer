@@ -19,14 +19,16 @@ function ResupplyState:__new()
 
    -- Menu grid setup
    self.menuGrid = {}
-   self.gridWidth = 4
+   self.gridWidth = 5
    self.gridHeight = 7
    self.cursorX = 1
    self.cursorY = 1
 
    -- Get player's current money from inventory
    local inventory = Game.player:get(prism.components.Inventory)
-   self.maxSpend = inventory and inventory:getStack(prism.actors.Loot):get(prism.components.Item).stackCount or 0
+   local loot = inventory:getStack(prism.actors.Loot)
+
+   self.maxSpend = loot and loot:get(prism.components.Item).stackCount or 0
 
    prism.logger.info("maxSpend = " .. self.maxSpend)
 
@@ -75,46 +77,46 @@ function ResupplyState:initializeMenu()
 
    self.menuGrid[self:coordKey(1, 2)] = {
       actor = AMMO_TYPES["Pistol"](20),
-      displayName = "Pistol Ammo (20)",
+      displayName = "Pistol (20)",
       price = 1,
       purchased = false
    }
    self.menuGrid[self:coordKey(2, 2)] = {
       actor = AMMO_TYPES["Shotgun"](8),
-      displayName = "Shotgun Ammo (8)",
+      displayName = "Shotgun (8)",
       price = 2,
       purchased = false
    }
 
    self.menuGrid[self:coordKey(3, 2)] = {
       actor = AMMO_TYPES["Laser"](5),
-      displayName = "Laser Ammo (5)",
+      displayName = "Laser (5)",
+      price = 2,
+      purchased = false
+   }
+
+   self.menuGrid[self:coordKey(4, 2)] = {
+      actor = AMMO_TYPES["Rocket"](2),
+      displayName = "Rocket (2)",
       price = 2,
       purchased = false
    }
 
    self.menuGrid[self:coordKey(1, 3)] = {
-      actor = AMMO_TYPES["Rocket"](2),
-      displayName = "Rocket Ammo (2)",
-      price = 2,
-      purchased = false
-   }
-
-   self.menuGrid[self:coordKey(1, 4)] = {
       actor = nil,
       displayName = "Heal All",
       price = 1,
       purchased = false
    }
 
-   self.menuGrid[self:coordKey(1, 6)] = {
+   self.menuGrid[self:coordKey(1, 5)] = {
       actor = nil,
       displayName = "RESET",
       price = 0,
       purchased = false
    }
 
-   self.menuGrid[self:coordKey(2, 6)] = {
+   self.menuGrid[self:coordKey(2, 5)] = {
       actor = nil,
       displayName = "COMPLETE",
       price = 0,
@@ -167,30 +169,36 @@ function ResupplyState:draw()
 
    self.display:clear()
 
-   self.display:putString(3, 3, "RESUPPLY", nil, nil, nil, "left")
+   self.display:putString(2, 2, "RESUPPLY", nil, nil, nil, "left")
 
    -- Display money information
    local totalSpend = self:getTotalSpend()
    local remaining = self.maxSpend - totalSpend
-   self.display:putString(3, 5, "Money Available: " .. self.maxSpend, prism.Color4.WHITE, nil, nil, "left")
-   self.display:putString(3, 6, "Total Spend: " .. totalSpend, prism.Color4.WHITE, nil, nil, "left")
-   self.display:putString(3, 7, "Money Remaining: " .. remaining,
-      remaining >= 0 and prism.Color4.GREEN or prism.Color4.RED, nil, nil, "left")
+   self.display:put(3, 4, CENTS, prism.Color4.YELLOW)
+   self.display:putString(5, 4,
+      tostring(self.maxSpend) .. " - " .. tostring(totalSpend) .. " = " .. tostring(remaining), prism.Color4.WHITE,
+      nil, nil, "left")
+   -- self.display:putString(3, 6, "Total Spend: " .. totalSpend, prism.Color4.WHITE, nil, nil, "left")
+   -- self.display:putString(3, 7, "Money Remaining: " .. remaining,
+   -- remaining >= 0 and prism.Color4.GREEN or prism.Color4.RED, nil, nil, "left")
+
+   self.display:putString(2, 10 + 0, "WEAPONS", prism.Color4.WHITE)
+   self.display:putString(5, 10 + 4, "AMMO", prism.Color4.WHITE)
+   self.display:putString(2, 10 + 8, "SERVICE", prism.Color4.WHITE)
 
    -- Draw menu grid
-   local startX, startY = 5, 10
+   local startX, startY = 10, 10
    for y = 1, self.gridHeight do
       for x = 1, self.gridWidth do
          local item = self:getItemAt(x, y)
-         local displayX = startX + (x - 1) * 20
-         local displayY = startY + (y - 1) * 3
+         local displayX = startX + (x - 1) * 13
+         local displayY = startY + (y - 1) * 4
 
          if item then
             local color = item.purchased and prism.Color4.GREY or prism.Color4.WHITE
             local prefix = ""
 
             -- Check if item is affordable
-            local totalSpend = self:getTotalSpend()
             local canAfford = item.purchased or (totalSpend + item.price <= self.maxSpend) or item.price == 0
 
             if not canAfford then
@@ -199,7 +207,7 @@ function ResupplyState:draw()
 
             -- Add cursor indicator
             if x == self.cursorX and y == self.cursorY then
-               prefix = "> "
+               prefix = ">"
                if canAfford then
                   color = prism.Color4.YELLOW
                else
