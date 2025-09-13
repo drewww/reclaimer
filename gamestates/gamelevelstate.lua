@@ -81,7 +81,8 @@ function GameLevelState:__new(builder, seed)
       prism.systems.Sight(),
       -- prism.systems.Alert(),
       prism.systems.Energy(),
-      prism.systems.Tick()
+      prism.systems.Tick(),
+      prism.systems.Destruct()
    -- prism.systems.Target()
    )
 
