@@ -62,7 +62,18 @@ function Move:perform(level, destination)
       if lootAtDestination then
          prism.logger.info("attempting pickup", lootAtDestination)
          local pickup = prism.actions.Pickup(self.owner, lootAtDestination)
-         level:tryPerform(pickup)
+         local performed = level:tryPerform(pickup)
+
+         local lootAmount = lootAtDestination:get(prism.components.Item).stackCount
+         if performed then
+            level:yield(prism.messages.Animation {
+               animation = spectrum.animations.Damage(lootAmount, prism.Color4.YELLOW),
+               actor = self.owner,
+               y = -1,
+               blocking = false,
+               skippable = true
+            })
+         end
       end
    end
 
