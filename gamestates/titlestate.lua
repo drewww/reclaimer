@@ -71,7 +71,7 @@ function TitleState:update(dt)
       end
    elseif self.state == "contract" then
       -- Any key press starts the game
-      if self.controls.anykey.pressed or self.controls.start.pressed or self.controls.quit.pressed then
+      if self.controls.anykey.pressed or self.controls.start.pressed or self.controls.quit.pressed or self.controls.credits.pressed then
          local player = prism.actors.Player()
 
          local inventory = player:get(prism.components.Inventory)
