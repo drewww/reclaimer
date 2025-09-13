@@ -13,7 +13,7 @@ function TitleState:__new()
    self.display:fitWindowToTerminal()
 
    -- Load title image
-   self.titleImage = love.graphics.newImage("display/images/title.png")
+   self.titleImage = love.graphics.newImage("display/images/game_title.png")
 
    self.controls = spectrum.Input.Controls {
       controls = {

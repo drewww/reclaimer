@@ -12,6 +12,9 @@ function GameOverState:__new(died)
    self.display     = spectrum.Display(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, cp437Atlas, prism.Vector2(16, 16))
    self.display:fitWindowToTerminal()
 
+   -- Load contract failed image
+   self.contractFailedImage = love.graphics.newImage("display/images/contract_failed_title.png")
+
    Game.stats:finalize()
    Game.stats:print()
    Game.stats:save()
@@ -28,19 +31,10 @@ function GameOverState:draw()
    local midpointX, midpointY = math.floor(self.display.width / 2), math.floor(self.display.height / 2)
 
    self.display:clear()
+   -- Draw contract failed image as background
+   love.graphics.draw(self.contractFailedImage, 0, 0)
 
-   if self.died then
-      self.display:putString(3, 3, "CONTRACT FAILED", nil, nil, nil, "left",
-         self.display.width)
-   else
-      self.display:putString(3, 3, "CONTRACT OVER", nil, nil, nil, "left", self.display.width)
-   end
-
-   self.display:putString(midpointX + 2, midpointY + 5, "R TO RESTART", nil, nil, nil, "left", self.display.width)
-   self.display:putString(midpointX + 2, midpointY + 6, "Q TO QUIT", nil, nil, nil, "left", self.display.width)
-
-   -- TODO draw the stats in here
-   self.display:putString(3, 7, "STATS", nil, nil, nil, "left")
+   self.display:putString(3, 10, "STATS", nil, nil, nil, "left")
 
    -- now iterate through stats and display them
    -- first, convert to an array and then sort the array
@@ -58,11 +52,11 @@ function GameOverState:draw()
    for key, value in ipairs(statsArray) do
       if value.record then
          -- star
-         self.display:put(4, 9 + i, (15 * 32) + 5)
+         self.display:put(6, 12 + i, EXCLAMATION)
       end
-      self.display:putString(6, 9 + i, string.upper(value.name))
-      self.display:putString(14, 9 + i, tostring(value.cur))
-      self.display:putString(20, 9 + i, "(" .. tostring(value.best) .. ")")
+      self.display:putString(8, 12 + i, value.name)
+      self.display:putString(16, 12 + i, tostring(value.cur))
+      self.display:putString(22, 12 + i, "(" .. tostring(value.best) .. ")")
 
       i = i + 1
    end

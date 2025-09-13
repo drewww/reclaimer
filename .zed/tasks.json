@@ -75,6 +75,19 @@
       "hide": "never"
    },
    {
+      "label": "Update Titles",
+      "command": "cp",
+      "args": [
+         "/Applications/REXPaint-v1.70/images/*_title.png",
+         "display/images/."
+      ],
+      "cwd": "$ZED_WORKTREE_ROOT",
+      "use_new_terminal": false,
+      "allow_concurrent_runs": false,
+      "reveal": "always",
+      "hide": "never"
+   },
+   {
       "label": "Update Weapons",
       "command": "magick",
       "args": [
