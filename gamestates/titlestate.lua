@@ -14,6 +14,10 @@ function TitleState:__new()
 
    -- Load title image
    self.titleImage = love.graphics.newImage("display/images/game_title.png")
+   self.contractImage = love.graphics.newImage("display/images/crawl_title.png")
+
+   -- Track state: "title" or "contract"
+   self.state = "title"
 
    self.controls = spectrum.Input.Controls {
       controls = {
@@ -21,7 +25,8 @@ function TitleState:__new()
          quit = { "q", "Q" },
          generate = { "g", "G" },
          credits = { "c", "C" },
-         help = { "h", "H" }
+         help = { "h", "H" },
+         anykey = { "return", "space", "escape", "w", "a", "s", "d", "up", "down", "left", "right", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }
       }
    }
 end
@@ -31,70 +36,76 @@ function TitleState:draw()
 
    self.display:clear()
 
-   self.display:putString(midpointX + 2, 20, "[P]lay", nil, nil, nil, "left", midpointX - 2)
+   -- self.display:putString(midpointX + 2, 20, "[P]lay", nil, nil, nil, "left", midpointX - 2)
 
-   self.display:putString(midpointX + 2, 22, "[Q]uit", nil, nil, nil, "left", midpointX - 2)
+   -- self.display:putString(midpointX + 2, 22, "[Q]uit", nil, nil, nil, "left", midpointX - 2)
 
    self.display:draw()
 
-   -- Draw title image
-   love.graphics.draw(self.titleImage, 0, 0)
+   -- Draw appropriate image based on state
+   if self.state == "title" then
+      love.graphics.draw(self.titleImage, 0, 0)
+   elseif self.state == "contract" then
+      love.graphics.draw(self.contractImage, 0, 0)
+   end
 end
 
 function TitleState:update(dt)
    self.controls:update()
 
-   if self.controls.start.pressed or self.controls.start.down or self.controls.start.released then
-      prism.logger.info("UPDATE DECISON: " ..
-         tostring(self.controls.start.pressed) ..
-         " - " .. tostring(self.controls.start.down) .. " - " .. tostring(self.controls.start.released))
-   end
-
-   if self.controls.start.pressed then
-      local player = prism.actors.Player()
-
-      local inventory = player:get(prism.components.Inventory)
-      if inventory then
-         -- DEFINE STARTING INVENTORY
-         local ammo = AMMO_TYPES["Pistol"](10)
-         inventory:addItem(ammo)
-
-         local pistol = prism.actors.Pistol()
-         pistol:get(prism.components.Weapon).active = true
-         inventory:addItem(pistol)
-
-         local knife = prism.actors.Knife()
-         inventory:addItem(knife)
-
-         -- local shotgun = prism.actors.Shotgun()
-         -- inventory:addItem(shotgun)
-         -- inventory:addItem(AMMO_TYPES["Shotgun"](12))
-
-         -- local laser = prism.actors.Laser()
-         -- inventory:addItem(laser)
-         -- inventory:addItem(AMMO_TYPES["Laser"](10))
-
-
-         -- local rocket = prism.actors.Rocket()
-         -- inventory:addItem(rocket)
-         -- inventory:addItem(AMMO_TYPES["Rocket"](2))
+   if self.state == "title" then
+      if self.controls.start.pressed then
+         -- Switch to contract briefing screen
+         self.state = "contract"
+      elseif self.controls.quit.pressed then
+         love.event.quit()
+      elseif self.controls.generate.pressed then
+         self.manager:enter(MapState(self.display))
+      elseif self.controls.help.pressed then
+         -- TODO build this out
+      elseif self.controls.credits.pressed then
+         -- TODO merge this in.
+         -- self.manager:enter(CreditsState(self.display))
       end
+   elseif self.state == "contract" then
+      -- Any key press starts the game
+      if self.controls.anykey.pressed or self.controls.start.pressed or self.controls.quit.pressed then
+         local player = prism.actors.Player()
 
-      Game.player = player
+         local inventory = player:get(prism.components.Inventory)
+         if inventory then
+            -- DEFINE STARTING INVENTORY
+            local ammo = AMMO_TYPES["Pistol"](10)
+            inventory:addItem(ammo)
 
-      local builder = Game:generateNextFloor()
-      prism.logger:info("entering game state")
+            local pistol = prism.actors.Pistol()
+            pistol:get(prism.components.Weapon).active = true
+            inventory:addItem(pistol)
 
-      self.manager:enter(GameLevelState(builder, Game:getLevelSeed()))
-   elseif self.controls.quit.pressed then
-      love.event.quit()
-   elseif self.controls.generate.pressed then
-      self.manager:enter(MapState(self.display))
-   elseif self.controls.help.pressed then
-      -- TODO build this out
-   elseif self.controls.credits.pressed then
-      -- TODO merge this in.
-      -- self.manager:enter(CreditsState(self.display))
+            local knife = prism.actors.Knife()
+            inventory:addItem(knife)
+
+            -- local shotgun = prism.actors.Shotgun()
+            -- inventory:addItem(shotgun)
+            -- inventory:addItem(AMMO_TYPES["Shotgun"](12))
+
+            -- local laser = prism.actors.Laser()
+            -- inventory:addItem(laser)
+            -- inventory:addItem(AMMO_TYPES["Laser"](10))
+
+
+            -- local rocket = prism.actors.Rocket()
+            -- inventory:addItem(rocket)
+            -- inventory:addItem(AMMO_TYPES["Rocket"](2))
+         end
+
+         Game.player = player
+
+         local builder = Game:generateNextFloor()
+         prism.logger:info("entering game state")
+
+         self.manager:enter(GameLevelState(builder, Game:getLevelSeed()))
+      end
    end
 end
 
