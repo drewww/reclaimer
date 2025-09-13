@@ -54,6 +54,17 @@ function Move:perform(level, destination)
    if self.owner:has(prism.components.PlayerController) then
       Game.stats:increment("steps")
    end
+
+   if self.owner:has(prism.components.PlayerController) then
+      prism.logger.info("moving into cell, checking for loot")
+      local lootAtDestination = level:query(prism.components.Item):at(destination:decompose()):first()
+      prism.logger.info("lootAtDestination", lootAtDestination)
+      if lootAtDestination then
+         prism.logger.info("attempting pickup", lootAtDestination)
+         local pickup = prism.actions.Pickup(self.owner, lootAtDestination)
+         level:tryPerform(pickup)
+      end
+   end
 end
 
 return Move
