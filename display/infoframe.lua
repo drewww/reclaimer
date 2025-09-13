@@ -33,20 +33,26 @@ function InfoFrame:draw()
          amount = bits:get(prism.components.Item).stackCount
       end
 
-      self.display:put(30, 1, CENTS, prism.Color4.WHITE, prism.Color4.NAVY)
-      self.display:putString(31, 1, tostring(amount), prism.Color4.WHITE, prism.Color4.NAVY)
+      self.display:put(51, 1, CENTS, prism.Color4.WHITE, prism.Color4.NAVY)
+      self.display:putString(52, 1, tostring(amount), prism.Color4.WHITE, prism.Color4.NAVY)
    end
 
    local energy = player and player:get(prism.components.Energy)
    if energy then
-      self.display:put(20, 1, "E", prism.Color4.WHITE, prism.Color4.NAVY)
-      self.display:putString(22, 1, tostring(math.floor(energy.energy)) .. "/" .. tostring(energy.maxEnergy),
+      self.display:put(16, 1, LIGHTNING, prism.Color4.WHITE, prism.Color4.NAVY)
+      self.display:putString(18, 1, tostring(math.floor(energy.energy)) .. "/" .. tostring(energy.maxEnergy),
          prism.Color4.WHITE,
          prism.Color4.NAVY)
    end
 
-   self.display:putString(40, 1, "DEPTH", prism.Color4.WHITE, prism.Color4.NAVY)
-   self.display:putString(47, 1, tostring(Game.depth), prism.Color4.WHITE, prism.Color4.NAVY)
+   self.display:putString(45, 1, "LVL", prism.Color4.WHITE, prism.Color4.NAVY)
+   self.display:putString(48, 1, tostring(Game.depth), prism.Color4.WHITE, prism.Color4.NAVY)
+
+   local dashColor = prism.Color4.BLUE
+   if player and player:has(prism.components.Dashing) then
+      dashColor = prism.Color4.WHITE
+   end
+   self.display:putString(22, 1, "DASH", dashColor, prism.Color4.NAVY)
 end
 
 return InfoFrame
