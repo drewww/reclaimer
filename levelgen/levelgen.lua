@@ -1,6 +1,60 @@
 local BLOCK_WIDTH = 5
 local BLOCK_HEIGHT = 5
 
+-- Weighted block selection data structure
+-- Keys are block filenames, values are weights
+local blockWeights = {
+   ["5_base"] = 3,
+   ["5_checkpoint"] = 1,
+   ["5_chest_open"] = 2,
+   ["5_chest_room"] = 4,
+   ["5_chest_tight"] = 2,
+   ["5_depot"] = 1,
+   ["5_maze"] = 2,
+   ["5_offset"] = 3,
+   ["5_open_1"] = 5,
+   ["5_open_2"] = 5,
+   ["5_open_3"] = 5,
+   ["5_open_4"] = 5,
+   ["5_open_5"] = 5,
+   ["5_open_6"] = 5,
+   ["5_plus_hall"] = 3,
+   ["5_stacks"] = 2,
+   ["5_stacks_deep"] = 1
+}
+
+-- Method to select a weighted random block
+-- @param rng RNG object
+-- @param weights table with keys as items and values as weights
+-- @return string selected key
+local function selectWeightedRandom(rng, weights)
+   -- Calculate total weight
+   local totalWeight = 0
+   for _, weight in pairs(weights) do
+      totalWeight = totalWeight + weight
+   end
+
+   -- Generate random number from 0 to 1
+   local rand = rng:random()
+   local scaledRand = rand * totalWeight
+
+   -- Find the selected item based on cumulative weights
+   local cumulative = 0
+   for key, weight in pairs(weights) do
+      cumulative = cumulative + weight
+      if scaledRand <= cumulative then
+         return key
+      end
+   end
+
+   -- Fallback (shouldn't reach here)
+   local keys = {}
+   for key in pairs(weights) do
+      table.insert(keys, key)
+   end
+   return keys[1]
+end
+
 -- Okay, the approach here. We're going to have "blocks" of some size. The map is
 -- composed of those blocks randomly composed. There may be rules to what blocks can go
 -- next to what blocks. There may be rotations. But what is our implementation order?
@@ -77,19 +131,8 @@ return function(depth, rng, player, width, height)
    for i = 1, blockWidth do
       levelBlocks[i] = {}
       for j = 1, blockHeight do
-         local rooms = {}
-         local dir = love.filesystem.getDirectoryItems("levelgen/blocks/")
-         for _, filename in ipairs(dir) do
-            local blockName = filename:match("^5_(.+)%.lz4$")
-            if blockName then
-               table.insert(rooms, "5_" .. blockName)
-            end
-         end
-
-         local rand = rng:random(1, #rooms)
-
-         -- even odds for all rooms
-         levelBlocks[i][j] = rooms[rand]
+         -- Use weighted random selection for block placement
+         levelBlocks[i][j] = selectWeightedRandom(rng, blockWeights)
          prism.logger.info("room " .. tostring(i) .. "," .. tostring(j) .. " = " .. levelBlocks[i][j])
       end
    end
