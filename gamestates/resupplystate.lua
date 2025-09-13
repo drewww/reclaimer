@@ -24,6 +24,14 @@ function ResupplyState:__new()
    self.cursorX = 1
    self.cursorY = 1
 
+   -- Load weapon images
+   self.weaponImages = {
+      Pistol = love.graphics.newImage("display/weapons/weapon_0.png"),
+      Rocket = love.graphics.newImage("display/weapons/weapon_1.png"),
+      Laser = love.graphics.newImage("display/weapons/weapon_2.png"),
+      Shotgun = love.graphics.newImage("display/weapons/weapon_3.png"),
+   }
+
    -- Get player's current money from inventory
    local inventory = Game.player:get(prism.components.Inventory)
    local loot = inventory:getStack(prism.actors.Loot)
@@ -206,6 +214,44 @@ function ResupplyState:moveCursor(dx, dy)
    self.cursorY = newY
 end
 
+function ResupplyState:drawWeaponImages()
+   -- Draw weapon images above columns that have weapons or ammo available
+   local imageY = 6 * 16 -- Position images above the menu grid
+
+   -- Check each column for weapons/ammo and draw corresponding images
+   for x = 1, self.gridWidth do
+      local hasWeaponOrAmmo = false
+      local weaponType = nil
+
+      -- Check if this column has any weapon or ammo items
+      for y = 1, self.gridHeight do
+         local item = self:getItemAt(x, y)
+         if item then
+            -- Determine weapon type from item
+            if item.displayName == "Laser" or item.displayName == "Laser (5)" then
+               weaponType = "Laser"
+               hasWeaponOrAmmo = true
+            elseif item.displayName == "Shotgun" or item.displayName == "Shotgun (8)" then
+               weaponType = "Shotgun"
+               hasWeaponOrAmmo = true
+            elseif item.displayName == "Rocket" or item.displayName == "Rocket (2)" then
+               weaponType = "Rocket"
+               hasWeaponOrAmmo = true
+            elseif item.displayName == "Pistol (20)" then
+               weaponType = "Pistol"
+               hasWeaponOrAmmo = true
+            end
+         end
+      end
+
+      -- Draw the weapon image if we found a weapon/ammo in this column
+      if hasWeaponOrAmmo and weaponType and self.weaponImages[weaponType] then
+         local imageX = (10 + (x - 1) * 13) * 16 -- Match column positioning
+         love.graphics.draw(self.weaponImages[weaponType], imageX, imageY)
+      end
+   end
+end
+
 function ResupplyState:draw()
    local midpointX, midpointY = math.floor(self.display.width / 2), math.floor(self.display.height / 2)
 
@@ -224,12 +270,12 @@ function ResupplyState:draw()
    -- self.display:putString(3, 7, "Money Remaining: " .. remaining,
    -- remaining >= 0 and prism.Color4.GREEN or prism.Color4.RED, nil, nil, "left")
 
-   self.display:putString(2, 10 + 0, "WEAPONS", prism.Color4.WHITE)
-   self.display:putString(5, 10 + 4, "AMMO", prism.Color4.WHITE)
-   self.display:putString(2, 10 + 8, "SERVICE", prism.Color4.WHITE)
+   self.display:putString(2, 11 + 0, "WEAPONS", prism.Color4.WHITE)
+   self.display:putString(5, 11 + 4, "AMMO", prism.Color4.WHITE)
+   self.display:putString(2, 11 + 8, "SERVICE", prism.Color4.WHITE)
 
-   -- Draw menu grid
-   local startX, startY = 10, 10
+   -- Draw menu grid (pushed down to make room for weapon images)
+   local startX, startY = 10, 11
    for y = 1, self.gridHeight do
       for x = 1, self.gridWidth do
          local item = self:getItemAt(x, y)
@@ -267,6 +313,10 @@ function ResupplyState:draw()
    end
 
    self.display:draw()
+
+   -- Draw weapon images above the grid (using Love2D graphics)
+   love.graphics.setColor(1, 1, 1, 1)
+   self:drawWeaponImages()
 end
 
 function ResupplyState:update(dt)
