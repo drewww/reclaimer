@@ -14,7 +14,7 @@ function GameOverState:__new(died)
 
    -- Load contract failed image
    self.contractFailedImage = love.graphics.newImage("display/images/contract_failed_title.png")
-   self.contractCompletedImage = love.graphics.newImage("display/images/contract_completed_title.png")
+   self.contractCompletedImage = love.graphics.newImage("display/images/contract_complete_title.png")
 
    Game.stats:finalize()
    Game.stats:print()

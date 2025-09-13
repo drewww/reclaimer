@@ -77,7 +77,8 @@ function GameLevelState:__new(builder, seed)
       prism.systems.Sight(),
       -- prism.systems.Alert(),
       prism.systems.Energy(),
-      prism.systems.Tick()
+      prism.systems.Tick(),
+      prism.systems.Destruct()
    -- prism.systems.Target()
    )
 
@@ -120,9 +121,8 @@ function GameLevelState:handleMessage(message)
    if prism.messages.Descend:is(message) then
       prism.logger.info("DESCENDING")
 
-      Game.depth = Game.depth + 1
+      Game:descend()
 
-      Game.stats:increment("depth", 1)
       Game.stats:print()
 
       if Game.depth == 0 then

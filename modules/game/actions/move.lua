@@ -52,7 +52,7 @@ function Move:perform(level, destination)
    end
 
    if self.owner:has(prism.components.PlayerController) then
-      Game.stats:increment("steps")
+      Game:step()
    end
 
    if self.owner:has(prism.components.PlayerController) then
@@ -64,6 +64,15 @@ function Move:perform(level, destination)
          local pickup = prism.actions.Pickup(self.owner, lootAtDestination)
          level:tryPerform(pickup)
       end
+   end
+
+   local targetCell = level:getCell(destination:decompose())
+   if targetCell:has(prism.components.OnFire) then
+      local damage = prism.actions.Damage(self.owner, 1)
+      level:tryPerform(damage)
+
+      local x, y = destination:decompose()
+      level:setCell(x, y, prism.cells.Ashes())
    end
 end
 
