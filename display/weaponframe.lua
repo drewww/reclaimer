@@ -88,6 +88,10 @@ function WeaponFrame:draw()
             self.display:put(originX + 2 + baseColumn, originY + 1, HEART, fg, bg)
             self.display:put(originX + 5 + baseColumn, originY + 1, PUSH, fg, bg)
             self.display:put(originX + 8 + baseColumn, originY + 1, RANGE, fg, bg)
+
+            -- put black tiles around the image area
+            self.display:putFilledRect(originX + baseColumn, originY - 4, 12, 3, BLANK, prism.Color4.BLACK,
+               prism.Color4.BLACK)
          end
       end
    end
@@ -109,7 +113,11 @@ function WeaponFrame:drawActiveWeapon()
 
       local image = self.weaponImages[weaponC.ammoType]
       if image then
-         love.graphics.draw(image, baseColumn * 16, (self.display.height - 5) * 16 - 1)
+         local yOffset = 0
+         if weaponC.ammoType == "Pistol" then
+            yOffset = 4
+         end
+         love.graphics.draw(image, baseColumn * 16, (self.display.height - 5) * 16 - 1 + yOffset)
       end
    end
 end

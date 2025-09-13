@@ -26,6 +26,7 @@ DEPTHS = {
 PLAYER = 1
 ENEMY = 2
 
+
 DAMAGE_BASE = 15 * 16
 EMPTY_BASE = 16 * 16 + 1
 RELOAD_BASE = 17 * 16 + 1
@@ -54,3 +55,5 @@ CENTS = 16 * 56 + 11
 PUSH = 16 * 61 + 1
 RANGE = 16 * 42 + 10
 AMMO = 16 * 4 + 11
+
+BLANK = 1
