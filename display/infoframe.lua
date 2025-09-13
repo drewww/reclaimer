@@ -54,9 +54,12 @@ function InfoFrame:draw()
       self.display:putString(50, 1, tostring(amount), prism.Color4.WHITE, prism.Color4.NAVY)
    end
 
-
-   self.display:putString(55, 1, "T-" .. tostring(MAX_TURNS_IN_LEVEL - Game.turnsInLevel), prism.Color4.WHITE,
-      prism.Color4.NAVY)
+   if Game.turnsInLevel > MAX_TURNS_IN_LEVEL then
+      self.display:putString(55, 1, "DESTRUCT", prism.Color4.WHITE, prism.Color4.NAVY)
+   else
+      self.display:putString(55, 1, "T-" .. tostring(MAX_TURNS_IN_LEVEL - Game.turnsInLevel), prism.Color4.WHITE,
+         prism.Color4.NAVY)
+   end
 end
 
 return InfoFrame

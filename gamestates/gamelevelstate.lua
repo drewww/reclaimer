@@ -143,9 +143,7 @@ function GameLevelState:updateCamera()
    self.display:setCamera(x, y)
 end
 
---- @param primary Senses[] { curActor:getComponent(prism.components.Senses)}
---- @param secondary Senses[]
-function GameLevelState:draw(primary, secondary)
+function GameLevelState:draw(dt)
    self.display:clear()
    self.uiDisplay:clear()
 

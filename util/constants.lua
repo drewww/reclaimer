@@ -10,7 +10,7 @@ DASH_ENERGY_COST_PER_TILE = 1
 
 START_DEPTH = -9
 
-MAX_TURNS_IN_LEVEL = 10
+MAX_TURNS_IN_LEVEL = 300
 
 DEPTHS = {
    { enemyOdds = 0.3, weights = "basic",   weapons = {} },
