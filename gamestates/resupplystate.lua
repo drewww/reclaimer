@@ -65,10 +65,12 @@ function ResupplyState:initializeMenu()
 
    -- looks at the next depth in the list
    local depthInfo = DEPTHS[10 + Game.depth]
+   local inventory = Game.player:get(prism.components.Inventory)
+
 
    if depthInfo.weapons[1] == "laser" or depthInfo.weapons[2] == "laser" then
       self.menuGrid[self:coordKey(1, 1)] = {
-         actor = prism.actors.Laser,
+         actor = prism.actors.Laser(),
          displayName = "Laser",
          price = 10,
          purchased = false
@@ -77,7 +79,7 @@ function ResupplyState:initializeMenu()
 
    if depthInfo.weapons[1] == "shotgun" or depthInfo.weapons[2] == "shotgun" then
       self.menuGrid[self:coordKey(2, 1)] = {
-         actor = prism.actors.Shotgun,
+         actor = prism.actors.Shotgun(),
          displayName = "Shotgun",
          price = 10,
          purchased = false
@@ -86,7 +88,7 @@ function ResupplyState:initializeMenu()
 
    if depthInfo.weapons[1] == "rocket" or depthInfo.weapons[2] == "rocket" then
       self.menuGrid[self:coordKey(3, 1)] = {
-         actor = prism.actors.Rocket,
+         actor = prism.actors.Rocket(),
          displayName = "Rocket",
          price = 10,
          purchased = false
@@ -99,26 +101,48 @@ function ResupplyState:initializeMenu()
       price = 1,
       purchased = false
    }
-   self.menuGrid[self:coordKey(2, 2)] = {
-      actor = AMMO_TYPES["Shotgun"](8),
-      displayName = "Shotgun (8)",
-      price = 2,
-      purchased = false
-   }
 
-   self.menuGrid[self:coordKey(3, 2)] = {
-      actor = AMMO_TYPES["Laser"](5),
-      displayName = "Laser (5)",
-      price = 2,
-      purchased = false
-   }
+   -- show ammo if the player has the weapon
 
-   self.menuGrid[self:coordKey(4, 2)] = {
-      actor = AMMO_TYPES["Rocket"](2),
-      displayName = "Rocket (2)",
-      price = 2,
-      purchased = false
-   }
+   local hasShotgun, hasLaser, hasRocket = false, false, false
+   for _, actor in ipairs(inventory:query(prism.components.Weapon):gather()) do
+      local weaponC = actor:get(prism.components.Weapon)
+      prism.logger.info("weapon.ammotype: " .. weaponC.ammoType)
+      if weaponC.ammoType == "Shotgun" then
+         hasShotgun = true
+      elseif weaponC.ammoType == "Laser" then
+         hasLaser = true
+      elseif weaponC.ammoType == "Rocket" then
+         hasRocket = true
+      end
+   end
+
+   if hasShotgun then
+      self.menuGrid[self:coordKey(2, 2)] = {
+         actor = AMMO_TYPES["Shotgun"](8),
+         displayName = "Shotgun (8)",
+         price = 2,
+         purchased = false
+      }
+   end
+
+   if hasLaser then
+      self.menuGrid[self:coordKey(3, 2)] = {
+         actor = AMMO_TYPES["Laser"](5),
+         displayName = "Laser (5)",
+         price = 2,
+         purchased = false
+      }
+   end
+
+   if hasRocket then
+      self.menuGrid[self:coordKey(4, 2)] = {
+         actor = AMMO_TYPES["Rocket"](2),
+         displayName = "Rocket (2)",
+         price = 2,
+         purchased = false
+      }
+   end
 
    self.menuGrid[self:coordKey(1, 3)] = {
       actor = nil,
