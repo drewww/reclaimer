@@ -10,33 +10,35 @@ function DestructSystem:onTurnEnd(level, actor)
       -- for now, start randomly converting floor tiles into impassable fire tiles
 
       local turnsRemaining = MAX_TURNS_IN_LEVEL - Game.turnsInLevel
-      prism.logger.info("turnsRemaining: ", turnsRemaining)
-      if turnsRemaining == 0 then
-         level:yield(prism.messages.Animation {
-            animation = spectrum.animations.SelfDestruct(0),
-            blocking = true,
-            skippable = true
-         })
-      elseif turnsRemaining % 25 == 0 and turnsRemaining <= 100 then
-         prism.logger.info("triggering destruction close message: ", turnsRemaining)
+      -- prism.logger.info("turnsRemaining: ", turnsRemaining)
+
+      if turnsRemaining % 25 == 0 and turnsRemaining <= 100 and turnsRemaining > 0 then
+         -- prism.logger.info("triggering destruction close message: ", turnsRemaining)
          level:yield(prism.messages.Animation {
             animation = spectrum.animations.SelfDestruct(turnsRemaining),
-            blocking = true,
+            blocking = false,
             skippable = true
          })
+
+         return
       end
 
-      if turnsRemaining < 0 then
-         for x, y, cell in level:eachCell() do
-            local target = prism.Vector2(x, y)
+      if turnsRemaining <= 0 then
+         if turnsRemaining == 0 then
+            level:yield(prism.messages.Animation {
+               animation = spectrum.animations.SelfDestruct(0),
+               blocking = false,
+               skippable = true
+            })
+         end
 
-            if math.random() < 0.05 then
-               if player:getPosition():getRange(target) < 2 then
-                  local damage = prism.actions.Damage(player, 1)
-                  level:tryPerform(damage)
+         if turnsRemaining == 0 or turnsRemaining % 2 == 0 then
+            for x, y, cell in level:eachCell() do
+               local target = prism.Vector2(x, y)
+
+               if math.random() < 0.07 then
+                  level:setCell(x, y, prism.cells.Fire())
                end
-
-               level:setCell(x, y, prism.cells.Fire())
             end
          end
       end

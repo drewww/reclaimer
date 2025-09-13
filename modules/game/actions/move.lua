@@ -65,6 +65,15 @@ function Move:perform(level, destination)
          level:tryPerform(pickup)
       end
    end
+
+   local targetCell = level:getCell(destination:decompose())
+   if targetCell:has(prism.components.OnFire) then
+      local damage = prism.actions.Damage(self.owner, 1)
+      level:tryPerform(damage)
+
+      local x, y = destination:decompose()
+      level:setCell(x, y, prism.cells.Ashes())
+   end
 end
 
 return Move
