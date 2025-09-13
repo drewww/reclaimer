@@ -36,6 +36,25 @@ local barrelWeights = {
    ["7_weird"] = 1
 }
 
+-- End weights for final levels with new 7_ block files
+local endWeights = {
+   ["7_big_x"] = 2,
+   ["7_bigblock"] = 3,
+   ["7_checkerboard"] = 2,
+   ["7_connector"] = 4,
+   ["7_connector_chest"] = 3,
+   ["7_full"] = 1,
+   ["7_hourglass"] = 2,
+   ["7_long_lane_h"] = 3,
+   ["7_long_lanes"] = 4,
+   ["7_plug"] = 2,
+   ["7_plug_reverse"] = 2,
+   ["7_slash"] = 3,
+   ["7_twisty_1"] = 2,
+   ["7_twisty_2"] = 2,
+   ["7_windy"] = 3
+}
+
 -- Method to select a weighted random block
 -- @param rng RNG object
 -- @param weights table with keys as items and values as weights
@@ -148,6 +167,8 @@ return function(depth, rng, player, width, height)
       weights = basicWeights
    elseif depthInfo.weights == "barrels" then
       weights = barrelWeights
+   elseif depthInfo.weights == "end" then
+      weights = endWeights
    end
 
 

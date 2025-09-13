@@ -15,11 +15,11 @@ DEPTHS = {
    { enemyOdds = 0.4, weights = "basic",   weapons = { "shotgun" } },
    { enemyOdds = 0.5, weights = "basic",   weapons = { "shotgun" } },
    { enemyOdds = 0.3, weights = "barrels", weapons = { "shotgun" } },
-   { enemyOdds = 0.3, weights = "barrels", weapons = { "shotgun", "laser" } },
-   { enemyOdds = 0.3, weights = "barrels", weapons = { "laser" } },
-   { enemyOdds = 0.3, weights = "end",     weapons = { "laser", "rocket" } },
-   { enemyOdds = 0.3, weights = "end",     weapons = { "laser", "rocket" } },
-   { enemyOdds = 0.3, weights = "end",     weapons = { "rocket" } },
+   { enemyOdds = 0.4, weights = "barrels", weapons = { "shotgun", "laser" } },
+   { enemyOdds = 0.5, weights = "barrels", weapons = { "laser" } },
+   { enemyOdds = 0.5, weights = "end",     weapons = { "laser", "rocket" } },
+   { enemyOdds = 0.7, weights = "end",     weapons = { "laser", "rocket" } },
+   { enemyOdds = 0.9, weights = "end",     weapons = { "rocket" } },
 }
 
 -- sprite locations
