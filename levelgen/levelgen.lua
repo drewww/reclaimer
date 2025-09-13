@@ -13,7 +13,11 @@ local blockWeights = {
    ["7_pillars_wide"] = 2,
    ["7_rotary"] = 4,
    ["7_station"] = 2,
-   ["7_wide"] = 4
+   ["7_wide"] = 4,
+   ["7_cross"] = 2,
+   ["7_half_cross"] = 2,
+   ["7_narrow_hallway"] = 1,
+   ["7_mini_pillars"] = 3
 }
 
 -- Method to select a weighted random block
