@@ -17,10 +17,11 @@ function TitleState:__new()
 
    self.controls = spectrum.Input.Controls {
       controls = {
-         start = { "p" },
-         quit = { "q" },
-         generate = { "g" },
-         credits = { "c" }
+         start = { "p", "P" },
+         quit = { "q", "Q" },
+         generate = { "g", "G" },
+         credits = { "c", "C" },
+         help = { "h", "H" }
       }
    }
 end
@@ -89,6 +90,8 @@ function TitleState:update(dt)
       love.event.quit()
    elseif self.controls.generate.pressed then
       self.manager:enter(MapState(self.display))
+   elseif self.controls.help.pressed then
+      -- TODO build this out
    elseif self.controls.credits.pressed then
       -- TODO merge this in.
       -- self.manager:enter(CreditsState(self.display))
