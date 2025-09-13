@@ -30,10 +30,10 @@ function GameOverState:draw()
    self.display:clear()
 
    if self.died then
-      self.display:putString(3, 3, "EXPEDITION FAILED", nil, nil, nil, "left",
+      self.display:putString(3, 3, "CONTRACT FAILED", nil, nil, nil, "left",
          self.display.width)
    else
-      self.display:putString(3, 3, "EXPEDITION OVER", nil, nil, nil, "left", self.display.width)
+      self.display:putString(3, 3, "CONTRACT OVER", nil, nil, nil, "left", self.display.width)
    end
 
    self.display:putString(midpointX + 2, midpointY + 5, "R TO RESTART", nil, nil, nil, "left", self.display.width)

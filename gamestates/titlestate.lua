@@ -12,6 +12,9 @@ function TitleState:__new()
    self.display = spectrum.Display(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, cp437Atlas, prism.Vector2(16, 16))
    self.display:fitWindowToTerminal()
 
+   -- Load title image
+   self.titleImage = love.graphics.newImage("display/images/title.png")
+
    self.controls = spectrum.Input.Controls {
       controls = {
          start = { "p" },
@@ -26,15 +29,14 @@ function TitleState:draw()
 
    self.display:clear()
 
-   self.display:putString(5, 5, "RECLAIMER", nil, nil, nil, "left", self.display.width)
-
-   self.display:putString(5, 6, "a game by drew harry", nil, nil, nil, "left", self.display.width)
-
    self.display:putString(midpointX + 2, 20, "[P]lay", nil, nil, nil, "left", midpointX - 2)
 
    self.display:putString(midpointX + 2, 22, "[Q]uit", nil, nil, nil, "left", midpointX - 2)
 
    self.display:draw()
+
+   -- Draw title image
+   love.graphics.draw(self.titleImage, 0, 0)
 end
 
 function TitleState:update(dt)
