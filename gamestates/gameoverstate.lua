@@ -14,6 +14,7 @@ function GameOverState:__new(died)
 
    -- Load contract failed image
    self.contractFailedImage = love.graphics.newImage("display/images/contract_failed_title.png")
+   self.contractCompletedImage = love.graphics.newImage("display/images/contract_completed_title.png")
 
    Game.stats:finalize()
    Game.stats:print()
@@ -33,7 +34,11 @@ function GameOverState:draw()
 
    self.display:clear()
    -- Draw contract failed image as background
-   love.graphics.draw(self.contractFailedImage, 0, 0)
+   if self.died then
+      love.graphics.draw(self.contractFailedImage, 0, 0)
+   else
+      love.graphics.draw(self.contractCompletedImage, 0, 0)
+   end
 
    self.display:putString(3, 10, "STATS", nil, nil, nil, "left")
 
