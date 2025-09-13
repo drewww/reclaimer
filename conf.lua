@@ -6,6 +6,6 @@ function love.conf(t)
    t.window.title = "reclaimer"
    t.highdpi = false            -- Enable high-dpi mode for the window on a Retina display (boolean)
    t.window.usedpiscale = false -- Enable automatic DPI scaling when highdpi is set to true as well (boolean)
-   t.version = "12.0"           -- The LÖVE version this game was made for (string)
+   t.version = "11.5"           -- The LÖVE version this game was made for (string)
    -- Other configurations...
 end
