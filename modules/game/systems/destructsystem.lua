@@ -7,16 +7,26 @@ function DestructSystem:onTurnEnd(level, actor)
       Game:turn()
       local player = actor
 
-      if Game.turnsInLevel > MAX_TURNS_IN_LEVEL then
-         -- for now, start randomly converting floor tiles into impassable fire tiles
+      -- for now, start randomly converting floor tiles into impassable fire tiles
 
+      local turnsRemaining = MAX_TURNS_IN_LEVEL - Game.turnsInLevel
+      prism.logger.info("turnsRemaining: ", turnsRemaining)
+      if turnsRemaining == 0 then
          level:yield(prism.messages.Animation {
             animation = spectrum.animations.SelfDestruct(0),
             blocking = true,
             skippable = true
          })
+      elseif turnsRemaining % 25 == 0 and turnsRemaining <= 100 then
+         prism.logger.info("triggering destruction close message: ", turnsRemaining)
+         level:yield(prism.messages.Animation {
+            animation = spectrum.animations.SelfDestruct(turnsRemaining),
+            blocking = true,
+            skippable = true
+         })
+      end
 
-         prism.logger.info("SELF DESTRUCT")
+      if turnsRemaining < 0 then
          for x, y, cell in level:eachCell() do
             local target = prism.Vector2(x, y)
 

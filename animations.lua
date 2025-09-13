@@ -492,11 +492,13 @@ spectrum.registerAnimation("SelfDestruct", function(turns)
          return true
       end
 
+      local maxOffset = turns <= 0 and 6 or 7
+      local turnsOffset = turns <= 0 and 0 or 6
 
-      display:putFilledRect(9 - display.camera.x, 5 - display.camera.y, 10, 3, 3, prism.Color4.RED,
+      display:putFilledRect(9 - display.camera.x, 5 - display.camera.y, 10 + turnsOffset, 3, 3, prism.Color4.RED,
          prism.Color4.RED, math.huge)
 
-      local maxOffset = turns <= 0 and 6 or 8
+
 
       for i = 0, maxOffset do
          -- prism.logger.info("SELF_DESTRUCT_BASE + i", i)
@@ -506,6 +508,26 @@ spectrum.registerAnimation("SelfDestruct", function(turns)
 
       if turns > 0 then
          -- display turns left
+         local turnsOffset = 0
+         if turns == 75 then
+            turnsOffset = 1
+         elseif turns == 50 then
+            turnsOffset = 2
+         elseif turns == 25 then
+            turnsOffset = 3
+         end
+
+         display:put(10 + maxOffset + 2 - display.camera.x, 6 - display.camera.y,
+            REMAINING_TURNS_BASE + turnsOffset,
+            prism.Color4.WHITE,
+            prism.Color4.RED, math.huge)
+
+         for i = 0, 3 do
+            display:put(10 + maxOffset + 3 + i - display.camera.x, 6 - display.camera.y,
+               SELF_DESTRUCT_BASE + 8 + i,
+               prism.Color4.WHITE,
+               prism.Color4.RED, math.huge)
+         end
       else
          display:put(10 + 7 - display.camera.x, 6 - display.camera.y, SELF_DESTRUCT_BASE + 11, prism.Color4.WHITE,
             prism.Color4.RED, math.huge)

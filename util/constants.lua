@@ -10,7 +10,7 @@ DASH_ENERGY_COST_PER_TILE = 1
 
 START_DEPTH = -9
 
-MAX_TURNS_IN_LEVEL = 10
+MAX_TURNS_IN_LEVEL = 101
 
 DEPTHS = {
    { enemyOdds = 0.3, weights = "basic",   weapons = {} },
@@ -33,7 +33,7 @@ DAMAGE_BASE = 15 * 16
 EMPTY_BASE = 16 * 16 + 1
 SELF_DESTRUCT_BASE = 16 * 16 + 4
 RELOAD_BASE = 17 * 16 + 1
-
+REMAINING_TURNS_BASE = 15 * 16 + 11
 
 FLOOR_BASE = 10 * 16 + 1
 FIRE_BASE = 14 * 16 + 1
