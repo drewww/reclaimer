@@ -224,56 +224,64 @@ function GameLevelState:draw(dt)
          local weapon = WeaponUtil.getActive(player:get(prism.components.Inventory))
          assert(weapon, "No weapon")
 
-         local points = WeaponUtil.getTargetPoints(self.level, player, prism.Vector2(mouseX, mouseY))
+         local weaponC = weapon:get(prism.components.Weapon)
+         if weaponC and weaponC.ammo == 0 and weaponC.ammopershot > 0 then
+            -- display empty at cursor
+            for i = 0, 2 do
+               self.display:put(mouseX + cameraX + 1 + i, mouseY + cameraY, EMPTY_BASE + i)
+            end
+         else
+            local points = WeaponUtil.getTargetPoints(self.level, player, prism.Vector2(mouseX, mouseY))
 
-         for i, point in ipairs(points) do
-            self.display:putBG(point.x + cameraX, point.y + cameraY, prism.Color4(0.5, 0.5, 1.0, 0.5), 50)
-         end
+            for i, point in ipairs(points) do
+               self.display:putBG(point.x + cameraX, point.y + cameraY, prism.Color4(0.5, 0.5, 1.0, 0.5), 50)
+            end
 
-         -- to see if this is working, only do this if the target point has changed, not every frame.
+            -- to see if this is working, only do this if the target point has changed, not every frame.
 
-         -- consider if there are entities in the set of points.
-         -- if there are, and the current weapon has push, loop a non-blocking push animation
-         -- for that entity.
-         if self.mouseCellPositionChanged then
-            -- prism.logger.info("mouseCellPositionChanged")
-            self.display:skipAnimations()
+            -- consider if there are entities in the set of points.
+            -- if there are, and the current weapon has push, loop a non-blocking push animation
+            -- for that entity.
+            if self.mouseCellPositionChanged then
+               -- prism.logger.info("mouseCellPositionChanged")
+               self.display:skipAnimations()
 
-            local weaponC = weapon:get(prism.components.Weapon)
-            local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
-            if #points > 0 and weaponC and weaponC.push > 0 then
-               for _, point in ipairs(points) do
-                  local entity = self.level:query(prism.components.Collider):at(point:decompose()):first()
-                  -- prism.logger.info("Entity at weapon target point: ", point, entity)
+               local weaponC = weapon:get(prism.components.Weapon)
+               local mask = prism.Collision.createBitmaskFromMovetypes { "walk" }
+               if #points > 0 and weaponC and weaponC.push > 0 then
+                  for _, point in ipairs(points) do
+                     local entity = self.level:query(prism.components.Collider):at(point:decompose()):first()
+                     -- prism.logger.info("Entity at weapon target point: ", point, entity)
 
-                  if entity then
-                     -- prism.logger.info("entity: ", entity:getName())
-                     -- return function(level, startPos, direction, maxCells, moveMask)
-                     -- TODO this needs to adapt to the AOE knockback variation, but this works
-                     -- for everything else.
-                     local direction = point - player:getPosition()
+                     if entity then
+                        -- prism.logger.info("entity: ", entity:getName())
+                        -- return function(level, startPos, direction, maxCells, moveMask)
+                        -- TODO this needs to adapt to the AOE knockback variation, but this works
+                        -- for everything else.
+                        local direction = point - player:getPosition()
 
-                     if weaponC.template == "aoe" then
-                        direction = point - prism.Vector2(mouseX, mouseY)
+                        if weaponC.template == "aoe" then
+                           direction = point - prism.Vector2(mouseX, mouseY)
+                        end
+
+                        -- prism.logger.info("direction: ", direction)
+                        local finalPos, hitWall, cellsMoved, path, impassablePos = knockback(self.level, point, direction,
+                           weaponC.push,
+                           mask)
+
+                        -- prism.logger.info("starting push. final, hit, cells: ", finalPos, hitWall, cellsMoved)
+                        for _, p in ipairs(path) do
+                           prism.logger.info("pushing entity to: ", p)
+                        end
+
+                        -- prism.logger.info("triggering animation: ", entity, #path)
+
+                        self.display:yieldAnimation(prism.messages.Animation {
+                           animation = spectrum.animations.Push(entity, path, true, impassablePos),
+                           blocking = false,
+                           skippable = true
+                        })
                      end
-
-                     -- prism.logger.info("direction: ", direction)
-                     local finalPos, hitWall, cellsMoved, path, impassablePos = knockback(self.level, point, direction,
-                        weaponC.push,
-                        mask)
-
-                     -- prism.logger.info("starting push. final, hit, cells: ", finalPos, hitWall, cellsMoved)
-                     for _, p in ipairs(path) do
-                        prism.logger.info("pushing entity to: ", p)
-                     end
-
-                     -- prism.logger.info("triggering animation: ", entity, #path)
-
-                     self.display:yieldAnimation(prism.messages.Animation {
-                        animation = spectrum.animations.Push(entity, path, true, impassablePos),
-                        blocking = false,
-                        skippable = true
-                     })
                   end
                end
             end
