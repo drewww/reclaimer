@@ -62,18 +62,36 @@ end
 
 function ResupplyState:initializeMenu()
    -- Example menu items - replace with actual actors/items
-   self.menuGrid[self:coordKey(1, 1)] = {
-      actor = nil,
-      displayName = "Laser",
-      price = 10,
-      purchased = false
-   }
-   self.menuGrid[self:coordKey(2, 1)] = {
-      actor = nil,
-      displayName = "Shotgun",
-      price = 10,
-      purchased = false
-   }
+
+   -- looks at the next depth in the list
+   local depthInfo = DEPTHS[10 + Game.depth]
+
+   if depthInfo.weapons[1] == "laser" or depthInfo.weapons[2] == "laser" then
+      self.menuGrid[self:coordKey(1, 1)] = {
+         actor = prism.actors.Laser,
+         displayName = "Laser",
+         price = 10,
+         purchased = false
+      }
+   end
+
+   if depthInfo.weapons[1] == "shotgun" or depthInfo.weapons[2] == "shotgun" then
+      self.menuGrid[self:coordKey(2, 1)] = {
+         actor = prism.actors.Shotgun,
+         displayName = "Shotgun",
+         price = 10,
+         purchased = false
+      }
+   end
+
+   if depthInfo.weapons[1] == "rocket" or depthInfo.weapons[2] == "rocket" then
+      self.menuGrid[self:coordKey(3, 1)] = {
+         actor = prism.actors.Rocket,
+         displayName = "Rocket",
+         price = 10,
+         purchased = false
+      }
+   end
 
    self.menuGrid[self:coordKey(1, 2)] = {
       actor = AMMO_TYPES["Pistol"](20),

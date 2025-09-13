@@ -125,7 +125,7 @@ return function(depth, rng, player, width, height)
    -- initialize the blocks. this will eventually have logic, but for now just
    -- places the default "room" type
 
-   local depthInfo = DEPTHS[depth * -1]
+   local depthInfo = DEPTHS[10 + depth]
 
    local weights = blockWeights
    if depthInfo.weights == "basic" then
