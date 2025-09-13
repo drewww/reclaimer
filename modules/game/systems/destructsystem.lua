@@ -10,7 +10,13 @@ function DestructSystem:onTurnEnd(level, actor)
       if Game.turnsInLevel > MAX_TURNS_IN_LEVEL then
          -- for now, start randomly converting floor tiles into impassable fire tiles
 
-         prism.logger.info("EXPLODE")
+         level:yield(prism.messages.Animation {
+            animation = spectrum.animations.SelfDestruct(0),
+            blocking = true,
+            skippable = true
+         })
+
+         prism.logger.info("SELF DESTRUCT")
          for x, y, cell in level:eachCell() do
             local target = prism.Vector2(x, y)
 

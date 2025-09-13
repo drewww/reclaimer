@@ -470,3 +470,48 @@ spectrum.registerAnimation("Explode", function(center, radius, targetPoints, col
       return false
    end)
 end)
+
+
+spectrum.registerAnimation("SelfDestruct", function(turns)
+   prism.logger.info(" in animation construction")
+   return spectrum.Animation(function(t, display)
+      -- display:push()
+      prism.logger.info("in animation running ", t)
+      -- do a put string, center screen that says
+      -- "SELF DESTRUCTING IN N TURNS"
+      -- "FIND AN EXIT QUICKLY"
+      -- "SELF DESTRUCTING NOW"
+
+      -- now our problem with text on the main display. I dont' want
+      -- to make a whole new font for this.
+      local duration = 1.0
+      local progress = math.min(t / duration, 1.0)
+
+      if progress >= 1 then
+         -- display:pop()
+         return true
+      end
+
+
+      display:putFilledRect(9 - display.camera.x, 5 - display.camera.y, 10, 3, 3, prism.Color4.RED,
+         prism.Color4.RED, math.huge)
+
+      local maxOffset = turns <= 0 and 6 or 8
+
+      for i = 0, maxOffset do
+         -- prism.logger.info("SELF_DESTRUCT_BASE + i", i)
+         display:put(10 + i - display.camera.x, 6 - display.camera.y, SELF_DESTRUCT_BASE + i, prism.Color4.WHITE,
+            prism.Color4.RED, math.huge)
+      end
+
+      if turns > 0 then
+         -- display turns left
+      else
+         display:put(10 + 7 - display.camera.x, 6 - display.camera.y, SELF_DESTRUCT_BASE + 11, prism.Color4.WHITE,
+            prism.Color4.RED, math.huge)
+      end
+
+      -- display:pop()
+      return false
+   end)
+end)
