@@ -6,11 +6,11 @@ prism.registerActor("Player", function()
       prism.components.Collider(),
       prism.components.PlayerController(),
       prism.components.Senses(),
-      prism.components.Sight { range = 20, fov = true },
+      prism.components.Sight { range = 10, fov = true },
       prism.components.Mover { "walk" },
       prism.components.Health(10),
       -- prism.components.Log(),
-      prism.components.Energy(4, 0.2),
+      prism.components.Energy(3, 0.2),
       prism.components.Inventory {
          limitCount = 26,
       },

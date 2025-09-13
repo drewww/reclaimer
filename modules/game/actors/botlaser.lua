@@ -5,9 +5,9 @@ prism.registerActor("BotLaser", function()
       prism.components.Drawable { index = GUN, color = prism.Color4.YELLOW },
       prism.components.Item(),
       prism.components.Weapon({
-         damage = 1,
+         damage = 2,
          push = 0,
-         range = 10,
+         range = 8,
          ammo = 1,
          maxAmmo = 1,
          ammopershot = 1,

@@ -1,26 +1,18 @@
-local BLOCK_WIDTH = 5
-local BLOCK_HEIGHT = 5
+local BLOCK_WIDTH = 7
+local BLOCK_HEIGHT = 7
 
 -- Weighted block selection data structure
 -- Keys are block filenames, values are weights
 local blockWeights = {
-   ["5_base"] = 3,
-   ["5_checkpoint"] = 1,
-   ["5_chest_open"] = 2,
-   ["5_chest_room"] = 4,
-   ["5_chest_tight"] = 2,
-   ["5_depot"] = 1,
-   ["5_maze"] = 2,
-   ["5_offset"] = 3,
-   ["5_open_1"] = 5,
-   ["5_open_2"] = 5,
-   ["5_open_3"] = 5,
-   ["5_open_4"] = 5,
-   ["5_open_5"] = 5,
-   ["5_open_6"] = 5,
-   ["5_plus_hall"] = 3,
-   ["5_stacks"] = 2,
-   ["5_stacks_deep"] = 1
+   ["7_base"] = 4,
+   ["7_big_pillar"] = 2,
+   ["7_open_wall"] = 2,
+   ["7_pillars_h"] = 3,
+   ["7_pillars_v"] = 3,
+   ["7_pillars_wide"] = 2,
+   ["7_rotary"] = 4,
+   ["7_station"] = 2,
+   ["7_wide"] = 4
 }
 
 -- Method to select a weighted random block
@@ -137,25 +129,43 @@ return function(depth, rng, player, width, height)
       end
    end
 
-   -- now, pick a random i/j and make it the start location. can't be on the left edge.
-   -- local startX, startY = rng:random(2, blockWidth), rng:random(1, blockHeight)
-   local startX, startY = rng:random(2, blockWidth), rng:random(1, blockHeight)
-   local exitX, exitY
-   repeat
-      exitX, exitY = rng:random(1, blockWidth), rng:random(1, blockHeight)
-   until not (startX == exitX and startY == exitY)
+   -- Generate 5 distinct positions for special blocks
+   local specialPositions = {}
+   local occupiedPositions = {}
 
-   -- prism.logger.info("start ", startX, startY, " exit", exitX, exitY)
+   -- Generate 5 unique positions
+   for i = 1, 5 do
+      local x, y
+      repeat
+         x = rng:random(1, blockWidth)
+         y = rng:random(1, blockHeight)
+      until not occupiedPositions[x .. "," .. y]
 
-   -- plus one because we increment on creation
-   if depth == START_DEPTH then
-      levelBlocks[startX][startY] = "SP5_start_right"
-   else
-      levelBlocks[startX][startY] = "SP5_stair_exit"
+      occupiedPositions[x .. "," .. y] = true
+      specialPositions[i] = { x = x, y = y }
    end
 
-   levelBlocks[exitX][exitY] = "SP5_stair"
-   levelBlocks[startX - 1][startY] = "5_base"
+   -- Allocate positions: 1=entry, 2=exit, 3-5=chests
+   local startX, startY = specialPositions[1].x, specialPositions[1].y
+   local exitX, exitY = specialPositions[2].x, specialPositions[2].y
+
+   -- Place entry block
+   if depth == START_DEPTH then
+      levelBlocks[startX][startY] = "X7_start"
+   else
+      levelBlocks[startX][startY] = "X7_entry"
+   end
+
+   -- Place exit block
+   levelBlocks[exitX][exitY] = "X7_exit"
+
+   -- Place exactly 3 chest blocks
+   local chestBlocks = { "7_chest_closed", "7_chest_open", "7_chest_wall" }
+   for i = 1, 3 do
+      local chestPos = specialPositions[i + 2] -- positions 3, 4, 5
+      levelBlocks[chestPos.x][chestPos.y] = chestBlocks[i]
+      prism.logger.info("Placed chest block " .. chestBlocks[i] .. " at " .. chestPos.x .. "," .. chestPos.y)
+   end
 
    -- now, iterate through the block list and drop them in. (this could be collapsed,
    -- but I expect that we will want multiple passes to do various consistency checks.

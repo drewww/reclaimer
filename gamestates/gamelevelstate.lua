@@ -69,6 +69,8 @@ function GameLevelState:__new(builder, seed)
    -- Construct a simple test map using LevelBuilder.
    -- In a complete game, you'd likely extract this logic to a separate module
    -- and pass in an existing player object between levels.
+   --
+   --
 
    builder:addSystems(
       prism.systems.Senses(),

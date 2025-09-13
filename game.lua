@@ -9,7 +9,7 @@ local Stats = require "modules.game.stats"
 local Game = prism.Object:extend("Game")
 
 --- @param seed string
-function Game:__new(seed)
+function Game:__new(seed, player)
    self.depth = START_DEPTH
    self.rng = prism.RNG(seed)
    self.stats = Stats()
@@ -25,7 +25,7 @@ end
 --- @return LevelBuilder builder
 function Game:generateNextFloor()
    local genRNG = prism.RNG(self:getLevelSeed())
-   return levelgen(self.depth, genRNG, self.player, 30, 30)
+   return levelgen(self.depth, genRNG, self.player, 35, 35)
 end
 
 return Game(tostring(os.time()))
