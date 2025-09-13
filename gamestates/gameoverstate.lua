@@ -60,7 +60,7 @@ function GameOverState:draw()
          -- star
          self.display:put(6, 12 + i, EXCLAMATION)
       end
-      self.display:putString(8, 12 + i, value.name)
+      self.display:putString(8, 12 + i, value.name:sub(1, 1):upper() .. value.name:sub(2))
       self.display:putString(16, 12 + i, tostring(value.cur))
       self.display:putString(22, 12 + i, "(" .. tostring(value.best) .. ")")
 
