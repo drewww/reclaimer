@@ -53,6 +53,8 @@ function InfoFrame:draw()
       dashColor = prism.Color4.WHITE
    end
    self.display:putString(22, 1, "DASH", dashColor, prism.Color4.NAVY)
+
+   self.display:putString(52, 1, "T-" .. tostring(100 - Game.turnsInLevel), prism.Color4.WHITE, prism.Color4.NAVY)
 end
 
 return InfoFrame

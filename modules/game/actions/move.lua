@@ -52,7 +52,7 @@ function Move:perform(level, destination)
    end
 
    if self.owner:has(prism.components.PlayerController) then
-      Game.stats:increment("steps")
+      Game:step()
    end
 
    if self.owner:has(prism.components.PlayerController) then

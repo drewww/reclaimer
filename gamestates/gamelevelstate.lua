@@ -61,6 +61,10 @@ function turn(level, actor, controller)
          -- prism.logger.info("continueTurn: " .. tostring(continueTurn))
       end
    until not continueTurn
+
+   if actor:has(prism.components.PlayerController) then
+      Game:turn()
+   end
 end
 
 --- @param builder LevelBuilder
@@ -120,9 +124,8 @@ function GameLevelState:handleMessage(message)
    if prism.messages.Descend:is(message) then
       prism.logger.info("DESCENDING")
 
-      Game.depth = Game.depth + 1
+      Game:descend()
 
-      Game.stats:increment("depth", 1)
       Game.stats:print()
 
       if Game.depth == 0 then
