@@ -11,15 +11,15 @@ DASH_ENERGY_COST_PER_TILE = 1
 START_DEPTH = -9
 
 DEPTHS = {
-   { enemyOdds = 0.3, weights = "basic", weapons = {} },
-   { enemyOdds = 0.4, weights = "basic", weapons = { "shotgun" } },
-   { enemyOdds = 0.5, weights = "basic", weapons = { "shotgun" } },
-   { enemyOdds = 0.3, weights = "basic", weapons = { "shotgun" } },
-   { enemyOdds = 0.3, weights = "basic", weapons = { "shotgun", "laser" } },
-   { enemyOdds = 0.3, weights = "basic", weapons = { "laser" } },
-   { enemyOdds = 0.3, weights = "basic", weapons = { "laser", "rocket" } },
-   { enemyOdds = 0.3, weights = "basic", weapons = { "laser", "rocket" } },
-   { enemyOdds = 0.3, weights = "basic", weapons = { "rocket" } },
+   { enemyOdds = 0.3, weights = "basic",   weapons = {} },
+   { enemyOdds = 0.4, weights = "basic",   weapons = { "shotgun" } },
+   { enemyOdds = 0.5, weights = "basic",   weapons = { "shotgun" } },
+   { enemyOdds = 0.3, weights = "barrels", weapons = { "shotgun" } },
+   { enemyOdds = 0.3, weights = "barrels", weapons = { "shotgun", "laser" } },
+   { enemyOdds = 0.3, weights = "barrels", weapons = { "laser" } },
+   { enemyOdds = 0.3, weights = "end",     weapons = { "laser", "rocket" } },
+   { enemyOdds = 0.3, weights = "end",     weapons = { "laser", "rocket" } },
+   { enemyOdds = 0.3, weights = "end",     weapons = { "rocket" } },
 }
 
 -- sprite locations

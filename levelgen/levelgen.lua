@@ -4,8 +4,8 @@ local BLOCK_HEIGHT = 7
 -- Weighted block selection data structure
 -- Keys are block filenames, values are weights
 
-local blockWeights = {
-   ["7_base"] = 4,
+local basicWeights = {
+   ["7_base"] = 1,
    ["7_big_pillar"] = 2,
    ["7_open_wall"] = 2,
    ["7_pillars_h"] = 3,
@@ -18,6 +18,22 @@ local blockWeights = {
    ["7_half_cross"] = 2,
    ["7_narrow_hallway"] = 1,
    ["7_mini_pillars"] = 3
+}
+
+-- Middle weights for additional 7_ block files
+local barrelWeights = {
+   ["7_alt_stacks"] = 3,
+   ["7_barrel_edge"] = 2,
+   ["7_boom_hole"] = 1,
+   ["7_boom_hole_double"] = 1,
+   ["7_boom_room"] = 2,
+   ["7_cup_l"] = 3,
+   ["7_h"] = 3,
+   ["7_lanes_v"] = 3,
+   ["7_stacks"] = 3,
+   ["7_stacks_gap"] = 2,
+   ["7_stacks_v"] = 3,
+   ["7_weird"] = 1
 }
 
 -- Method to select a weighted random block
@@ -127,12 +143,11 @@ return function(depth, rng, player, width, height)
 
    local depthInfo = DEPTHS[10 + depth]
 
-   local weights = blockWeights
+   local weights = basicWeights
    if depthInfo.weights == "basic" then
-      weights = blockWeights
+      weights = basicWeights
    elseif depthInfo.weights == "barrels" then
-      -- weights =
-      -- TOOD make these weights
+      weights = barrelWeights
    end
 
 
