@@ -8,7 +8,7 @@ CHEST_DURATION = 10
 
 DASH_ENERGY_COST_PER_TILE = 1
 
-START_DEPTH = -10
+START_DEPTH = -9
 
 -- sprite locations
 PLAYER = 1
