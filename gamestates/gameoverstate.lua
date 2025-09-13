@@ -82,7 +82,8 @@ function GameOverState:update(dt)
    end
 
    if self.controls.credits.pressed then
-      -- TODO switch to credits
+      local CreditsState = require "gamestates.creditsstate"
+      self.manager:enter(CreditsState(self))
    end
 end
 

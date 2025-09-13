@@ -65,7 +65,9 @@ function TitleState:update(dt)
          -- TODO build this out
       elseif self.controls.credits.pressed then
          -- TODO merge this in.
-         -- self.manager:enter(CreditsState(self.display))
+         local CreditsState = require "gamestates.creditsstate"
+
+         self.manager:enter(CreditsState(self))
       end
    elseif self.state == "contract" then
       -- Any key press starts the game
