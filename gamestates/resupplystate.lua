@@ -75,8 +75,22 @@ function ResupplyState:initializeMenu()
    local depthInfo = DEPTHS[10 + Game.depth]
    local inventory = Game.player:get(prism.components.Inventory)
 
+   -- show ammo if the player has the weapon
 
-   if depthInfo.weapons[1] == "laser" or depthInfo.weapons[2] == "laser" then
+   local hasShotgun, hasLaser, hasRocket = false, false, false
+   for _, actor in ipairs(inventory:query(prism.components.Weapon):gather()) do
+      local weaponC = actor:get(prism.components.Weapon)
+      prism.logger.info("weapon.ammotype: " .. weaponC.ammoType)
+      if weaponC.ammoType == "Shotgun" then
+         hasShotgun = true
+      elseif weaponC.ammoType == "Laser" then
+         hasLaser = true
+      elseif weaponC.ammoType == "Rocket" then
+         hasRocket = true
+      end
+   end
+
+   if (depthInfo.weapons[1] == "laser" or depthInfo.weapons[2] == "laser") and not hasLaser then
       self.menuGrid[self:coordKey(1, 1)] = {
          actor = prism.actors.Laser(),
          displayName = "Laser",
@@ -85,7 +99,7 @@ function ResupplyState:initializeMenu()
       }
    end
 
-   if depthInfo.weapons[1] == "shotgun" or depthInfo.weapons[2] == "shotgun" then
+   if (depthInfo.weapons[1] == "shotgun" or depthInfo.weapons[2] == "shotgun") and not hasShotgun then
       self.menuGrid[self:coordKey(2, 1)] = {
          actor = prism.actors.Shotgun(),
          displayName = "Shotgun",
@@ -94,7 +108,7 @@ function ResupplyState:initializeMenu()
       }
    end
 
-   if depthInfo.weapons[1] == "rocket" or depthInfo.weapons[2] == "rocket" then
+   if (depthInfo.weapons[1] == "rocket" or depthInfo.weapons[2] == "rocket") and not hasRocket then
       self.menuGrid[self:coordKey(3, 1)] = {
          actor = prism.actors.Rocket(),
          displayName = "Rocket",
@@ -110,20 +124,7 @@ function ResupplyState:initializeMenu()
       purchased = false
    }
 
-   -- show ammo if the player has the weapon
 
-   local hasShotgun, hasLaser, hasRocket = false, false, false
-   for _, actor in ipairs(inventory:query(prism.components.Weapon):gather()) do
-      local weaponC = actor:get(prism.components.Weapon)
-      prism.logger.info("weapon.ammotype: " .. weaponC.ammoType)
-      if weaponC.ammoType == "Shotgun" then
-         hasShotgun = true
-      elseif weaponC.ammoType == "Laser" then
-         hasLaser = true
-      elseif weaponC.ammoType == "Rocket" then
-         hasRocket = true
-      end
-   end
 
    if hasShotgun then
       self.menuGrid[self:coordKey(2, 2)] = {
@@ -217,37 +218,23 @@ end
 function ResupplyState:drawWeaponImages()
    -- Draw weapon images above columns that have weapons or ammo available
    local imageY = 6 * 16 -- Position images above the menu grid
+   local weaponTypes = { "Pistol", "Shotgun", "Laser", "Rocket" }
 
-   -- Check each column for weapons/ammo and draw corresponding images
-   for x = 1, self.gridWidth do
-      local hasWeaponOrAmmo = false
-      local weaponType = nil
-
-      -- Check if this column has any weapon or ammo items
+   -- Column order is always: pistol, shotgun, laser, rocket
+   for x = 1, 4 do
+      -- Check if this column has any items (weapon or ammo)
+      local hasItems = false
       for y = 1, self.gridHeight do
-         local item = self:getItemAt(x, y)
-         if item then
-            -- Determine weapon type from item
-            if item.displayName == "Laser" or item.displayName == "Laser (5)" then
-               weaponType = "Laser"
-               hasWeaponOrAmmo = true
-            elseif item.displayName == "Shotgun" or item.displayName == "Shotgun (8)" then
-               weaponType = "Shotgun"
-               hasWeaponOrAmmo = true
-            elseif item.displayName == "Rocket" or item.displayName == "Rocket (2)" then
-               weaponType = "Rocket"
-               hasWeaponOrAmmo = true
-            elseif item.displayName == "Pistol (20)" then
-               weaponType = "Pistol"
-               hasWeaponOrAmmo = true
-            end
+         if self:getItemAt(x, y) then
+            hasItems = true
+            break
          end
       end
 
-      -- Draw the weapon image if we found a weapon/ammo in this column
-      if hasWeaponOrAmmo and weaponType and self.weaponImages[weaponType] then
+      -- Draw the weapon image if column has items
+      if hasItems then
          local imageX = (10 + (x - 1) * 13) * 16 -- Match column positioning
-         love.graphics.draw(self.weaponImages[weaponType], imageX, imageY)
+         love.graphics.draw(self.weaponImages[weaponTypes[x]], imageX, imageY)
       end
    end
 end
