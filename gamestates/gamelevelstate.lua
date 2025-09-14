@@ -319,6 +319,31 @@ function GameLevelState:draw(dt)
    -- now, based on active weapon -- show an appropriate weapon image.
    -- figure out looking up after, just place it.
    self.weaponFrame:drawActiveWeapon()
+
+
+   -- now let's draw health indicators on enemies.
+
+   self.level:query(prism.components.BotController):each(function(bot)
+      local health = bot:get(prism.components.Health)
+      local canSee = primary[1].cells:get(bot:getPosition():decompose())
+
+      if health and canSee then
+         love.graphics.setColor(1, 0, 0, 1)
+
+         -- calculate the cell position in screen terms
+         -- that means apply the camera offset, and then multiply by the cell size
+         local screenCellPosition = bot:getPosition() + self.display.camera
+
+         prism.logger.info("screenCellPosition", screenCellPosition)
+
+         local screenPixelPosition = prism.Vector2((screenCellPosition.x - 1) * self.display.cellSize.x,
+            (screenCellPosition.y - 1) * self.display.cellSize.y)
+
+         love.graphics.rectangle("fill", screenPixelPosition.x, screenPixelPosition.y, 2, 2)
+
+         love.graphics.setColor(1, 1, 1, 1)
+      end
+   end)
 end
 
 function GameLevelState:mousepressed(x, y, button, istouch, presses)
