@@ -67,6 +67,21 @@ function ResupplyState:__new()
       }
    }
 
+   self.ammoAvailable = { Pistol = 0, Shotgun = 0, Rocket = 0, Laser = 0 }
+
+   for name, count in pairs(self.ammoAvailable) do
+      local ammoStack = inventory:getStack(AMMO_TYPES[name])
+      self.ammoAvailable[name] = ammoStack and ammoStack.stackCount or 0
+
+      -- now look at the weapon and see how much ammo is loaded
+      for weapon, weaponC in inventory:query(prism.components.Weapon):iter() do
+         if weaponC and weaponC.ammoType == name then
+            self.ammoAvailable[name] = self.ammoAvailable[name] + weaponC.ammo
+         end
+      end
+      prism.logger.info("ammo ", self.ammoAvailable[name], " for ", name)
+   end
+
    -- Initialize the menu items
    self:initializeMenu()
 
@@ -124,7 +139,7 @@ function ResupplyState:initializeMenu()
    if (depthInfo.weapons[1] == "rocket" or depthInfo.weapons[2] == "rocket") and not hasRocket then
       self.menuGrid[self:coordKey(4, 1)] = {
          actor = prism.actors.Rocket(),
-         displayName = "Rocket",
+         displayName = "Launcher",
          price = 10,
          purchased = false
       }
@@ -134,7 +149,8 @@ function ResupplyState:initializeMenu()
       actor = AMMO_TYPES["Pistol"](15),
       displayName = "Bullet x15",
       price = 1,
-      purchased = false
+      purchased = false,
+      ammo = true
    }
 
 
@@ -144,7 +160,8 @@ function ResupplyState:initializeMenu()
          actor = AMMO_TYPES["Shotgun"](8),
          displayName = "Shells x8",
          price = 2,
-         purchased = false
+         purchased = false,
+         ammo = true
       }
    end
 
@@ -153,7 +170,8 @@ function ResupplyState:initializeMenu()
          actor = AMMO_TYPES["Laser"](5),
          displayName = "Battery x5",
          price = 2,
-         purchased = false
+         purchased = false,
+         ammo = true
       }
    end
 
@@ -162,14 +180,15 @@ function ResupplyState:initializeMenu()
          actor = AMMO_TYPES["Rocket"](2),
          displayName = "Rocket x2",
          price = 2,
-         purchased = false
+         purchased = false,
+         ammo = true
       }
    end
 
    self.menuGrid[self:coordKey(1, 3)] = {
       actor = nil,
       displayName = "Heal All",
-      price = 1,
+      price = 2,
       purchased = false
    }
 
@@ -334,6 +353,16 @@ function ResupplyState:draw()
             if item.price > 0 then
                self.display:put(displayX, displayY + 1, CENTS, color, bg)
                self.display:putString(displayX + 1, displayY + 1, tostring(item.price), color, bg)
+
+               if item.actor then
+                  prism.logger.info(item.actor:getName())
+                  -- prism.logger.info("ammo available: " .. tostring(self.ammoAvailable[item.actor:getName()]))
+                  local ammo = self.ammoAvailable[item.actor:getName()]
+                  if item.ammo and ammo and ammo > 0 then
+                     self.display:put(displayX + 7, displayY + 1, AMMO, color, bg)
+                     self.display:putString(displayX + 8, displayY + 1, tostring(ammo), color, bg)
+                  end
+               end
             end
          else
             -- just render the selection
@@ -385,9 +414,10 @@ function ResupplyState:update(dt)
             return
          end
 
+         local inventory = Game.player:get(prism.components.Inventory)
+
          if currentItem.displayName == "COMPLETE" then
             -- execute the purchases and deduct money
-            local inventory = Game.player:get(prism.components.Inventory)
             local totalSpend = self:getTotalSpend()
 
             -- Remove the spent money from inventory
