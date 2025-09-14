@@ -71,7 +71,7 @@ function ResupplyState:__new()
 
    for name, count in pairs(self.ammoAvailable) do
       local ammoStack = inventory:getStack(AMMO_TYPES[name])
-      self.ammoAvailable[name] = ammoStack and ammoStack.stackCount or 0
+      self.ammoAvailable[name] = ammoStack and ammoStack:get(prism.components.Item).stackCount or 0
 
       -- now look at the weapon and see how much ammo is loaded
       for weapon, weaponC in inventory:query(prism.components.Weapon):iter() do
@@ -79,7 +79,6 @@ function ResupplyState:__new()
             self.ammoAvailable[name] = self.ammoAvailable[name] + weaponC.ammo
          end
       end
-      prism.logger.info("ammo ", self.ammoAvailable[name], " for ", name)
    end
 
    -- Initialize the menu items
@@ -355,7 +354,7 @@ function ResupplyState:draw()
                self.display:putString(displayX + 1, displayY + 1, tostring(item.price), color, bg)
 
                if item.actor then
-                  prism.logger.info(item.actor:getName())
+                  -- prism.logger.info(item.actor:getName())
                   -- prism.logger.info("ammo available: " .. tostring(self.ammoAvailable[item.actor:getName()]))
                   local ammo = self.ammoAvailable[item.actor:getName()]
                   if item.ammo and ammo and ammo > 0 then
