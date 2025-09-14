@@ -38,7 +38,11 @@ function CreditsState:update(dt)
    self.controls:update()
 
    if self.controls.restart.pressed then
-      love.event.restart()
+      if love.getVersion() >= 12 then
+         love.event.restart()
+      else
+         love.event.quit("restart")
+      end
    end
 
    if self.controls.quit.pressed then
