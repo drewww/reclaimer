@@ -19,8 +19,8 @@ function ResupplyState:__new()
 
    -- Menu grid setup
    self.menuGrid = {}
-   self.gridWidth = 5
-   self.gridHeight = 7
+   self.gridWidth = 4
+   self.gridHeight = 6
    self.cursorX = 1
    self.cursorY = 1
 
@@ -54,7 +54,7 @@ function ResupplyState:__new()
       },
 
       pairs = {
-         move = { "move_up", "move_upleft", "move_upright", "move_left", "move_right", "move_downleft", "move_down", "move_downright" }
+         move = { "move_upleft", "move_up", "move_upright", "move_left", "move_right", "move_downleft", "move_down", "move_downright" }
       }
    }
 
@@ -334,7 +334,7 @@ function ResupplyState:update(dt)
       -- until self:getCurrentItem()
 
 
-      prism.logger.info("Moving cursor to: ", self.cursorX, self.cursorY)
+      prism.logger.info("Moving cursor to: ", self.cursorX, self.cursorY, " due to vector ", vector)
    end
 
    if self.controls.select.pressed then
