@@ -253,7 +253,7 @@ function GameLevelState:draw(dt)
                      local entity = self.level:query(prism.components.Collider):at(point:decompose()):first()
                      -- prism.logger.info("Entity at weapon target point: ", point, entity)
 
-                     if entity then
+                     if entity and not entity:has(prism.components.PlayerController) then
                         -- prism.logger.info("entity: ", entity:getName())
                         -- return function(level, startPos, direction, maxCells, moveMask)
                         -- TODO this needs to adapt to the AOE knockback variation, but this works

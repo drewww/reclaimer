@@ -21,6 +21,7 @@ Shoot.requireComponents = {
 function Shoot:canPerform(level, target)
    prism.logger.info("SHOOT CAN PERFORM")
    -- TODO check for ammo
+
    local inventory = self.owner:get(prism.components.Inventory)
    if inventory then
       prism.logger.info("...has inventory")
@@ -47,7 +48,13 @@ function Shoot:canPerform(level, target)
       if range <= weapon.range then
          inRange = true
       end
+
+      if range == 0 then
+         return false
+      end
+
       prism.logger.info("Available ammo: ", availableAmmo)
+
       return availableAmmo
    else
       return false
