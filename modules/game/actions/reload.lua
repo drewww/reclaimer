@@ -98,9 +98,10 @@ function Reload:perform(level)
       if not self.owner:has(prism.components.PlayerController) then
          x, y = self.owner:getPosition():decompose()
          x = x + 1
+      else
+         -- if it IS the player, play reload sound
+         Audio.playSfx("reload")
       end
-
-      Audio.playSfx("reload")
 
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Notice("RELOAD", x, y),
