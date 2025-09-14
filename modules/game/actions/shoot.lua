@@ -138,7 +138,12 @@ function Shoot:perform(level, target)
          -- skippable = true,
       })
    end
-   -- Move the target to final position
+   -- Sort target points by distance from owner position
+   local ownerPos = self.owner:getPosition()
+   table.sort(targetPoints, function(a, b)
+      return ownerPos:distance(a) < ownerPos:distance(b)
+   end)
+
    for i, p in ipairs(targetPoints) do
       -- test for actors for each of the target points
       local targetActor = level:query():at(p:decompose()):first()
