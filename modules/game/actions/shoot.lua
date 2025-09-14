@@ -105,6 +105,8 @@ function Shoot:perform(level, target)
          blocking = true
       })
    elseif weapon.template == "melee" then
+      Audio.playSfx("cyclone")
+      
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Melee(self.owner:getPosition()),
          blocking = true

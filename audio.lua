@@ -27,7 +27,8 @@ local soundEffects = {
    rocketLaunch = "sound/rocket_launch.wav",
    select = "sound/select_a.wav",
    selfDestruct = "sound/self_destruct.wav",
-   shotgun = "sound/shotgun.wav"
+   shotgun = "sound/shotgun.wav",
+   cyclone = "sound/swing.wav"
 }
 
 -- Initialize the audio system
