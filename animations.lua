@@ -484,7 +484,7 @@ spectrum.registerAnimation("SelfDestruct", function(turns)
 
       -- now our problem with text on the main display. I dont' want
       -- to make a whole new font for this.
-      local duration = 1.0
+      local duration = 1.5
       local progress = math.min(t / duration, 1.0)
 
       if progress >= 1 then

@@ -62,5 +62,5 @@ RANGE = 16 * 42 + 10 + 16 * 16
 AMMO = 16 * 4 + 11 + 16 * 16
 
 BLANK = 1 + 16 * 16
-EXCLAMATION = 16 * 2 + 3
+EXCLAMATION = 16 * 2 + 2
 LIGHTNING = 16 * 23 + 4
