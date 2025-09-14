@@ -8,7 +8,7 @@ local Audio = {}
 local sources = {}        -- Pre-loaded audio sources
 local playingSources = {} -- Currently playing sources for cleanup
 local masterVolume = 1.0  -- Global volume multiplier
-local sfxVolume = 1.0     -- Sound effects volume
+local sfxVolume = 0.5     -- Sound effects volume
 
 -- Sound effect definitions with their file paths
 local soundEffects = {
