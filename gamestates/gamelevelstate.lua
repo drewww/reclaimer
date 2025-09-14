@@ -199,7 +199,7 @@ function GameLevelState:draw(dt)
          -- end
 
          local layer = 50
-         if cell:has(prism.components.Dashing) then color = prism.Color4(0.5, 0.5, 1.0, 0.5) end
+         if cell:has(prism.components.Dashing) then color = COLOR_DASH end
 
          if cell:has(prism.components.Targeted) then
             local targeted = cell:get(prism.components.Targeted)
@@ -234,7 +234,7 @@ function GameLevelState:draw(dt)
             local points = WeaponUtil.getTargetPoints(self.level, player, prism.Vector2(mouseX, mouseY))
 
             for i, point in ipairs(points) do
-               self.display:putBG(point.x + cameraX, point.y + cameraY, prism.Color4(0.5, 0.5, 1.0, 0.5), 50)
+               self.display:putBG(point.x + cameraX, point.y + cameraY, COLOR_TARGET, 50)
             end
 
             -- to see if this is working, only do this if the target point has changed, not every frame.
@@ -292,7 +292,7 @@ function GameLevelState:draw(dt)
    -- custom handle the player.
    if player:has(prism.components.Dashing) then
       self.display:putBG(player:getPosition().x + cameraX, player:getPosition().y + cameraY,
-         prism.Color4(0.5, 0.5, 1.0, 0.5))
+         COLOR_DASH)
    end
 
    -- Actually render the terminal out and present it to the screen.

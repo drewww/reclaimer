@@ -10,7 +10,7 @@ DASH_ENERGY_COST_PER_TILE = 1
 
 START_DEPTH = -9
 
-MAX_TURNS_IN_LEVEL = 300
+MAX_TURNS_IN_LEVEL = 250
 
 DEPTHS = {
    { enemyOdds = 0.3, weights = "basic",   weapons = {} },
@@ -64,3 +64,9 @@ AMMO = 16 * 4 + 11 + 16 * 16
 BLANK = 1 + 16 * 16
 EXCLAMATION = 16 * 2 + 2
 LIGHTNING = 16 * 23 + 4
+
+
+
+-- COLORS
+COLOR_TARGET = prism.Color4.RED
+COLOR_DASH = prism.Color4(0.5, 0.5, 1.0, 0.3)
