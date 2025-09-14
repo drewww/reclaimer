@@ -285,19 +285,30 @@ function ResupplyState:draw()
             end
 
             -- Add cursor indicator
+            local bg = prism.Color4.BLACK
             if x == self.cursorX and y == self.cursorY then
-               prefix = ">"
                if canAfford then
-                  color = prism.Color4.YELLOW
+                  color = prism.Color4.BLACK
+                  bg = prism.Color4.WHITE
                else
                   color = prism.Color4.RED
+                  bg = prism.Color4.WHITE
                end
+
+               self.display:putFilledRect(displayX, displayY, 11, 2, 1, bg, bg)
             end
 
-            self.display:putString(displayX, displayY, prefix .. item.displayName, color, nil, nil, "left")
+            self.display:putString(displayX, displayY, prefix .. item.displayName, color, bg, nil, "left")
 
             if item.price > 0 then
-               self.display:putString(displayX, displayY + 1, "Price: " .. item.price, color, nil, nil, "left")
+               self.display:put(displayX, displayY + 1, CENTS, color, bg)
+               self.display:putString(displayX + 1, displayY + 1, tostring(item.price), color, bg)
+            end
+         else
+            -- just render the selection
+            if self.cursorX == x and self.cursorY == y then
+               -- prism.logger.info("render menu location")
+               self.display:putFilledRect(displayX, displayY, 11, 2, 1, prism.Color4.DARKGREY, prism.Color4.DARKGREY)
             end
          end
       end
@@ -316,9 +327,11 @@ function ResupplyState:update(dt)
    if self.controls.move.pressed then
       local vector = self.controls.move.vector
 
-      repeat
+      -- repeat
+      if vector then
          self:moveCursor(vector.x, vector.y)
-      until self:getCurrentItem()
+      end
+      -- until self:getCurrentItem()
 
 
       prism.logger.info("Moving cursor to: ", self.cursorX, self.cursorY)
