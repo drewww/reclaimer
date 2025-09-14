@@ -278,6 +278,7 @@ function GameLevelState:draw(dt)
 
                         self.display:yieldAnimation(prism.messages.Animation {
                            animation = spectrum.animations.Push(entity, path, true, impassablePos),
+                           actor = entity,
                            blocking = false,
                            skippable = true
                         })
