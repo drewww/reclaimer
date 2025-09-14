@@ -34,10 +34,7 @@ function Push:perform(level, amount, from)
 
    local finalPos, hitWall, cellsMoved, path = knockback(level, target:getPosition(), direction, amount, mask)
 
-   if hitWall and target:has(prism.components.Health) then
-      local damage = prism.actions.Damage(target, WALL_COLLIDE_DAMAGE)
-      level:perform(damage)
-   end
+
 
 
    level:yield(prism.messages.Animation {
@@ -48,6 +45,11 @@ function Push:perform(level, amount, from)
 
    -- animate in here
    level:moveActor(target, finalPos)
+
+   if hitWall and target:has(prism.components.Health) then
+      local damage = prism.actions.Damage(target, WALL_COLLIDE_DAMAGE)
+      level:perform(damage)
+   end
 end
 
 return Push

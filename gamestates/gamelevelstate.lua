@@ -206,7 +206,7 @@ function GameLevelState:draw(dt)
             assert(targeted)
 
             color = prism.Color4(1.0, 0, 0, 0.3 + 0.2 * targeted.times)
-            layer = math.huge - 10
+            layer = math.huge - 20
          end
 
          self.display:putBG(cellX + cameraX, cellY + cameraY, color, layer)
@@ -234,7 +234,7 @@ function GameLevelState:draw(dt)
             local points = WeaponUtil.getTargetPoints(self.level, player, prism.Vector2(mouseX, mouseY))
 
             for i, point in ipairs(points) do
-               self.display:putBG(point.x + cameraX, point.y + cameraY, COLOR_TARGET, 50)
+               self.display:putBG(point.x + cameraX, point.y + cameraY, COLOR_TARGET, math.huge - 10)
             end
 
             -- to see if this is working, only do this if the target point has changed, not every frame.

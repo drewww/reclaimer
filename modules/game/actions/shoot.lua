@@ -129,8 +129,7 @@ function Shoot:perform(level, target)
          -- if error then
          --    prism.logger.error(error)
          -- end
-         level:perform(push)
-
+         level:tryPerform(push)
 
          -- Calculate damage based on whether they hit a wall
          local damageValue = weapon.damage
