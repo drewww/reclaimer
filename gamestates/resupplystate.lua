@@ -42,15 +42,19 @@ function ResupplyState:__new()
 
    self.controls = spectrum.Input.Controls {
       controls = {
-         move_up    = { "w", "k" },
-         move_left  = { "a", "h" },
-         move_right = { "d", "l" },
-         move_down  = { "s", "j" },
-         select     = { "return", "space" },
+         move_up        = { "w", "k" },
+         move_upleft    = { "q", "y" },
+         move_upright   = { "e", "u" },
+         move_left      = { "a", "h" },
+         move_right     = { "d", "l" },
+         move_downleft  = { "z", "b" },
+         move_down      = { "s", "j" },
+         move_downright = { "c", "n" },
+         select         = { "return", "space" },
       },
 
       pairs = {
-         move = { "move_up", "move_left", "move_right", "move_down" }
+         move = { "move_up", "move_upleft", "move_upright", "move_left", "move_right", "move_downleft", "move_down", "move_downright" }
       }
    }
 
