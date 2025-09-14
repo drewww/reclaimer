@@ -174,19 +174,10 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
       table.insert(fullPath, p)
    end
 
-
-   -- local initialLayer = actor:get(prism.components.Drawable).layer
-   -- if prediction then
-   --    table.remove(path, 1)
-   -- end
    local drawable = actor:get(prism.components.Drawable)
 
-   if not prediction then
-      actor:remove(prism.components.Drawable)
-   end
-
-
    return spectrum.Animation(function(t, display)
+      display:overrideActor(actor)
       local stepDuration = 0.15
 
       display:push()
@@ -207,9 +198,7 @@ spectrum.registerAnimation("Push", function(actor, path, prediction, impassableP
       if t >= totalDuration then
          -- drawable.layer = initialLayer
          -- handles the case when the actor is dead at this point
-         if actor and drawable then
-            actor:give(drawable)
-         end
+         display:unoverrideActor(actor)
          display:pop()
 
          return true
