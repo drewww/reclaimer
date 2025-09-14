@@ -6,7 +6,7 @@ prism.registerActor("Knife", function()
       prism.components.Item(),
       prism.components.Weapon({
          damage = 0,
-         push = 3,
+         push = 2,
          range = 1,
          ammo = 1,
          maxAmmo = 1,

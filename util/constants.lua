@@ -25,6 +25,19 @@ DEPTHS = {
    { enemyOdds = 0.9, weights = "end",     weapons = { "rocket" } },
 }
 
+-- Enemy type spawn odds per depth (must sum to 1.0)
+ENEMY_SPAWN_ODDS = {
+   { basic = 1.0,  big = 0.0,  boom = 0.0 }, -- Depth 1: Only basic enemies
+   { basic = 1.0,  big = 0.0,  boom = 0.0 }, -- Depth 2: Mostly basic, some big
+   { basic = 1.0,  big = 0.0,  boom = 0.0 }, -- Depth 3: More big enemies
+   { basic = 0.6,  big = 0.4,  boom = 0.0 }, -- Depth 4: Introduce boom enemies
+   { basic = 0.6,  big = 0.4,  boom = 0.0 }, -- Depth 5: More variety
+   { basic = 0.6,  big = 0.4,  boom = 0.0 }, -- Depth 6: Balanced mix
+   { basic = 0.45, big = 0.35, boom = 0.2 }, -- Depth 7: Fewer basic
+   { basic = 0.3,  big = 0.4,  boom = 0.3 }, -- Depth 8: Mostly big/boom
+   { basic = 0.2,  big = 0.4,  boom = 0.4 }, -- Depth 9: Final level - mostly dangerous
+}
+
 -- sprite locations
 PLAYER = 1
 ENEMY = 2

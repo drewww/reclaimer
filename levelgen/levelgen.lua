@@ -253,7 +253,17 @@ return function(depth, rng, player, width, height)
          prism.logger.info("adding actor of type " .. hint.type .. " at ", x, y)
          if hint.type == "enemy" then
             if rng:random() < depthInfo.enemyOdds then
-               builder:addActor(prism.actors.BotBoom(), x, y)
+               -- Determine which enemy type to spawn based on depth odds
+               local enemyOdds = ENEMY_SPAWN_ODDS[10 + depth]
+               local rand = rng:random()
+
+               if rand <= enemyOdds.basic then
+                  builder:addActor(prism.actors.Bot(), x, y)
+               elseif rand <= enemyOdds.basic + enemyOdds.big then
+                  builder:addActor(prism.actors.BotBig(), x, y)
+               else
+                  builder:addActor(prism.actors.BotBoom(), x, y)
+               end
             end
          elseif hint.type == "chest" then
             builder:addActor(prism.actors.Chest(), x, y)
