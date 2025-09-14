@@ -31,12 +31,14 @@ function Reload:canPerform(level)
          prism.logger.info(" canPerform-RELOAD has weaponComponent")
          if weaponComponent.ammopershot == 0 then
             do
+               -- does not NEED to reload
                return false
             end
          end
 
          prism.logger.info("ammo check ", weaponComponent.ammoType, weaponComponent.maxAmmo, weaponComponent.ammo)
          if weaponComponent.maxAmmo == weaponComponent.ammo then
+            -- ammo full, no need to reload
             return false
          end
 
@@ -53,6 +55,8 @@ function Reload:canPerform(level)
                if ammoComponent.stackCount > 0 then
                   return true
                else
+                  -- no ammo left, cannot reload
+                  Audio.playSfx("click")
                   return false
                end
             end
