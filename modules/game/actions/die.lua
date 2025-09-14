@@ -39,7 +39,7 @@ function Die:perform(level)
       level:removeActor(self.owner)
 
       for actor, component in level:query(prism.components.Health):iter() do
-         if actor:getPosition():distanceChebyshev(source) <= 3 then
+         if actor:getPosition():distanceChebyshev(source) <= 2 then
             level:tryPerform(prism.actions.Damage(actor, BARREL_EXPLODE_DAMAGE))
          end
       end
