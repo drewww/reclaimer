@@ -1,18 +1,19 @@
 -- local PushTarget = prism.Target(prism.components.Position)
-local PushAmount = prism.Target():isType("number")
-local PushFrom = prism.Target():isPrototype(prism.Vector2)
+local PushAmount        = prism.Target():isType("number")
+local PushFrom          = prism.Target():isPrototype(prism.Vector2)
 
-local knockback = require "util.knockback"
+local knockback         = require "util.knockback"
+local Audio             = require "audio"
 
 ---@class Push : Action
 ---@overload fun(owner: Actor, amount: number, from: Vector2): Push
-local Push = prism.Action:extend("Push")
+local Push              = prism.Action:extend("Push")
 
 Push.requiredComponents = {
    prism.components.Position
 }
 
-Push.targets = {
+Push.targets            = {
    PushAmount,
    PushFrom
 }
@@ -50,6 +51,8 @@ function Push:perform(level, amount, from)
    if hitWall and target:has(prism.components.Health) then
       local damage = prism.actions.Damage(target, WALL_COLLIDE_DAMAGE)
       level:perform(damage)
+
+      Audio.playSfx("hitWall")
    end
 end
 

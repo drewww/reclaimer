@@ -1,12 +1,13 @@
-local WeaponUtil = require "util.weapons"
+local WeaponUtil          = require "util.weapons"
+local Audio               = require "audio"
 
 --- @class Reload : Action
 --- @field name string
 --- @field targets Target[]
-local Reload = prism.Action:extend("Reload")
-Reload.name = "reload"
+local Reload              = prism.Action:extend("Reload")
+Reload.name               = "reload"
 
-Reload.targets = {}
+Reload.targets            = {}
 
 Reload.requiredComponents = {
    prism.components.Inventory
@@ -97,6 +98,9 @@ function Reload:perform(level)
       if not self.owner:has(prism.components.PlayerController) then
          x, y = self.owner:getPosition():decompose()
          x = x + 1
+      else
+         -- if it IS the player, play reload sound
+         Audio.playSfx("reload")
       end
 
       level:yield(prism.messages.Animation {

@@ -1,5 +1,6 @@
 local MoveTarget = prism.Target():isPrototype(prism.Vector2):range(1)
 local Game = require "game"
+local Audio = require "audio"
 
 ---@class Move : Action
 ---@field name string
@@ -66,6 +67,7 @@ function Move:perform(level, destination)
 
          local lootAmount = lootAtDestination:get(prism.components.Item).stackCount
          if performed then
+            Audio.playSfx("loot")
             level:yield(prism.messages.Animation {
                animation = spectrum.animations.Damage(lootAmount, prism.Color4.YELLOW),
                actor = self.owner,

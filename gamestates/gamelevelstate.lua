@@ -1,10 +1,11 @@
-local GameOverState = require "gamestates.gameoverstate"
-local ResupplyState = require "gamestates.resupplystate"
-local InfoFrame = require "display.infoframe"
-local Game = require "game"
-local WeaponUtil = require "util.weapons"
-local WeaponFrame = require "display.weaponframe"
-local knockback = require "util.knockback"
+local GameOverState  = require "gamestates.gameoverstate"
+local ResupplyState  = require "gamestates.resupplystate"
+local InfoFrame      = require "display.infoframe"
+local Game           = require "game"
+local WeaponUtil     = require "util.weapons"
+local WeaponFrame    = require "display.weaponframe"
+local knockback      = require "util.knockback"
+local Audio          = require "audio"
 
 --- @class GameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,
@@ -116,7 +117,10 @@ function GameLevelState:handleMessage(message)
 
    -- This is where you'd process custom messages like advancing to the next
    -- level or triggering a game over.
-   if prism.messages.Lose:is(message) then self.manager:enter(GameOverState(true)) end
+   if prism.messages.Lose:is(message) then
+      Audio.playSfx("lose")
+      self.manager:enter(GameOverState(true))
+   end
 
    if prism.messages.Descend:is(message) then
       prism.logger.info("DESCENDING")
@@ -378,6 +382,7 @@ end
 -- the level. This is a similar pattern to the example KoboldController.
 function GameLevelState:updateDecision(dt, owner, decision)
    self.controls:update()
+   Audio.update()
 
    -- if self.controls.move.pressed or self.controls.dash.pressed then
    if self.controls.move.pressed then

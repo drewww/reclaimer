@@ -1,3 +1,4 @@
+local Audio = require "audio"
 local DescendTarget = prism.Target():with(prism.components.Stair):range(1)
 
 --- @class Descend : Action
@@ -7,6 +8,9 @@ Descend.targets = { DescendTarget }
 
 function Descend:perform(level)
    level:removeActor(self.owner)
+
+   Audio.playSfx("nextLevel")
+
    level:yield(prism.messages.Descend(self.owner))
 end
 

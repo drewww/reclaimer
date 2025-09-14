@@ -1,6 +1,7 @@
 --- @class DestructSystem : System
 local DestructSystem = prism.System:extend("DestructSystem")
 local Game = require "game"
+local Audio = require "audio"
 
 function DestructSystem:onTurnEnd(level, actor)
    if actor:has(prism.components.PlayerController) then
@@ -33,6 +34,7 @@ function DestructSystem:onTurnEnd(level, actor)
          end
 
          if turnsRemaining == 0 or turnsRemaining % 2 == 0 then
+            Audio.playSfx("selfDestruct")
             for x, y, cell in level:eachCell() do
                local target = prism.Vector2(x, y)
 
