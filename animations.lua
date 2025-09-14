@@ -4,6 +4,8 @@ spectrum.registerAnimation("Projectile", function(owner, targetPosition, char)
    local x, y = owner:expectPosition():decompose()
    local line = prism.Bresenham(x, y, targetPosition.x, targetPosition.y)
 
+   table.remove(line, 1)
+
    if not char then
       char = "*"
    end
