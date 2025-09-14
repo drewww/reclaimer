@@ -32,6 +32,9 @@ function ResupplyState:__new()
       Shotgun = love.graphics.newImage("display/weapons/weapon_3.png"),
    }
 
+   -- Load resupply background image
+   self.resupplyImage = love.graphics.newImage("display/images/resupply_title.png")
+
    -- Get player's current money from inventory
    local inventory = Game.player:get(prism.components.Inventory)
    local loot = inventory:getStack(prism.actors.Loot)
@@ -221,7 +224,7 @@ end
 
 function ResupplyState:drawWeaponImages()
    -- Draw weapon images above columns that have weapons or ammo available
-   local imageY = 6 * 16 -- Position images above the menu grid
+   local imageY = 10 * 16 -- Position images above the menu grid (shifted down)
    local weaponTypes = { "Pistol", "Shotgun", "Laser", "Rocket" }
 
    -- Column order is always: pistol, shotgun, laser, rocket
@@ -248,25 +251,23 @@ function ResupplyState:draw()
 
    self.display:clear()
 
-   self.display:putString(2, 2, "RESUPPLY", nil, nil, nil, "left")
+   -- Draw resupply background image
+   love.graphics.draw(self.resupplyImage, 0, 0)
 
-   -- Display money information
+   -- Display money information (shifted down)
    local totalSpend = self:getTotalSpend()
    local remaining = self.maxSpend - totalSpend
-   self.display:put(3, 4, CENTS, prism.Color4.YELLOW)
-   self.display:putString(5, 4,
+   self.display:put(3, 8, CENTS, prism.Color4.YELLOW)
+   self.display:putString(5, 8,
       tostring(self.maxSpend) .. " - " .. tostring(totalSpend) .. " = " .. tostring(remaining), prism.Color4.WHITE,
       nil, nil, "left")
-   -- self.display:putString(3, 6, "Total Spend: " .. totalSpend, prism.Color4.WHITE, nil, nil, "left")
-   -- self.display:putString(3, 7, "Money Remaining: " .. remaining,
-   -- remaining >= 0 and prism.Color4.GREEN or prism.Color4.RED, nil, nil, "left")
 
-   self.display:putString(2, 11 + 0, "WEAPONS", prism.Color4.WHITE)
-   self.display:putString(5, 11 + 4, "AMMO", prism.Color4.WHITE)
-   self.display:putString(2, 11 + 8, "SERVICE", prism.Color4.WHITE)
+   self.display:putString(2, 15 + 0, "WEAPONS", prism.Color4.WHITE)
+   self.display:putString(5, 15 + 4, "AMMO", prism.Color4.WHITE)
+   self.display:putString(2, 15 + 8, "SERVICE", prism.Color4.WHITE)
 
-   -- Draw menu grid (pushed down to make room for weapon images)
-   local startX, startY = 10, 11
+   -- Draw menu grid (pushed down to make room for background image and weapon images)
+   local startX, startY = 10, 15
    for y = 1, self.gridHeight do
       for x = 1, self.gridWidth do
          local item = self:getItemAt(x, y)
