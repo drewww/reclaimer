@@ -2,6 +2,7 @@
 --- @overload fun(owner: Actor): Die
 local Die = prism.Action:extend("Die")
 local Game = require "game"
+local Audio = require "audio"
 
 function Die:perform(level)
    -- check if the dying actor has an inventory. if it does, drop the first item
@@ -27,6 +28,8 @@ function Die:perform(level)
 
    if self.owner:has(prism.components.Unstable) then
       prism.logger.info("EXPLODE AT " .. tostring(self.owner:getPosition()))
+
+      Audio.playSfx("explode")
 
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Explode(self.owner:getPosition(), 4.0),

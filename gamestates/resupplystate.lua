@@ -1,4 +1,5 @@
 local Game = require "game"
+local Audio = require "audio"
 
 --- @class ResupplyState : GameState
 --- @field display Display
@@ -326,6 +327,7 @@ end
 
 function ResupplyState:update(dt)
    self.controls:update()
+   Audio.update()
 
    if self.controls.move.pressed then
       local vector = self.controls.move.vector
@@ -341,6 +343,8 @@ function ResupplyState:update(dt)
    end
 
    if self.controls.select.pressed then
+      Audio.playSfx("select")
+
       local currentItem = self:getCurrentItem()
       if currentItem then
          if currentItem.displayName == "RESET" then

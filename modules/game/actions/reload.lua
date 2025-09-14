@@ -1,12 +1,13 @@
-local WeaponUtil = require "util.weapons"
+local WeaponUtil          = require "util.weapons"
+local Audio               = require "audio"
 
 --- @class Reload : Action
 --- @field name string
 --- @field targets Target[]
-local Reload = prism.Action:extend("Reload")
-Reload.name = "reload"
+local Reload              = prism.Action:extend("Reload")
+Reload.name               = "reload"
 
-Reload.targets = {}
+Reload.targets            = {}
 
 Reload.requiredComponents = {
    prism.components.Inventory
@@ -98,6 +99,8 @@ function Reload:perform(level)
          x, y = self.owner:getPosition():decompose()
          x = x + 1
       end
+
+      Audio.playSfx("reload")
 
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Notice("RELOAD", x, y),

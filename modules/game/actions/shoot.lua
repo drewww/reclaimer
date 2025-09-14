@@ -2,6 +2,7 @@ local Log = prism.components.Log
 local Name = prism.components.Name
 local sf = string.format
 local Game = require "game"
+local Audio = require "audio"
 
 local WeaponUtil = require "util.weapons"
 local knockback = require "util.knockback"
@@ -67,6 +68,7 @@ function Shoot:perform(level, target)
    weapon.ammo = math.max(weapon.ammo - weapon.ammopershot, 0)
 
    if weapon.ammo < weapon.ammopershot and self.owner:has(prism.components.PlayerController) then
+      Audio.playSfx("click")
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Notice("EMPTY"),
          blocking = false
@@ -78,16 +80,19 @@ function Shoot:perform(level, target)
       -- Convert angle to sprite offset: 0=up, 1=right, 2=down, 3=left
       local spriteOffset = math.floor((angle + math.pi * 2.5) / (math.pi * 0.5)) % 4
 
+      Audio.playSfx("rocketLaunch")
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Projectile(self.owner, target, ROCKET_BASE + spriteOffset),
          blocking = true
       })
 
+      Audio.playSfx("explode")
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Explode(target, weapon.aoe, targetPoints),
          blocking = true
       })
    elseif weapon.template == "cone" then
+      Audio.playSfx("shotgun")
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Explode(self.owner:getPosition(), weapon.range + 1, targetPoints, prism.Color4.WHITE),
          blocking = true
@@ -98,12 +103,15 @@ function Shoot:perform(level, target)
          blocking = true
       })
    elseif weapon.template == "line" then
+      Audio.playSfx("laser")
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Laser(self.owner:getPosition(), target, prism.Color4.LIME, weapon.range),
          blocking = true,
          -- skippable = true
       })
    else
+      Audio.playSfx("bullet")
+
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Projectile(self.owner, targetPoints[1], BULLET_BASE),
          blocking = true,

@@ -5,6 +5,8 @@ require "animations"
 
 require "util.constants"
 
+local Audio = require "audio"
+
 prism.loadModule("prism/spectrum")
 prism.loadModule("prism/extra/sight")
 prism.loadModule("prism/extra/log")
@@ -44,6 +46,9 @@ local manager = spectrum.StateManager()
 -- we put out levelstate on top here, but you could create a main menu
 --- @diagnostic disable-next-line
 function love.load()
+   -- Initialize audio system
+   Audio.init()
+
    manager:push(TitleState())
    manager:hook()
    spectrum.Input:hook()

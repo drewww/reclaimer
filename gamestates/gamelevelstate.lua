@@ -1,10 +1,11 @@
-local GameOverState = require "gamestates.gameoverstate"
-local ResupplyState = require "gamestates.resupplystate"
-local InfoFrame = require "display.infoframe"
-local Game = require "game"
-local WeaponUtil = require "util.weapons"
-local WeaponFrame = require "display.weaponframe"
-local knockback = require "util.knockback"
+local GameOverState  = require "gamestates.gameoverstate"
+local ResupplyState  = require "gamestates.resupplystate"
+local InfoFrame      = require "display.infoframe"
+local Game           = require "game"
+local WeaponUtil     = require "util.weapons"
+local WeaponFrame    = require "display.weaponframe"
+local knockback      = require "util.knockback"
+local Audio          = require "audio"
 
 --- @class GameLevelState : LevelState
 --- A custom game level state responsible for initializing the level map,
@@ -377,6 +378,7 @@ end
 -- the level. This is a similar pattern to the example KoboldController.
 function GameLevelState:updateDecision(dt, owner, decision)
    self.controls:update()
+   Audio.update()
 
    -- if self.controls.move.pressed or self.controls.dash.pressed then
    if self.controls.move.pressed then
