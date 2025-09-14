@@ -56,6 +56,10 @@ function Shoot:canPerform(level, target)
 
       prism.logger.info("Available ammo: ", availableAmmo)
 
+      if not availableAmmo then
+         Audio.playSfx("click")
+      end
+
       return availableAmmo
    else
       return false
