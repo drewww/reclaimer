@@ -377,6 +377,21 @@ function ResupplyState:update(dt)
                elseif item.purchased and inventory and item.actor then
                   prism.logger.info("Adding item: ", item.displayName)
                   inventory:addItem(item.actor)
+
+                  -- Grant bonus ammo when purchasing weapons
+                  if item.displayName == "Laser" then
+                     local laserAmmo = AMMO_TYPES["Laser"](3)
+                     inventory:addItem(laserAmmo)
+                     prism.logger.info("Added bonus Laser ammo (5)")
+                  elseif item.displayName == "Shotgun" then
+                     local shotgunAmmo = AMMO_TYPES["Shotgun"](8)
+                     inventory:addItem(shotgunAmmo)
+                     prism.logger.info("Added bonus Shotgun ammo (8)")
+                  elseif item.displayName == "Rocket" then
+                     local rocketAmmo = AMMO_TYPES["Rocket"](2)
+                     inventory:addItem(rocketAmmo)
+                     prism.logger.info("Added bonus Rocket ammo (2)")
+                  end
                end
             end
 
