@@ -1,3 +1,4 @@
+local Audio = require "audio"
 -- what is this? not sure yet
 local DamageTarget = prism.Target():isType("number")
 
@@ -13,6 +14,10 @@ function Damage:perform(level, damage)
    local health = self.owner:expect(prism.components.Health)
    health.hp = health.hp - damage
    self.dealt = damage
+
+   if self.owner:has(prism.components.PlayerController) then
+      Audio.playSfx("playerHit")
+   end
 
    -- use absolute positions because the owner may be dead by the time this finishes
    local x, y = self.owner:getPosition():decompose()

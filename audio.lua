@@ -31,6 +31,7 @@ local soundEffects = {
    cyclone = "sound/swing.wav",
    open = "sound/open.wav",
    opened = "sound/opened.wav",
+   playerHit = "sound/player_hit.wav"
 }
 
 -- Initialize the audio system

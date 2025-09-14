@@ -49,7 +49,10 @@ function Push:perform(level, amount, from)
    level:moveActor(target, finalPos)
 
    if hitWall and target:has(prism.components.Health) then
-      local damage = prism.actions.Damage(target, WALL_COLLIDE_DAMAGE)
+      local damageAmount = target:has(prism.components.PlayerController) and PLAYER_WALL_COLLIDE_DAMAGE or
+          WALL_COLLIDE_DAMAGE
+
+      local damage = prism.actions.Damage(target, damageAmount)
       level:perform(damage)
 
       Audio.playSfx("hitWall")
