@@ -334,12 +334,14 @@ function GameLevelState:draw(dt)
          -- that means apply the camera offset, and then multiply by the cell size
          local screenCellPosition = bot:getPosition() + self.display.camera
 
-         prism.logger.info("screenCellPosition", screenCellPosition)
-
          local screenPixelPosition = prism.Vector2((screenCellPosition.x - 1) * self.display.cellSize.x,
             (screenCellPosition.y - 1) * self.display.cellSize.y)
 
-         love.graphics.rectangle("fill", screenPixelPosition.x, screenPixelPosition.y, 2, 2)
+         -- Draw 2x2 squares for each health point with 1px spacing
+         for i = 1, health.hp do
+            local offsetX = (i - 1) * 3 -- 2px square + 1px space
+            love.graphics.rectangle("fill", screenPixelPosition.x + offsetX, screenPixelPosition.y, 2, 2)
+         end
 
          love.graphics.setColor(1, 1, 1, 1)
       end
