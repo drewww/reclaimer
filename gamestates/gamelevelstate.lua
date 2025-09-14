@@ -328,8 +328,6 @@ function GameLevelState:draw(dt)
       local canSee = primary[1].cells:get(bot:getPosition():decompose())
 
       if health and canSee then
-         love.graphics.setColor(1, 0.7, 0.7, 1)
-
          -- calculate the cell position in screen terms
          -- that means apply the camera offset, and then multiply by the cell size
          local screenCellPosition = bot:getPosition() + self.display.camera
@@ -337,21 +335,48 @@ function GameLevelState:draw(dt)
          local screenPixelPosition = prism.Vector2((screenCellPosition.x - 1) * self.display.cellSize.x,
             (screenCellPosition.y - 1) * self.display.cellSize.y)
 
-         -- Draw 2x2 squares for each health point with 1px spacing, wrapping within cell
+         -- Adaptive health bar style based on health amount
          local squareWidth = 2
-         local spacing = 2
-         local squareSpacing = squareWidth + spacing             -- 3 pixels per square
-         local maxSquaresPerRow = math.floor(32 / squareSpacing) -- How many squares fit in 32px width
+         local baseY = 32 - 4 -- Position at bottom with 4px margin
 
-         for i = 1, health.hp do
-            local row = math.floor((i - 1) / maxSquaresPerRow)
-            local col = (i - 1) % maxSquaresPerRow
+         if health.hp <= 10 then
+            -- Padded mode: 2px square + 1px gap = 3px per square
+            local squareSpacing = 3
+            local maxSquaresPerRow = math.floor(32 / squareSpacing) -- 10 squares fit in 32px width
 
-            local offsetX = col * squareSpacing
-            local offsetY = 32 - 4 - (row * (squareWidth + spacing)) -- Position at bottom, leave 4px margin
+            for i = 1, health.hp do
+               local row = math.floor((i - 1) / maxSquaresPerRow)
+               local col = (i - 1) % maxSquaresPerRow
 
-            love.graphics.rectangle("fill", screenPixelPosition.x + offsetX, screenPixelPosition.y + offsetY, squareWidth,
-               squareWidth)
+               local offsetX = col * squareSpacing
+               local offsetY = baseY - (row * squareSpacing)
+
+               -- Single color for padded mode
+               love.graphics.setColor(1, 0.5, 0.5, 1) -- Solid red
+               love.graphics.rectangle("fill", screenPixelPosition.x + offsetX, screenPixelPosition.y + offsetY,
+                  squareWidth, squareWidth)
+            end
+         else
+            -- Compressed mode: no padding between squares
+            local maxSquaresPerRow = math.floor(32 / squareWidth) -- 16 squares fit in 32px width
+
+            for i = 1, health.hp do
+               local row = math.floor((i - 1) / maxSquaresPerRow)
+               local col = (i - 1) % maxSquaresPerRow
+
+               local offsetX = col * squareWidth
+               local offsetY = baseY - (row * squareWidth)
+
+               -- Alternating colors for compressed mode
+               if (i % 2 == 1) then
+                  love.graphics.setColor(1, 0.5, 0.5, 1) -- Darker red
+               else
+                  love.graphics.setColor(1, 0.8, 0.8, 1) -- Lighter red
+               end
+
+               love.graphics.rectangle("fill", screenPixelPosition.x + offsetX, screenPixelPosition.y + offsetY,
+                  squareWidth, squareWidth)
+            end
          end
 
          love.graphics.setColor(1, 1, 1, 1)
