@@ -1,6 +1,6 @@
 prism.registerActor("Knife", function()
    return prism.Actor.fromComponents {
-      prism.components.Name("Knife"),
+      prism.components.Name("Spin Push"),
       prism.components.Position(),
       prism.components.Drawable { index = GUN, color = prism.Color4.YELLOW },
       prism.components.Item(),
