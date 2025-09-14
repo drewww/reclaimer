@@ -7,6 +7,7 @@ function WeaponFrame:__new(level, display)
    self.display = display
 
    self.weaponImages = {
+      Knife = love.graphics.newImage("display/weapons/weapon_4.png"),
       Pistol = love.graphics.newImage("display/weapons/weapon_0.png"),
       Rocket = love.graphics.newImage("display/weapons/weapon_1.png"),
       Laser = love.graphics.newImage("display/weapons/weapon_2.png"),

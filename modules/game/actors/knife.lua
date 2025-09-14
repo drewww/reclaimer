@@ -1,6 +1,6 @@
 prism.registerActor("Knife", function()
    return prism.Actor.fromComponents {
-      prism.components.Name("Spin Push"),
+      prism.components.Name("Cyclone"),
       prism.components.Position(),
       prism.components.Drawable { index = GUN, color = prism.Color4.YELLOW },
       prism.components.Item(),
@@ -13,7 +13,8 @@ prism.registerActor("Knife", function()
          ammopershot = 0,
          aoe = 0,
          template = "melee",
-         hotkey = 1
+         hotkey = 1,
+         ammoType = "Knife"
       })
    }
 end)
