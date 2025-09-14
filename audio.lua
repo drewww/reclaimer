@@ -13,14 +13,18 @@ local sfxVolume = 1.0     -- Sound effects volume
 -- Sound effect definitions with their file paths
 local soundEffects = {
    click = "sound/click.wav",
+   dashEnd = "sound/dash_end.wav",
+   dashStart = "sound/dash_start.wav",
    explode = "sound/explode_c.wav",
    bullet = "sound/impact_b.wav",
    laser = "sound/laser.wav",
+   lose = "sound/lose_b.wav",
    loot = "sound/loot.wav",
    nextLevel = "sound/next_level.wav",
    reload = "sound/reload.wav",
    rocketLaunch = "sound/rocket_launch.wav",
    select = "sound/select_a.wav",
+   selfDestruct = "sound/self_destruct.wav",
    shotgun = "sound/shotgun.wav"
 }
 
@@ -156,5 +160,13 @@ function Audio.playImpact() return Audio.playSfx("bullet", 0.8) end
 function Audio.playLoot() return Audio.playSfx("loot", 0.8) end
 
 function Audio.playNextLevel() return Audio.playSfx("nextLevel", 0.9) end
+
+function Audio.playDashStart() return Audio.playSfx("dashStart", 0.8) end
+
+function Audio.playDashEnd() return Audio.playSfx("dashEnd", 0.8) end
+
+function Audio.playLose() return Audio.playSfx("lose", 0.9) end
+
+function Audio.playSelfDestruct() return Audio.playSfx("selfDestruct", 1.0) end
 
 return Audio

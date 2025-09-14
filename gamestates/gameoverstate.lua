@@ -1,4 +1,5 @@
 local Game = require "game"
+local Audio = require "audio"
 --- @class GameOverState : GameState
 --- @field display Display
 --- @overload fun(): GameOverState

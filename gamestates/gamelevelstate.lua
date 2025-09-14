@@ -117,7 +117,10 @@ function GameLevelState:handleMessage(message)
 
    -- This is where you'd process custom messages like advancing to the next
    -- level or triggering a game over.
-   if prism.messages.Lose:is(message) then self.manager:enter(GameOverState(true)) end
+   if prism.messages.Lose:is(message) then
+      Audio.playSfx("lose")
+      self.manager:enter(GameOverState(true))
+   end
 
    if prism.messages.Descend:is(message) then
       prism.logger.info("DESCENDING")
