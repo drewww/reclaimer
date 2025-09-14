@@ -1,6 +1,7 @@
 local BotController = prism.components.Controller:extend("BotController")
 BotController.name = "BotController"
 
+
 local WeaponUtil = require "util.weapons"
 local sf = string.format
 
@@ -102,7 +103,40 @@ function BotController:act(level, actor)
 
          local targetDirection = player:getPosition() - actor:getPosition()
 
+
          local target = targetDirection:normalize() * weaponComponent.range + actor:getPosition()
+
+         -- we need to run a line check towards this target and stop when it hits something.
+
+         local passabilityCallback = function(x, y)
+            -- Skip the starting position
+            if x == actor:getPosition().x and y == actor:getPosition().y then return true end
+
+            if x == player:getPosition().x and y == player:getPosition().y then return true end
+
+            -- Check if this position is passable
+            if level:inBounds(x, y) and not level:getCellPassable(x, y, prism.Collision.createBitmaskFromMovetypes { "walk" }) then
+               return false -- Stop the line algorithm here
+            end
+            return true
+         end
+
+         local x0, y0 = actor:getPosition():decompose()
+         local x1, y1 = target:decompose()
+         local line = prism.Bresenham(x0, y0, x1, y1, passabilityCallback)
+
+         for _, v in ipairs(line) do
+            prism.logger.info("Line point: ", v[1], v[2])
+         end
+
+         prism.logger.info("target before: ", target)
+         target = prism.Vector2(line[#line][1], line[#line][2])
+         prism.logger.info("target after: ", target)
+
+         if not target then
+            prism.logger.error("target post LOS check failed")
+            return
+         end
 
          if weaponComponent.template == "aoe" then
             target = player:getPosition()
