@@ -91,7 +91,7 @@ function WeaponUtil.getTargetPoints(level, actor, target)
             local direction = target - actor:getPosition()
             local maxRange = direction:normalize() * weapon.range + actor:getPosition()
 
-            prism.logger.info("maxRange: ", maxRange)
+            -- prism.logger.info("maxRange: ", maxRange)
             table.insert(points, prism.Vector2(math.floor(maxRange.x + 0.5), math.floor(maxRange.y + 0.5)))
          end
       end
