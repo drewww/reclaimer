@@ -106,15 +106,22 @@ function Shoot:perform(level, target)
       })
    elseif weapon.template == "melee" then
       Audio.playSfx("cyclone")
-      
+
       level:yield(prism.messages.Animation {
          animation = spectrum.animations.Melee(self.owner:getPosition()),
          blocking = true
       })
    elseif weapon.template == "line" then
       Audio.playSfx("laser")
+
+      local laserColor = prism.Color4.LIME
+
+      if not self.owner:has(prism.components.PlayerController) then
+         laserColor = prism.Color4.RED
+      end
+
       level:yield(prism.messages.Animation {
-         animation = spectrum.animations.Laser(self.owner:getPosition(), target, prism.Color4.LIME, weapon.range),
+         animation = spectrum.animations.Laser(self.owner:getPosition(), target, laserColor, weapon.range),
          blocking = true,
          -- skippable = true
       })

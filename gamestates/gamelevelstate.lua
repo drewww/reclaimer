@@ -238,7 +238,7 @@ function GameLevelState:draw(dt)
             local points = WeaponUtil.getTargetPoints(self.level, player, prism.Vector2(mouseX, mouseY))
 
             for i, point in ipairs(points) do
-               self.display:putBG(point.x + cameraX, point.y + cameraY, COLOR_TARGET, math.huge - 10)
+               self.display:putBG(point.x + cameraX, point.y + cameraY, COLOR_TARGET, 100)
             end
 
             -- to see if this is working, only do this if the target point has changed, not every frame.
