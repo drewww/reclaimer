@@ -2,7 +2,7 @@ prism.registerActor("Bot", function()
    return prism.Actor.fromComponents {
       prism.components.Position(),
       prism.components.Name("Bot"),
-      prism.components.Drawable { index = 2, color = prism.Color4.RED, layer = 10 },
+      prism.components.Drawable { index = 2, color = COLOR_ENEMY, layer = 10 },
       prism.components.Collider(),
       prism.components.Senses(),
       prism.components.Sight { range = 10, fov = true },

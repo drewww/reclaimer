@@ -70,3 +70,6 @@ LIGHTNING = 16 * 23 + 4
 -- COLORS
 COLOR_TARGET = prism.Color4.RED
 COLOR_DASH = prism.Color4(0.5, 0.5, 1.0, 0.3)
+COLOR_PLAYER = prism.Color4.fromHex(0x10FF79)
+COLOR_ENEMY = prism.Color4.fromHex(0xBB0408)
+COLOR_DAMAGE = prism.Color4.fromHex(0xFF0000)

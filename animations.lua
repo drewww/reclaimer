@@ -72,7 +72,7 @@ spectrum.registerAnimation("Melee", function(position, color)
 end)
 
 spectrum.registerAnimation("Damage", function(value, color)
-   local startColor = color or prism.Color4.RED
+   local startColor = color or COLOR_DAMAGE
    local lighterColor = startColor:copy()
    lighterColor.a = 0.6
 
@@ -85,7 +85,7 @@ spectrum.registerAnimation("Damage", function(value, color)
 
    return spectrum.Animation(
       { on, on, on, on, on, on, on, fade1, fade1, fade2 },
-      0.05,
+      0.10,
       "pauseAtEnd"
    )
 end)
