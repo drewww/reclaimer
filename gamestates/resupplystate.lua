@@ -25,6 +25,11 @@ function ResupplyState:__new()
    self.cursorX = 1
    self.cursorY = 1
 
+   -- Grid positioning constants
+   self.cellWidth = 12
+   self.cellHeight = 4
+   self.cellPadding = 0
+
    -- Load weapon images
    self.weaponImages = {
       Pistol = love.graphics.newImage("display/weapons/weapon_0.png"),
@@ -126,8 +131,8 @@ function ResupplyState:initializeMenu()
    end
 
    self.menuGrid[self:coordKey(1, 2)] = {
-      actor = AMMO_TYPES["Pistol"](20),
-      displayName = "Pistol (20)",
+      actor = AMMO_TYPES["Pistol"](15),
+      displayName = "Bullet x15",
       price = 1,
       purchased = false
    }
@@ -137,7 +142,7 @@ function ResupplyState:initializeMenu()
    if hasShotgun then
       self.menuGrid[self:coordKey(2, 2)] = {
          actor = AMMO_TYPES["Shotgun"](8),
-         displayName = "Shotgun (8)",
+         displayName = "Shells x8",
          price = 2,
          purchased = false
       }
@@ -146,7 +151,7 @@ function ResupplyState:initializeMenu()
    if hasLaser then
       self.menuGrid[self:coordKey(3, 2)] = {
          actor = AMMO_TYPES["Laser"](5),
-         displayName = "Laser (5)",
+         displayName = "Battery x5",
          price = 2,
          purchased = false
       }
@@ -155,7 +160,7 @@ function ResupplyState:initializeMenu()
    if hasRocket then
       self.menuGrid[self:coordKey(4, 2)] = {
          actor = AMMO_TYPES["Rocket"](2),
-         displayName = "Rocket (2)",
+         displayName = "Rocket x2",
          price = 2,
          purchased = false
       }
@@ -165,6 +170,27 @@ function ResupplyState:initializeMenu()
       actor = nil,
       displayName = "Heal All",
       price = 1,
+      purchased = false
+   }
+
+   self.menuGrid[self:coordKey(2, 3)] = {
+      actor = nil,
+      displayName = "Health +1",
+      price = 4,
+      purchased = false
+   }
+
+   self.menuGrid[self:coordKey(3, 3)] = {
+      actor = nil,
+      displayName = "Energy +1",
+      price = 4,
+      purchased = false
+   }
+
+   self.menuGrid[self:coordKey(4, 3)] = {
+      actor = nil,
+      displayName = "Recharge +1",
+      price = 4,
       purchased = false
    }
 
@@ -241,7 +267,7 @@ function ResupplyState:drawWeaponImages()
 
       -- Draw the weapon image if column has items
       if hasItems then
-         local imageX = (13 + (x - 1) * 13) * 16 -- Match column positioning
+         local imageX = (12 + (x - 1) * self.cellWidth) * 16 -- Match column positioning
          love.graphics.draw(self.weaponImages[weaponTypes[x]], imageX, imageY)
       end
    end
@@ -272,8 +298,8 @@ function ResupplyState:draw()
    for y = 1, self.gridHeight do
       for x = 1, self.gridWidth do
          local item = self:getItemAt(x, y)
-         local displayX = startX + (x - 1) * 13
-         local displayY = startY + (y - 1) * 4
+         local displayX = startX + (x - 1) * (self.cellWidth + self.cellPadding)
+         local displayY = startY + (y - 1) * (self.cellHeight + self.cellPadding)
 
          if item then
             local color = item.purchased and prism.Color4.DARKGREY or prism.Color4.WHITE
@@ -374,6 +400,24 @@ function ResupplyState:update(dt)
                if item.displayName == "Heal All" and item.purchased then
                   local health = Game.player:get(prism.components.Health)
                   health:heal(health.maxHP)
+               elseif item.displayName == "Health +1" and item.purchased then
+                  local health = Game.player:get(prism.components.Health)
+                  health.maxHP = health.maxHP + 1
+                  health.hp = health.hp + 1
+                  prism.logger.info("Increased max health to: " .. health.maxHP)
+               elseif item.displayName == "Energy +1" and item.purchased then
+                  local energy = Game.player:get(prism.components.Energy)
+                  if energy then
+                     energy.maxEnergy = energy.maxEnergy + 1
+                     energy.energy = energy.energy + 1
+                     prism.logger.info("Increased max energy to: " .. energy.maxEnergy)
+                  end
+               elseif item.displayName == "Recharge +1" and item.purchased then
+                  local energy = Game.player:get(prism.components.Energy)
+                  if energy then
+                     energy.recharge = energy.recharge + 0.125
+                     prism.logger.info("Increased recharge to: " .. energy.recharge)
+                  end
                elseif item.purchased and inventory and item.actor then
                   prism.logger.info("Adding item: ", item.displayName)
                   inventory:addItem(item.actor)
