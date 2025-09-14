@@ -60,7 +60,7 @@ function Move:perform(level, destination)
       prism.logger.info("moving into cell, checking for loot")
       local lootAtDestination = level:query(prism.components.Item):at(destination:decompose()):first()
       prism.logger.info("lootAtDestination", lootAtDestination)
-      if lootAtDestination then
+      if lootAtDestination and lootAtDestination:instanceOf(prism.components.Loot) then
          prism.logger.info("attempting pickup", lootAtDestination)
          local pickup = prism.actions.Pickup(self.owner, lootAtDestination)
          local performed = level:tryPerform(pickup)

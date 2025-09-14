@@ -99,7 +99,7 @@ function ResupplyState:initializeMenu()
    end
 
    if (depthInfo.weapons[1] == "laser" or depthInfo.weapons[2] == "laser") and not hasLaser then
-      self.menuGrid[self:coordKey(1, 1)] = {
+      self.menuGrid[self:coordKey(3, 1)] = {
          actor = prism.actors.Laser(),
          displayName = "Laser",
          price = 10,
@@ -117,7 +117,7 @@ function ResupplyState:initializeMenu()
    end
 
    if (depthInfo.weapons[1] == "rocket" or depthInfo.weapons[2] == "rocket") and not hasRocket then
-      self.menuGrid[self:coordKey(3, 1)] = {
+      self.menuGrid[self:coordKey(4, 1)] = {
          actor = prism.actors.Rocket(),
          displayName = "Rocket",
          price = 10,
