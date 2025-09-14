@@ -28,7 +28,9 @@ local soundEffects = {
    select = "sound/select_a.wav",
    selfDestruct = "sound/self_destruct.wav",
    shotgun = "sound/shotgun.wav",
-   cyclone = "sound/swing.wav"
+   cyclone = "sound/swing.wav",
+   open = "sound/open.wav",
+   opened = "sound/opened.wav",
 }
 
 -- Initialize the audio system

@@ -1,6 +1,7 @@
 --- @class Tick : Action
-local Tick = prism.Action:extend "Tick"
+local Tick              = prism.Action:extend "Tick"
 Tick.requiredComponents = { prism.components.Tickable }
+local Audio             = require "audio"
 
 -- what's my design here? we want something to happen at the end of a countdown, not something to happen every tick of a countdown. what happens at the end is variable ...
 -- does inheritance work? NO it does not work.
@@ -21,6 +22,10 @@ function Tick:perform(level)
       if tickable.type == "openchest" then
          -- update the drawable
          -- this is hacky as hell, just assuming max duration is 10
+         if tickable.duration % 2 == 0 then
+            Audio.playSfx("open")
+         end
+
          local spriteOffset = math.floor((CHEST_DURATION - tickable.duration) / 2)
          local drawable = self.owner:get(prism.components.Drawable)
          if drawable then
@@ -33,7 +38,8 @@ function Tick:perform(level)
          prism.logger.info("TICK OVER")
 
          if tickable.type == "openchest" then
-            local value = math.random(1, 4)
+            local value = math.random(2, 4)
+            Audio.playSfx("opened")
             -- prism.logger.info("generated loot of value " .. tostring(value))
             local loot = prism.actors.Loot(value)
             local lootItem = loot:get(prism.components.Item)

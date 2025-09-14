@@ -1,3 +1,4 @@
+local Audio = require "audio"
 local OpenTarget = prism.Target():isPrototype(prism.Actor):with(prism.components.Openable)
 
 ---@class Open : Action
@@ -25,6 +26,7 @@ function Open:perform(level, target)
 
    if openable then
       if openable.delay > 0 and not openable.open then
+         Audio.playSfx("open")
          -- set a tick component and get it started
          prism.logger.info("Started delayed open countdown: " .. tostring(openable.delay))
          target:give(prism.components.Tickable("openchest", openable.delay))
