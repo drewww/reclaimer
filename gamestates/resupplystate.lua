@@ -240,7 +240,7 @@ function ResupplyState:drawWeaponImages()
 
       -- Draw the weapon image if column has items
       if hasItems then
-         local imageX = (10 + (x - 1) * 13) * 16 -- Match column positioning
+         local imageX = (13 + (x - 1) * 13) * 16 -- Match column positioning
          love.graphics.draw(self.weaponImages[weaponTypes[x]], imageX, imageY)
       end
    end
@@ -257,17 +257,17 @@ function ResupplyState:draw()
    -- Display money information (shifted down)
    local totalSpend = self:getTotalSpend()
    local remaining = self.maxSpend - totalSpend
-   self.display:put(3, 8, CENTS, prism.Color4.YELLOW)
-   self.display:putString(5, 8,
+   self.display:put(6, 8, CENTS, prism.Color4.YELLOW)
+   self.display:putString(8, 8,
       tostring(self.maxSpend) .. " - " .. tostring(totalSpend) .. " = " .. tostring(remaining), prism.Color4.WHITE,
       nil, nil, "left")
 
-   self.display:putString(2, 15 + 0, "WEAPONS", prism.Color4.WHITE)
-   self.display:putString(5, 15 + 4, "AMMO", prism.Color4.WHITE)
-   self.display:putString(2, 15 + 8, "SERVICE", prism.Color4.WHITE)
+   self.display:putString(5, 15 + 0, "WEAPONS", prism.Color4.WHITE)
+   self.display:putString(8, 15 + 4, "AMMO", prism.Color4.WHITE)
+   self.display:putString(5, 15 + 8, "SERVICE", prism.Color4.WHITE)
 
    -- Draw menu grid (pushed down to make room for background image and weapon images)
-   local startX, startY = 10, 15
+   local startX, startY = 13, 15
    for y = 1, self.gridHeight do
       for x = 1, self.gridWidth do
          local item = self:getItemAt(x, y)
