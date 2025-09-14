@@ -274,7 +274,7 @@ function ResupplyState:draw()
          local displayY = startY + (y - 1) * 4
 
          if item then
-            local color = item.purchased and prism.Color4.GREY or prism.Color4.WHITE
+            local color = item.purchased and prism.Color4.DARKGREY or prism.Color4.WHITE
             local prefix = ""
 
             -- Check if item is affordable
@@ -287,8 +287,11 @@ function ResupplyState:draw()
             -- Add cursor indicator
             local bg = prism.Color4.BLACK
             if x == self.cursorX and y == self.cursorY then
-               if canAfford then
+               if canAfford and not item.purchased then
                   color = prism.Color4.BLACK
+                  bg = prism.Color4.WHITE
+               elseif item.purchased then
+                  color = prism.Color4.DARKGREY
                   bg = prism.Color4.WHITE
                else
                   color = prism.Color4.RED
