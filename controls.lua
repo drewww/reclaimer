@@ -2,12 +2,12 @@ return spectrum.Input.Controls {
    -- stylua: ignore
    controls = {
       move_upleft    = { "q", "y" },
-      move_up        = { "w", "k" },
+      move_up        = { "w", "k", "right" },
       move_upright   = { "e", "u" },
-      move_left      = { "a", "h" },
-      move_right     = { "d", "l" },
+      move_left      = { "a", "h", "left" },
+      move_right     = { "d", "l", "right" },
       move_downleft  = { "z", "b" },
-      move_down      = { "s", "j" },
+      move_down      = { "s", "j", "down" },
       move_downright = { "c", "n" },
       pickup         = { "p", "g" },
       wait           = { "x" },
