@@ -328,7 +328,7 @@ function GameLevelState:draw(dt)
       local canSee = primary[1].cells:get(bot:getPosition():decompose())
 
       if health and canSee then
-         love.graphics.setColor(1, 0, 0, 1)
+         love.graphics.setColor(1, 0.7, 0.7, 1)
 
          -- calculate the cell position in screen terms
          -- that means apply the camera offset, and then multiply by the cell size
@@ -337,10 +337,21 @@ function GameLevelState:draw(dt)
          local screenPixelPosition = prism.Vector2((screenCellPosition.x - 1) * self.display.cellSize.x,
             (screenCellPosition.y - 1) * self.display.cellSize.y)
 
-         -- Draw 2x2 squares for each health point with 1px spacing
+         -- Draw 2x2 squares for each health point with 1px spacing, wrapping within cell
+         local squareWidth = 2
+         local spacing = 2
+         local squareSpacing = squareWidth + spacing             -- 3 pixels per square
+         local maxSquaresPerRow = math.floor(32 / squareSpacing) -- How many squares fit in 32px width
+
          for i = 1, health.hp do
-            local offsetX = (i - 1) * 3 -- 2px square + 1px space
-            love.graphics.rectangle("fill", screenPixelPosition.x + offsetX, screenPixelPosition.y, 2, 2)
+            local row = math.floor((i - 1) / maxSquaresPerRow)
+            local col = (i - 1) % maxSquaresPerRow
+
+            local offsetX = col * squareSpacing
+            local offsetY = 32 - 4 - (row * (squareWidth + spacing)) -- Position at bottom, leave 4px margin
+
+            love.graphics.rectangle("fill", screenPixelPosition.x + offsetX, screenPixelPosition.y + offsetY, squareWidth,
+               squareWidth)
          end
 
          love.graphics.setColor(1, 1, 1, 1)
