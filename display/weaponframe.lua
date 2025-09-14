@@ -87,7 +87,7 @@ function WeaponFrame:draw()
 
             self.display:putString(originX + 9 + baseColumn, originY + 1, tostring(math.floor(weapon.range)), fg, bg)
             self.display:put(originX + 2 + baseColumn, originY + 1, HEART, fg, bg)
-            self.display:put(originX + 5 + baseColumn, originY + 1, PUSH, fg, bg)
+            self.display:put(originX + 5 + baseColumn, originY + 1, ARROW, fg, bg)
             self.display:put(originX + 8 + baseColumn, originY + 1, RANGE, fg, bg)
 
             -- put black tiles around the image area
