@@ -1,4 +1,4 @@
-prism.registerActor("Shotgun", function()
+prism.registerActor("Shotgun", function(active)
    return prism.Actor.fromComponents {
       prism.components.Name("Shotgun"),
       prism.components.Position(),
@@ -14,7 +14,8 @@ prism.registerActor("Shotgun", function()
          aoe = 0,
          template = "cone",
          hotkey = 3,
-         ammoType = "Shotgun"
+         ammoType = "Shotgun",
+         active = active or false
       })
    }
 end)
