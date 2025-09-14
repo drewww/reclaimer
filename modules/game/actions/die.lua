@@ -64,6 +64,10 @@ function Die:perform(level)
          end
       end
 
+      if not self.owner:has(prism.components.PlayerController) then
+         Audio.playSfx("killEnemy")
+      end
+
       level:removeActor(self.owner)
 
       if not level:query(prism.components.PlayerController):first() then level:yield(prism.messages.Lose()) end

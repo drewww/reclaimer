@@ -16,7 +16,9 @@ local soundEffects = {
    dashEnd = "sound/dash_end.wav",
    dashStart = "sound/dash_start.wav",
    explode = "sound/explode_c.wav",
+   hitWall = "sound/hit_wall.wav",
    bullet = "sound/impact_b.wav",
+   killEnemy = "sound/kill_enemy.wav",
    laser = "sound/laser.wav",
    lose = "sound/lose_b.wav",
    loot = "sound/loot.wav",
@@ -168,5 +170,9 @@ function Audio.playDashEnd() return Audio.playSfx("dashEnd", 0.8) end
 function Audio.playLose() return Audio.playSfx("lose", 0.9) end
 
 function Audio.playSelfDestruct() return Audio.playSfx("selfDestruct", 1.0) end
+
+function Audio.playHitWall() return Audio.playSfx("hitWall", 0.8) end
+
+function Audio.playKillEnemy() return Audio.playSfx("killEnemy", 0.9) end
 
 return Audio
