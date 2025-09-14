@@ -32,9 +32,9 @@ function InfoFrame:draw()
          prism.Color4.NAVY)
    end
 
-   local dashColor = prism.Color4.BLUE
+   local dashColor = prism.Color4.WHITE
    if player and player:has(prism.components.Dashing) then
-      dashColor = prism.Color4.WHITE
+      dashColor = prism.Color4.BLUE
    end
    self.display:putString(22, 1, "DASH", dashColor, prism.Color4.NAVY)
 
