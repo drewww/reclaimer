@@ -5,7 +5,7 @@ prism.registerActor("BotBoom", function()
       prism.components.Drawable { index = 4, color = COLOR_ENEMY, layer = 10 },
       prism.components.Collider(),
       prism.components.Senses(),
-      prism.components.Sight { range = 12, fov = true },
+      prism.components.Sight { range = 10, fov = true },
       prism.components.Mover { "walk" },
       prism.components.BotController(),
       prism.components.Health(5),

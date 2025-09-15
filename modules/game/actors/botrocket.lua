@@ -7,7 +7,7 @@ prism.registerActor("BotRocket", function(active)
       prism.components.Weapon({
          damage = 1,
          push = 2,
-         range = 15,
+         range = 10,
          ammo = 1,
          maxAmmo = 1,
          ammopershot = 1,
