@@ -121,7 +121,7 @@ function ResupplyState:initializeMenu()
       self.menuGrid[self:coordKey(3, 1)] = {
          actor = prism.actors.Laser(),
          displayName = "Laser",
-         price = 10,
+         price = 8,
          purchased = false
       }
    end
@@ -130,7 +130,7 @@ function ResupplyState:initializeMenu()
       self.menuGrid[self:coordKey(2, 1)] = {
          actor = prism.actors.Shotgun(),
          displayName = "Shotgun",
-         price = 10,
+         price = 8,
          purchased = false
       }
    end
@@ -139,7 +139,7 @@ function ResupplyState:initializeMenu()
       self.menuGrid[self:coordKey(4, 1)] = {
          actor = prism.actors.Rocket(),
          displayName = "Launcher",
-         price = 10,
+         price = 8,
          purchased = false
       }
    end
@@ -158,7 +158,7 @@ function ResupplyState:initializeMenu()
       self.menuGrid[self:coordKey(2, 2)] = {
          actor = AMMO_TYPES["Shotgun"](8),
          displayName = "Shells x8",
-         price = 2,
+         price = 1,
          purchased = false,
          ammo = true
       }
@@ -168,7 +168,7 @@ function ResupplyState:initializeMenu()
       self.menuGrid[self:coordKey(3, 2)] = {
          actor = AMMO_TYPES["Laser"](5),
          displayName = "Battery x5",
-         price = 2,
+         price = 1,
          purchased = false,
          ammo = true
       }
@@ -178,7 +178,7 @@ function ResupplyState:initializeMenu()
       self.menuGrid[self:coordKey(4, 2)] = {
          actor = AMMO_TYPES["Rocket"](2),
          displayName = "Rocket x2",
-         price = 2,
+         price = 1,
          purchased = false,
          ammo = true
       }
@@ -455,13 +455,13 @@ function ResupplyState:update(dt)
                   if item.displayName == "Laser" then
                      local laserAmmo = AMMO_TYPES["Laser"](3)
                      inventory:addItem(laserAmmo)
-                     prism.logger.info("Added bonus Laser ammo (5)")
+                     prism.logger.info("Added bonus Laser ammo (3)")
                   elseif item.displayName == "Shotgun" then
                      local shotgunAmmo = AMMO_TYPES["Shotgun"](8)
                      inventory:addItem(shotgunAmmo)
                      prism.logger.info("Added bonus Shotgun ammo (8)")
-                  elseif item.displayName == "Rocket" then
-                     local rocketAmmo = AMMO_TYPES["Rocket"](2)
+                  elseif item.displayName == "Launcher" then
+                     local rocketAmmo = AMMO_TYPES["Rocket"](4)
                      inventory:addItem(rocketAmmo)
                      prism.logger.info("Added bonus Rocket ammo (2)")
                   end

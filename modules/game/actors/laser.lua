@@ -7,9 +7,9 @@ prism.registerActor("Laser", function()
       prism.components.Weapon({
          damage = 5,
          push = 0,
-         range = 10,
-         ammo = 3,
-         maxAmmo = 3,
+         range = 12,
+         ammo = 4,
+         maxAmmo = 4,
          ammopershot = 1,
          aoe = 0,
          template = "line",

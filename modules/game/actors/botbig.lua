@@ -5,10 +5,10 @@ prism.registerActor("BotBig", function()
       prism.components.Drawable { index = 3, color = COLOR_ENEMY, layer = 10 },
       prism.components.Collider(),
       prism.components.Senses(),
-      prism.components.Sight { range = 10, fov = true },
+      prism.components.Sight { range = 8, fov = true },
       prism.components.Mover { "walk" },
       prism.components.BotController(),
-      prism.components.Health(16),
+      prism.components.Health(12),
       -- prism.components.Attacker(1),
       prism.components.Alert(),
       -- put a scrap item in the inventory of the bot

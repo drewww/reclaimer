@@ -14,28 +14,28 @@ START_DEPTH = -9
 MAX_TURNS_IN_LEVEL = 200
 
 DEPTHS = {
-   { enemyOdds = 0.3,  weights = "basic",   walls = "rock",   weapons = {} },
-   { enemyOdds = 0.4,  weights = "basic",   walls = "rock",   weapons = { "shotgun" } },
-   { enemyOdds = 0.45, weights = "basic",   walls = "rock",   weapons = { "shotgun" } },
-   { enemyOdds = 0.3,  weights = "barrels", walls = "circle", weapons = { "shotgun" } },
-   { enemyOdds = 0.4,  weights = "barrels", walls = "circle", weapons = { "shotgun", "laser" } },
-   { enemyOdds = 0.4,  weights = "barrels", walls = "circle", weapons = { "laser" } },
-   { enemyOdds = 0.4,  weights = "end",     walls = "none",   weapons = { "laser", "rocket" } },
-   { enemyOdds = 0.5,  weights = "end",     walls = "none",   weapons = { "laser", "rocket" } },
-   { enemyOdds = 0.6,  weights = "end",     walls = "none",   weapons = { "rocket" } },
+   { enemyOdds = 0.3, weights = "basic",   walls = "rock",   weapons = {} },
+   { enemyOdds = 0.4, weights = "basic",   walls = "rock",   weapons = { "shotgun" } },
+   { enemyOdds = 0.5, weights = "basic",   walls = "rock",   weapons = { "shotgun" } },
+   { enemyOdds = 0.3, weights = "barrels", walls = "circle", weapons = { "shotgun" } },
+   { enemyOdds = 0.4, weights = "barrels", walls = "circle", weapons = { "shotgun", "laser" } },
+   { enemyOdds = 0.4, weights = "barrels", walls = "circle", weapons = { "laser" } },
+   { enemyOdds = 0.4, weights = "end",     walls = "none",   weapons = { "laser", "rocket" } },
+   { enemyOdds = 0.4, weights = "end",     walls = "none",   weapons = { "laser", "rocket" } },
+   { enemyOdds = 0.4, weights = "end",     walls = "none",   weapons = { "rocket" } },
 }
 
 -- Enemy type spawn odds per depth (must sum to 1.0)
 ENEMY_SPAWN_ODDS = {
-   { basic = 1.0,  big = 0.0,  boom = 0.0 }, -- Depth 1: Only basic enemies
-   { basic = 1.0,  big = 0.0,  boom = 0.0 }, -- Depth 2: Mostly basic, some big
-   { basic = 1.0,  big = 0.0,  boom = 0.0 }, -- Depth 3: More big enemies
-   { basic = 0.6,  big = 0.4,  boom = 0.0 }, -- Depth 4: Introduce boom enemies
-   { basic = 0.6,  big = 0.4,  boom = 0.0 }, -- Depth 5: More variety
-   { basic = 0.6,  big = 0.4,  boom = 0.0 }, -- Depth 6: Balanced mix
-   { basic = 0.45, big = 0.35, boom = 0.2 }, -- Depth 7: Fewer basic
-   { basic = 0.3,  big = 0.4,  boom = 0.3 }, -- Depth 8: Mostly big/boom
-   { basic = 0.2,  big = 0.4,  boom = 0.4 }, -- Depth 9: Final level - mostly dangerous
+   { basic = 1.0, big = 0.0, boom = 0.0 },   -- Depth 1: Only basic enemies
+   { basic = 1.0, big = 0.0, boom = 0.0 },   -- Depth 2: Mostly basic, some big
+   { basic = 1.0, big = 0.0, boom = 0.0 },   -- Depth 3: More big enemies
+   { basic = 0.8, big = 0.2, boom = 0.0 },   -- Depth 4: Introduce boom enemies
+   { basic = 0.8, big = 0.2, boom = 0.0 },   -- Depth 5: More variety
+   { basic = 0.7, big = 0.3, boom = 0.0 },   -- Depth 6: Balanced mix
+   { basic = 0.5, big = 0.2, boom = 0.3 },   -- Depth 7: Fewer basic
+   { basic = 0.5, big = 0.2, boom = 0.3 },   -- Depth 8: Mostly big/boom
+   { basic = 0.3, big = 0.3, boom = 0.4 },   -- Depth 9: Final level - mostly dangerous
 }
 
 -- sprite locations

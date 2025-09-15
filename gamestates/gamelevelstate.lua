@@ -339,7 +339,7 @@ function GameLevelState:draw(dt)
          local squareWidth = 2
          local baseY = 32 - 4 -- Position at bottom with 4px margin
 
-         if health.hp <= 10 then
+         if health.maxHP <= 10 then
             -- Padded mode: 2px square + 1px gap = 3px per square
             local squareSpacing = 3
             local maxSquaresPerRow = math.floor(32 / squareSpacing) -- 10 squares fit in 32px width
