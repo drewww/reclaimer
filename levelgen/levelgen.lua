@@ -192,7 +192,11 @@ return function(depth, rng, player, width, height)
    for i = 1, 5 do
       local x, y
       repeat
-         x = rng:random(1, blockWidth)
+         if depth == -1 and i == 2 then
+            x = 1
+         else
+            x = rng:random(1, blockWidth)
+         end
          y = rng:random(1, blockHeight)
       until not occupiedPositions[x .. "," .. y]
 
@@ -212,7 +216,12 @@ return function(depth, rng, player, width, height)
    end
 
    -- Place exit block
-   levelBlocks[exitX][exitY] = "X7_exit"
+   if depth == -1 then
+      levelBlocks[exitX][exitY] = "X7_win"
+   else
+      levelBlocks[exitX][exitY] = "X7_exit"
+   end
+
 
    -- Place exactly 3 chest blocks
    local chestBlocks = { "7_chest_closed", "7_chest_open", "7_chest_wall" }
