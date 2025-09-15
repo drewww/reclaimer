@@ -442,12 +442,12 @@ function ResupplyState:update(dt)
                local loot = inventory:getStack(prism.actors.Loot)
                inventory:removeQuantity(loot, totalSpend)
             end
+            local health = Game.player:get(prism.components.Health)
 
             for _, item in pairs(self.menuGrid) do
                if item.displayName == "Heal All" and item.purchased then
                   health:heal(health.maxHP)
                elseif item.displayName == "Health +1" and item.purchased then
-                  local health = Game.player:get(prism.components.Health)
                   health.maxHP = health.maxHP + 1
                   health.hp = health.hp + 1
                   prism.logger.info("Increased max health to: " .. health.maxHP)
