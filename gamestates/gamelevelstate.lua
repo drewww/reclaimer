@@ -500,9 +500,9 @@ function GameLevelState:updateDecision(dt, owner, decision)
 
       local pickup = prism.actions.Pickup(owner, target)
 
-      if pickup:canPerform() and target and target:getName() == "nanos" then
-         Game.stats:increment("cash", target:get(prism.components.Item).stackCount)
-      end
+      -- if pickup:canPerform() and target and target:getName() == "nanos" then
+      --    Game.stats:increment("cash", target:get(prism.components.Item).stackCount)
+      -- end
 
       decision:setAction(pickup, self.level)
    end

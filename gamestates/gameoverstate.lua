@@ -17,6 +17,14 @@ function GameOverState:__new(died)
    self.contractFailedImage = love.graphics.newImage("display/images/contract_failed_title.png")
    self.contractCompletedImage = love.graphics.newImage("display/images/contract_complete_title.png")
 
+   if not died then
+      local inventory = Game.player:get(prism.components.Inventory)
+      if inventory then
+         local cash = inventory:getStack(prism.actors.Loot):get(prism.components.Item)
+         Game.stats:set("cash", cash.stackCount)
+      end
+   end
+
    Game.stats:finalize()
    Game.stats:print()
    Game.stats:save()

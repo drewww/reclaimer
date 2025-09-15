@@ -1,9 +1,9 @@
 SCREEN_WIDTH = 31
 SCREEN_HEIGHT = 20
 
-WALL_COLLIDE_DAMAGE = 4
+WALL_COLLIDE_DAMAGE = 5
 PLAYER_WALL_COLLIDE_DAMAGE = 2
-BARREL_EXPLODE_DAMAGE = 4
+BARREL_EXPLODE_DAMAGE = 5
 
 CHEST_DURATION = 10
 
@@ -27,15 +27,15 @@ DEPTHS = {
 
 -- Enemy type spawn odds per depth (must sum to 1.0)
 ENEMY_SPAWN_ODDS = {
-   { basic = 1.0, big = 0.0, boom = 0.0 },   -- Depth 1: Only basic enemies
-   { basic = 1.0, big = 0.0, boom = 0.0 },   -- Depth 2: Mostly basic, some big
-   { basic = 1.0, big = 0.0, boom = 0.0 },   -- Depth 3: More big enemies
-   { basic = 0.8, big = 0.2, boom = 0.0 },   -- Depth 4: Introduce boom enemies
-   { basic = 0.8, big = 0.2, boom = 0.0 },   -- Depth 5: More variety
-   { basic = 0.7, big = 0.3, boom = 0.0 },   -- Depth 6: Balanced mix
-   { basic = 0.5, big = 0.2, boom = 0.3 },   -- Depth 7: Fewer basic
-   { basic = 0.5, big = 0.2, boom = 0.3 },   -- Depth 8: Mostly big/boom
-   { basic = 0.3, big = 0.3, boom = 0.4 },   -- Depth 9: Final level - mostly dangerous
+   { basic = 1.0, big = 0.0, boom = 0.0 }, -- Depth 1: Only basic enemies
+   { basic = 1.0, big = 0.0, boom = 0.0 }, -- Depth 2: Mostly basic, some big
+   { basic = 1.0, big = 0.0, boom = 0.0 }, -- Depth 3: More big enemies
+   { basic = 0.8, big = 0.2, boom = 0.0 }, -- Depth 4: Introduce boom enemies
+   { basic = 0.8, big = 0.2, boom = 0.0 }, -- Depth 5: More variety
+   { basic = 0.7, big = 0.3, boom = 0.0 }, -- Depth 6: Balanced mix
+   { basic = 0.5, big = 0.2, boom = 0.3 }, -- Depth 7: Fewer basic
+   { basic = 0.5, big = 0.2, boom = 0.3 }, -- Depth 8: Mostly big/boom
+   { basic = 0.3, big = 0.3, boom = 0.4 }, -- Depth 9: Final level - mostly dangerous
 }
 
 -- sprite locations

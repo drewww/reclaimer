@@ -5,7 +5,7 @@ prism.registerActor("Shotgun", function(active)
       prism.components.Drawable { index = GUN, color = prism.Color4.YELLOW },
       prism.components.Item(),
       prism.components.Weapon({
-         damage = 1,
+         damage = 2,
          push = 3,
          range = 4,
          ammo = 4,

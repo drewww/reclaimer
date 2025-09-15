@@ -296,6 +296,9 @@ function ResupplyState:draw()
 
    self.display:clear()
 
+   local health = Game.player:get(prism.components.Health)
+   local energy = Game.player:get(prism.components.Energy)
+
    -- Draw resupply background image
    love.graphics.draw(self.resupplyImage, 0, 0)
 
@@ -360,6 +363,21 @@ function ResupplyState:draw()
                   if item.ammo and ammo and ammo > 0 then
                      self.display:put(displayX + 7, displayY + 1, AMMO, color, bg)
                      self.display:putString(displayX + 8, displayY + 1, tostring(ammo), color, bg)
+                  end
+               else
+                  if item.displayName == "Heal All" then
+                     self.display:put(displayX + 3, displayY + 1, HEART, color, bg)
+                     self.display:putString(displayX + 4, displayY + 1,
+                        tostring(health.hp) .. "/" .. tostring(health.maxHP), color, bg)
+                  elseif item.displayName == "Health +1" then
+                     self.display:put(displayX + 6, displayY + 1, HEART, color, bg)
+                     self.display:putString(displayX + 7, displayY + 1, tostring(health.maxHP), color, bg)
+                  elseif item.displayName == "Energy +1" then
+                     self.display:put(displayX + 7, displayY + 1, "»", color, bg)
+                     self.display:putString(displayX + 8, displayY + 1, tostring(energy.maxEnergy), color, bg)
+                  elseif item.displayName == "Recharge +1" then
+                     self.display:put(displayX + 7, displayY + 1, "»", color, bg)
+                     self.display:putString(displayX + 8, displayY + 1, tostring(energy.regenRate), color, bg)
                   end
                end
             end
@@ -427,7 +445,6 @@ function ResupplyState:update(dt)
 
             for _, item in pairs(self.menuGrid) do
                if item.displayName == "Heal All" and item.purchased then
-                  local health = Game.player:get(prism.components.Health)
                   health:heal(health.maxHP)
                elseif item.displayName == "Health +1" and item.purchased then
                   local health = Game.player:get(prism.components.Health)
