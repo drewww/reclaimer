@@ -26,8 +26,8 @@ function InfoFrame:draw()
 
    local energy = player and player:get(prism.components.Energy)
    if energy then
-      self.display:put(16, 1, "»", prism.Color4.WHITE, prism.Color4.NAVY)
-      self.display:putString(17, 1, tostring(math.floor(energy.energy)) .. "/" .. tostring(energy.maxEnergy),
+      self.display:put(24, 1, "»", prism.Color4.WHITE, prism.Color4.NAVY)
+      self.display:putString(25, 1, tostring(math.floor(energy.energy)) .. "/" .. tostring(energy.maxEnergy),
          prism.Color4.WHITE,
          prism.Color4.NAVY)
    end
@@ -36,7 +36,7 @@ function InfoFrame:draw()
    if player and player:has(prism.components.Dashing) then
       dashColor = prism.Color4.BLUE
    end
-   self.display:putString(22, 1, "DASH", dashColor, prism.Color4.NAVY)
+   self.display:putString(29, 1, "DASH", dashColor, prism.Color4.NAVY)
 
    self.display:putString(41, 1, "LVL", prism.Color4.WHITE, prism.Color4.NAVY)
    self.display:putString(44, 1, tostring(Game.depth), prism.Color4.WHITE, prism.Color4.NAVY)

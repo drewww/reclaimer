@@ -10,7 +10,7 @@ prism.registerActor("Player", function()
       prism.components.Mover { "walk" },
       prism.components.Health(10),
       -- prism.components.Log(),
-      prism.components.Energy(3, 0.125),
+      prism.components.Energy(3, 0.1),
       prism.components.Inventory {
          limitCount = 26,
       },

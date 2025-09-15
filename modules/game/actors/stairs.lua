@@ -5,5 +5,6 @@ prism.registerActor("Stairs", function()
       prism.components.Drawable { index = STAIRS, color = COLOR_PLAYER, math.huge - 20 },
       prism.components.Stair(),
       prism.components.Remembered(),
+      prism.components.Immovable()
    }
 end)

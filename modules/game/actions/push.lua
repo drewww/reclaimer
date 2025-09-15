@@ -18,6 +18,14 @@ Push.targets            = {
    PushFrom
 }
 
+function Push:canPerform(level, amount, from)
+   if self.owner:has(prism.components.Immovable) then
+      return false, "Target is immovable"
+   end
+
+   return true
+end
+
 function Push:perform(level, amount, from)
    local target = self.owner
    prism.logger.info("target: ", target)

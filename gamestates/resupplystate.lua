@@ -444,7 +444,7 @@ function ResupplyState:update(dt)
                elseif item.displayName == "Recharge +1" and item.purchased then
                   local energy = Game.player:get(prism.components.Energy)
                   if energy then
-                     energy.regenRate = energy.regenRate + 0.125
+                     energy.regenRate = energy.regenRate + 0.1
                      prism.logger.info("Increased recharge to: " .. energy.regenRate)
                   end
                elseif item.purchased and inventory and item.actor then

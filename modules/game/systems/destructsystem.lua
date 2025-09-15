@@ -18,7 +18,7 @@ function DestructSystem:onTurnEnd(level, actor)
          level:yield(prism.messages.Animation {
             animation = spectrum.animations.SelfDestruct(turnsRemaining),
             blocking = false,
-            skippable = true
+            skippable = false
          })
 
          return
