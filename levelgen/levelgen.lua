@@ -162,6 +162,8 @@ return function(depth, rng, player, width, height)
 
    local depthInfo = DEPTHS[10 + depth]
 
+   prism.logger.info("depthInfo OVERALL: ", depthInfo.enemyOdds, depthInfo.weights, depthInfo.walls, depthInfo.weapons)
+
    local weights = basicWeights
    if depthInfo.weights == "basic" then
       weights = basicWeights
@@ -225,12 +227,27 @@ return function(depth, rng, player, width, height)
    for i = 1, blockWidth do
       for j = 1, blockHeight do
          local x, y = (i - 1) * (BLOCK_WIDTH) + 1, (j - 1) * (BLOCK_HEIGHT) + 1
-         prism.logger.info("generating block ", i, j, levelBlocks[i][j], " at ", x, y)
+         -- prism.logger.info("generating block ", i, j, levelBlocks[i][j], " at ", x, y)
          local blockBuilder = getBlockBuilder(levelBlocks[i][j], 0)
+
+         -- try replacing every cell with a Wall in it to a rock wall
 
          builder:blit(blockBuilder,
             x,
             y)
+      end
+   end
+
+   for i, j, cell in builder:eachCell() do
+      -- prism.logger.info("Checking cell at ", i, j, cell:getName(), " depthInfo.walls: ", depthInfo.walls)
+      if cell:getName() == "Wall" and depthInfo.walls then
+         if depthInfo.walls == "rock" then
+            builder:set(i, j, prism.cells.RockWall())
+         elseif depthInfo.walls == "circle" then
+            builder:set(i, j, prism.cells.CircleWall())
+         end
+
+         -- builder:set(i, j, depthInfo.walls())
       end
    end
 
@@ -275,7 +292,15 @@ return function(depth, rng, player, width, height)
       end
    end
 
-   builder:pad(1, prism.cells.Wall)
+
+   if depthInfo.walls == "rock" then
+      builder:pad(1, prism.cells.RockWall)
+   elseif depthInfo.walls == "circle" then
+      builder:pad(1, prism.cells.CircleWall)
+   else
+      builder:pad(1, prism.cells.Wall)
+   end
+   -- builder:pad(1, prism.cells.Wall)
 
    -- builder:addActor(prism.actors.Stairs(), randCorner.x, randCorner.y)
 

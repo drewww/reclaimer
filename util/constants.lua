@@ -14,15 +14,15 @@ START_DEPTH = -9
 MAX_TURNS_IN_LEVEL = 200
 
 DEPTHS = {
-   { enemyOdds = 0.3, weights = "basic",   weapons = {} },
-   { enemyOdds = 0.4, weights = "basic",   weapons = { "shotgun" } },
-   { enemyOdds = 0.5, weights = "basic",   weapons = { "shotgun" } },
-   { enemyOdds = 0.3, weights = "barrels", weapons = { "shotgun" } },
-   { enemyOdds = 0.4, weights = "barrels", weapons = { "shotgun", "laser" } },
-   { enemyOdds = 0.5, weights = "barrels", weapons = { "laser" } },
-   { enemyOdds = 0.5, weights = "end",     weapons = { "laser", "rocket" } },
-   { enemyOdds = 0.7, weights = "end",     weapons = { "laser", "rocket" } },
-   { enemyOdds = 0.9, weights = "end",     weapons = { "rocket" } },
+   { enemyOdds = 0.12, weights = "basic",   walls = "rock",   weapons = {} },
+   { enemyOdds = 0.4,  weights = "basic",   walls = "rock",   weapons = { "shotgun" } },
+   { enemyOdds = 0.5,  weights = "basic",   walls = "rock",   weapons = { "shotgun" } },
+   { enemyOdds = 0.3,  weights = "barrels", walls = "circle", weapons = { "shotgun" } },
+   { enemyOdds = 0.4,  weights = "barrels", walls = "circle", weapons = { "shotgun", "laser" } },
+   { enemyOdds = 0.5,  weights = "barrels", walls = "circle", weapons = { "laser" } },
+   { enemyOdds = 0.5,  weights = "end",     walls = "none",   weapons = { "laser", "rocket" } },
+   { enemyOdds = 0.7,  weights = "end",     walls = "none",   weapons = { "laser", "rocket" } },
+   { enemyOdds = 0.9,  weights = "end",     walls = "none",   weapons = { "rocket" } },
 }
 
 -- Enemy type spawn odds per depth (must sum to 1.0)
