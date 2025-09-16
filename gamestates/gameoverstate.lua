@@ -2,7 +2,7 @@ local Game = require "game"
 local Audio = require "audio"
 --- @class GameOverState : GameState
 --- @field display Display
---- @overload fun(): GameOverState
+--- @overload fun(bool): GameOverState
 local GameOverState = spectrum.GameState:extend("GameOverState")
 
 function GameOverState:__new(died)
